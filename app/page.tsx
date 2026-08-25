@@ -15,6 +15,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 const projects = [
@@ -67,6 +68,7 @@ export default function Home() {
           {menuOpen ? <X /> : <Menu />}
         </button>
         <div className={`nav-links ${menuOpen ? "open" : ""}`}>
+          <Link href="/giao-dien" onClick={closeMenu}>Kho giao diện</Link>
           <a href="#work" onClick={closeMenu}>Dự án</a>
           <a href="#services" onClick={closeMenu}>Dịch vụ</a>
           <a href="#about" onClick={closeMenu}>Về tui</a>
