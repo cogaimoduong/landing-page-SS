@@ -36,7 +36,7 @@ export const templates: TemplateItem[] = [
     accent: "#111111",
     dark: "#111111",
     image: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1600&q=85",
-    features: ["Tìm xe theo ngày", "Bảng giá trực quan", "Đặt xe nhanh"],
+    features: ["Đội xe & thông số", "Giá thuê & đặt cọc", "Điểm giao nhận", "Điều kiện thuê", "Form yêu cầu thuê thử"],
   },
   {
     slug: "nestly-home-rental",
@@ -50,7 +50,7 @@ export const templates: TemplateItem[] = [
     accent: "#9f5b3f",
     dark: "#283329",
     image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=85",
-    features: ["Khám phá địa điểm", "Lịch trống", "Đánh giá khách thuê"],
+    features: ["Bộ sưu tập chỗ ở", "Tiện nghi & sức chứa", "Cẩm nang địa phương", "Nội quy lưu trú", "Form đặt chỗ thử"],
   },
   {
     slug: "gearup-equipment-rental",
@@ -64,7 +64,7 @@ export const templates: TemplateItem[] = [
     accent: "#ff6b00",
     dark: "#171717",
     image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=85",
-    features: ["Danh mục thiết bị", "Yêu cầu báo giá", "Theo dõi đơn thuê"],
+    features: ["Danh mục & thông số máy", "Gói thuê theo ca / tháng", "Quy trình bàn giao", "Bảo trì & an toàn", "Form yêu cầu báo giá"],
   },
   {
     slug: "aurelia-luxury-hotel",
@@ -78,7 +78,7 @@ export const templates: TemplateItem[] = [
     accent: "#a78152",
     dark: "#18211b",
     image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=85",
-    features: ["Đặt phòng trực tuyến", "Trải nghiệm nghỉ dưỡng", "Ưu đãi theo mùa"],
+    features: ["Ba hạng phòng & villa", "Ẩm thực & spa", "Gói nghỉ dưỡng", "Hướng dẫn di chuyển", "Form đặt phòng thử"],
   },
   {
     slug: "sunday-boutique-hotel",
@@ -92,7 +92,7 @@ export const templates: TemplateItem[] = [
     accent: "#eb4f74",
     dark: "#193a37",
     image: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1600&q=85",
-    features: ["Gallery phòng", "Local guide", "Đặt phòng nhanh"],
+    features: ["Ba hạng phòng", "Local guide Sài Gòn", "Café & rooftop", "Tiện ích & chính sách", "Form đặt phòng thử"],
   },
   {
     slug: "hush-minimal-hotel",
@@ -106,7 +106,7 @@ export const templates: TemplateItem[] = [
     accent: "#5d6c62",
     dark: "#2d302d",
     image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=85",
-    features: ["Danh sách phòng", "Không gian & tiện ích", "Form đặt phòng"],
+    features: ["Phòng Tatami & Suite", "Trà & ẩm thực Nhật", "Cẩm nang Kyoto", "Nội quy lưu trú", "Form đặt phòng thử"],
   },
   {
     slug: "orbit-crm-dashboard",
@@ -120,7 +120,7 @@ export const templates: TemplateItem[] = [
     accent: "#7c6cff",
     dark: "#10111e",
     image: "",
-    features: ["Sales pipeline", "Báo cáo realtime", "Quản lý khách hàng"],
+    features: ["Sales pipeline tương tác", "Thêm & lọc cơ hội", "Danh bạ khách hàng", "Lịch chăm sóc", "Báo cáo doanh số mẫu"],
   },
   {
     slug: "flowdesk-project-management",
@@ -134,7 +134,7 @@ export const templates: TemplateItem[] = [
     accent: "#2877f0",
     dark: "#172133",
     image: "",
-    features: ["Kanban board", "Quản lý tiến độ", "Lịch công việc"],
+    features: ["Kanban đổi trạng thái", "Thêm & tìm công việc", "Tiến độ dự án", "Phân bổ thành viên", "Lịch bàn giao"],
   },
   {
     slug: "minto-store-management",
@@ -148,7 +148,7 @@ export const templates: TemplateItem[] = [
     accent: "#188f62",
     dark: "#17342a",
     image: "",
-    features: ["Doanh thu", "Kho hàng", "Đơn hàng đa kênh"],
+    features: ["Doanh thu theo kênh", "Tạo & lọc đơn hàng", "Cập nhật trạng thái", "Tồn kho & cảnh báo", "Lịch vận hành"],
   },
   {
     slug: "loud-creative-agency",
@@ -162,7 +162,7 @@ export const templates: TemplateItem[] = [
     accent: "#ff4d2e",
     dark: "#131313",
     image: "https://images.unsplash.com/photo-1542744094-3a31f272c490?auto=format&fit=crop&w=1600&q=85",
-    features: ["Showcase chiến dịch", "Case study", "Form nhận brief"],
+    features: ["Showcase chiến dịch", "Case study chi tiết", "Gói sáng tạo & sản xuất", "Đội ngũ studio", "Form nhận brief thử"],
   },
   {
     slug: "halo-digital-marketing",
@@ -176,7 +176,7 @@ export const templates: TemplateItem[] = [
     accent: "#4e5bff",
     dark: "#0c1024",
     image: "",
-    features: ["Dịch vụ marketing", "Số liệu tăng trưởng", "Đăng ký tư vấn"],
+    features: ["Growth audit & marketing", "Case study chuyển đổi", "Chỉ số hiệu quả mẫu", "Đội ngũ chuyên môn", "Form đăng ký tư vấn"],
   },
   {
     slug: "muse-brand-studio",
@@ -190,7 +190,7 @@ export const templates: TemplateItem[] = [
     accent: "#d3342f",
     dark: "#242018",
     image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=85",
-    features: ["Portfolio dự án", "Giới thiệu studio", "Đặt lịch trao đổi"],
+    features: ["Portfolio thương hiệu", "Case study nhận diện", "Gói chiến lược & thiết kế", "Giới thiệu đội ngũ", "Form trao đổi dự án"],
   },
 ];
 
