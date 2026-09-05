@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { BarChart3, CalendarDays, CheckCircle2, Users } from "lucide-react";
 import type { TemplateItem } from "@/lib/templates";
+import { WorkspaceDocuments, WorkspaceReports, WorkspaceSettings } from "./workspace-tools";
 
 type Row = { name: string; owner: string; value: string; status: string };
 
@@ -31,7 +32,7 @@ export function ManagementWorkspace({ template }: { template: TemplateItem }) {
     { name: "Bàn giao design system", owner: "Minh Anh", value: "12/09/2026", status: "Hoàn thành" },
   ]);
   const stages = crm ? ["Đang trao đổi", "Đã gửi đề xuất", "Đàm phán", "Thành công"] : shop ? ["Chờ xác nhận", "Đang đóng gói", "Đang giao", "Hoàn thành"] : ["Cần làm", "Đang làm", "Chờ duyệt", "Hoàn thành"];
-  const tabs = [{ id: "overview", label: "Tổng quan", icon: BarChart3 }, { id: "work", label: crm ? "Sales pipeline" : shop ? "Đơn hàng" : "Bảng công việc", icon: CheckCircle2 }, { id: "resources", label: crm ? "Khách hàng" : shop ? "Kho hàng" : "Thành viên", icon: Users }, { id: "calendar", label: crm ? "Lịch chăm sóc" : shop ? "Lịch vận hành" : "Lịch dự án", icon: CalendarDays }];
+  const tabs = [{ id: "overview", label: "Tổng quan", icon: BarChart3 }, { id: "work", label: crm ? "Sales pipeline" : shop ? "Đơn hàng" : "Bảng công việc", icon: CheckCircle2 }, { id: "resources", label: crm ? "Khách hàng" : shop ? "Kho hàng" : "Thành viên", icon: Users }, { id: "calendar", label: crm ? "Lịch chăm sóc" : shop ? "Lịch vận hành" : "Lịch dự án", icon: CalendarDays }, { id: "reports", label: "Báo cáo", icon: BarChart3 }, { id: "documents", label: shop ? "Chứng từ" : crm ? "Báo giá & ghi chú" : "Tài liệu", icon: CheckCircle2 }, { id: "settings", label: "Thiết lập", icon: Users }];
   const visible = rows.filter(row => `${row.name} ${row.owner}`.toLocaleLowerCase("vi").includes(query.toLocaleLowerCase("vi")) && (filter === "all" || row.status === filter));
   const metrics = crm ? [["Doanh số tháng", "311 triệu", "4 cơ hội trong pipeline"], ["Khách hàng mới", "28", "+8 khách so với tháng trước"], ["Tỷ lệ chốt", "32%", "+4 điểm phần trăm"]] : shop ? [["Doanh thu hôm nay", "18,6 triệu", "32 đơn đã thanh toán"], ["Đơn cần xử lý", "12", "4 đơn ưu tiên giao hôm nay"], ["Sản phẩm sắp hết", "3", "Cần bổ sung tồn kho"]] : [["Công việc hoàn thành", "24 / 36", "67% khối lượng dự án"], ["Sắp đến hạn", "5", "Trong 7 ngày tới"], ["Thành viên", "8", "3 nhóm đang cộng tác"]];
   return <div className="dashboard-shell workspace">
@@ -49,6 +50,9 @@ export function ManagementWorkspace({ template }: { template: TemplateItem }) {
         {visible.length === 0 && <p className="workspace-empty">Không tìm thấy kết quả phù hợp. Thử đổi từ khóa hoặc bộ lọc.</p>}
       </article>}
       {view === "resources" && <ResourcePanel crm={crm} shop={shop} />}
+      {view === "reports" && <WorkspaceReports rows={rows} crm={crm} shop={shop} />}
+      {view === "documents" && <WorkspaceDocuments crm={crm} shop={shop} />}
+      {view === "settings" && <WorkspaceSettings name={template.name} crm={crm} shop={shop} />}
       {(view === "calendar" || view === "overview") && <article className="workspace-panel"><h2>{crm ? "Lịch hẹn & chăm sóc" : shop ? "Lịch giao hàng & nhập kho" : "Mốc bàn giao sắp tới"}</h2><div className="workspace-agenda">{(crm ? [["07/09", "09:00", "Demo giải pháp cho Nova Retail", "Minh Anh · Google Meet"], ["08/09", "14:30", "Theo dõi đề xuất Mộc Studio", "Thảo Vy · Gọi điện"], ["10/09", "10:00", "Trao đổi hợp đồng Sun Hospitality", "Quang Huy · Văn phòng"]] : shop ? [["07/09", "08:00", "Nhập 120 sản phẩm bộ sưu tập mới", "Kho trung tâm · Phiếu NK028"], ["07/09", "15:00", "Bàn giao 8 đơn cho đơn vị vận chuyển", "Website & Shopee"], ["08/09", "09:00", "Kiểm kê nhóm sản phẩm sắp hết", "Kho trung tâm · 3 SKU"]] : [["07/09", "09:00", "Sprint planning · Tuần 37", "Toàn nhóm · 45 phút"], ["09/09", "14:00", "Review giao diện checkout", "Thiết kế & lập trình"], ["12/09", "16:00", "Bàn giao design system", "Minh Anh · Milestone 03"]]).map(([date, time, title, note]) => <div key={title}><b>{date}<small>{time}</small></b><span><strong>{title}</strong><small>{note}</small></span></div>)}</div></article>}
     </section>
   </div>;
