@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useScrollTheme } from "@/components/use-scroll-theme";
 import {
   homeContact,
   homeProjects,
@@ -392,6 +393,7 @@ function ProjectVisual({ visual }: { visual: string }) {
 }
 
 export function DevDesHome() {
+  const homeRef = useScrollTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [noticeOpen, setNoticeOpen] = useState(true);
   const [activeService, setActiveService] = useState<string | null>("website");
@@ -424,7 +426,7 @@ export function DevDesHome() {
   }, [menuOpen]);
 
   return (
-    <div className="dd-home" id="top">
+    <div className="dd-home" id="top" ref={homeRef}>
       <a className="dd-skip" href="#main-content">
         Bỏ qua điều hướng
       </a>

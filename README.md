@@ -8,7 +8,7 @@ Run `npm install`, then `npm run dev`. Production validation: `npm run lint` and
 
 - `app/page.tsx` renders `components/devdes-home.tsx`; styles live in `app/home.css` and use the `dd-` prefix.
 - `lib/home-content.ts` contains services, project filters, illustrative feedback, contact details, and each section's `backgroundTheme: "light" | "dark"`.
-- The header uses `mix-blend-mode: difference`. Section themes are fixed independently of the OS color scheme. Animations respect reduced motion; accordions support hover, click, touch, and keyboard.
+- `components/use-scroll-theme.ts` blends a shared page background between each section's target theme as the visitor scrolls. Sections become transparent, removing hard color boundaries. Text and header colors follow the shared background with contrast maintained through intermediate grays. Without JavaScript the fixed section themes remain as a fallback; reduced motion switches themes without interpolation. Accordions support hover, click, touch, and keyboard.
 - Projects link to the existing `/mau/[slug]` demos. The gallery and demo components remain available.
 
 ### Content to connect

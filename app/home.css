@@ -24,6 +24,47 @@
   background: var(--dd-bg);
   color: var(--dd-fg);
 }
+/* Sections share one background while scrolling; classes retain the target
+   themes and remain a readable fallback before JavaScript initializes. */
+.dd-home[data-scroll-theme-active] {
+  background: var(--dd-page-bg);
+  color: var(--dd-page-fg);
+}
+.dd-home[data-scroll-theme-active] :is(.theme-light, .theme-dark) {
+  --dd-bg: var(--dd-page-bg);
+  --dd-fg: var(--dd-page-fg);
+  --dd-muted: var(--dd-page-muted);
+  --dd-line: var(--dd-page-line);
+  background: transparent;
+  color: var(--dd-fg);
+}
+.dd-home[data-scroll-theme-active] .dd-header:not(.is-open) {
+  mix-blend-mode: normal;
+  background: var(--dd-page-bg);
+  color: var(--dd-page-fg);
+}
+.dd-home[data-scroll-theme-active] .dd-header-inner,
+.dd-home[data-scroll-theme-active] .dd-header-cta {
+  border-color: var(--dd-page-line);
+}
+.dd-home[data-scroll-theme-active] .dd-header-cta:hover {
+  background: var(--dd-page-fg);
+  color: var(--dd-page-bg);
+}
+.dd-home[data-scroll-theme-active]
+  :is(
+    .dd-hero-bottom p,
+    .dd-about-intro h2 > span,
+    .dd-testimonial > svg,
+    .dd-testimonial-controls i,
+    .dd-contact-title h2 span
+  ) {
+  color: var(--dd-muted);
+}
+.dd-home[data-scroll-theme-active] .dd-notice,
+.dd-home[data-scroll-theme-active] .dd-testimonial-person > span {
+  color: #101010;
+}
 .dd-home h1,
 .dd-home h2,
 .dd-home h3,
