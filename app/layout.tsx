@@ -12,16 +12,18 @@ const beVietnamPro = Be_Vietnam_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "webdao — Website xịn, làm nhanh, chạy mượt",
+  title: "DevDes.click — Design meets Development",
   description:
-    "Dịch vụ thiết kế và phát triển website cho startup, local brand và những người làm điều tử tế.",
+    "DevDes thiết kế và phát triển website, ứng dụng kinh doanh và phần mềm quản lý nội bộ cho tổ chức, doanh nghiệp.",
   keywords: ["thiết kế website", "lập trình web", "landing page", "Next.js"],
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="vi">
-      <body className={beVietnamPro.variable}>{children}</body>
+    <html lang="vi" className={beVietnamPro.variable}>
+      <body>{children}</body>
     </html>
   );
 }
