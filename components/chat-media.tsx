@@ -57,7 +57,7 @@ export function ChatComposer({ draft, onDraftChange, onSend, inputId, placeholde
   function toggleRecording() {
     if (isRecording) { recorder.current?.stop(); return; }
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) { setNotice("Trình duyệt này chưa hỗ trợ ghi âm."); return; }
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+    navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }).then((stream) => {
       const chunks: BlobPart[] = [];
       const mediaRecorder = new MediaRecorder(stream);
       recorder.current = mediaRecorder;
@@ -70,7 +70,13 @@ export function ChatComposer({ draft, onDraftChange, onSend, inputId, placeholde
         setIsRecording(false); recorder.current = null;
       };
       mediaRecorder.start(); setIsRecording(true); setNotice("Đang ghi âm — nhấn lại để dừng.");
-    }).catch(() => setNotice("Không thể dùng micro. Hãy cho phép quyền micro rồi thử lại."));
+    }).catch((error: unknown) => {
+      const name = error instanceof DOMException ? error.name : "UnknownError";
+      if (name === "NotAllowedError" || name === "SecurityError") setNotice("Chrome hoặc Windows đang chặn micro. Kiểm tra Quyền riêng tư > Microphone của Windows.");
+      else if (name === "NotFoundError") setNotice("Không tìm thấy micro. Hãy kết nối/chọn micro trong cài đặt âm thanh Windows.");
+      else if (name === "NotReadableError") setNotice("Micro đang được ứng dụng khác sử dụng. Hãy đóng Zoom, Teams hoặc ứng dụng ghi âm rồi thử lại.");
+      else setNotice(`Không thể khởi động micro (${name}). Hãy thử lại sau.`);
+    });
   }
   function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); if (!draft.trim() && !attachment) return; onSend(draft, attachment); onDraftChange(""); setAttachment(undefined); setNotice(""); setPanel(null); focusInput(); }
   const setSelectedAttachment = (next: ChatAttachment) => { setAttachment(next); setPanel(null); setNotice(""); focusInput(); };
