@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
+import { SupportChat } from "@/components/support-chat";
 import "./globals.css";
 import "./showcase.css";
 import "./catalog.css";
+import "./chat.css";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
@@ -24,7 +26,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="vi" className={beVietnamPro.variable}>
-      <body>{children}</body>
+      <body>{children}<SupportChat /></body>
     </html>
   );
 }
