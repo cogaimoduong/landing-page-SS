@@ -1,0 +1,2 @@
+/* Allow the message list, not the entire fixed-height workspace, to own scrolling. */
+.admin-chat{min-height:0;overflow:hidden}.admin-chat-log{min-height:0;overscroll-behavior:contain;scrollbar-gutter:stable}
