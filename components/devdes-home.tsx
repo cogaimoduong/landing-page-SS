@@ -36,8 +36,8 @@ function Brand({ onClick }: { onClick?: () => void }) {
     <a
       className="dd-brand"
       href="#top"
-      onClick={onClick}
-      aria-label="DevDes.click — Về đầu trang"
+      onClick={(event) => { event.preventDefault(); onClick?.(); window.dispatchEvent(new Event("devdes-open-chat")); }}
+      aria-label="Mở chat với DevDes"
     >
       <BrandLogo />
     </a>
