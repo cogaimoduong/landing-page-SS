@@ -5,6 +5,8 @@ import "./globals.css";
 import "./showcase.css";
 import "./catalog.css";
 import "./chat.css";
+import "./chat-media.css";
+import "./chat-template.css";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],

@@ -1,6 +1,13 @@
 import type { ChatMessage } from "@/lib/chat-demo";
 
-export type StoredChatMessage = ChatMessage & { createdAt: string };
+export type ChatAttachment = {
+  kind: "image" | "video" | "gif" | "sticker" | "audio" | "template";
+  url: string;
+  name?: string;
+  href?: string;
+};
+
+export type StoredChatMessage = ChatMessage & { createdAt: string; attachment?: ChatAttachment };
 
 const storageKey = "devdes-demo-chat-messages";
 export const chatChangedEvent = "devdes-demo-chat-changed";
@@ -24,6 +31,6 @@ export function saveChatMessages(messages: StoredChatMessage[]) {
   window.dispatchEvent(new Event(chatChangedEvent));
 }
 
-export function makeChatMessage(sender: ChatMessage["sender"], text: string): StoredChatMessage {
-  return { id: crypto.randomUUID(), sender, text, createdAt: new Date().toISOString() };
+export function makeChatMessage(sender: ChatMessage["sender"], text: string, attachment?: ChatAttachment): StoredChatMessage {
+  return { id: crypto.randomUUID(), sender, text, attachment, createdAt: new Date().toISOString() };
 }
