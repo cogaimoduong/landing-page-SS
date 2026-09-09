@@ -15,7 +15,7 @@ Run `npm install`, then `npm run dev`. Production validation: `npm run lint` and
 
 This repository has no CMS/backend. When one is connected, add a **Background Theme** select (`light`, `dark`) to each homepage block, and map it to `homeSections`. The defaults are Hero: light, Services: dark, Projects: dark, About: light, Footer: dark. This is a local typed configuration, not an implemented CMS admin field.
 
-The support-chat widget is currently a client-side demo: it does not persist messages. The agreed plan for a public visitor widget and protected admin Inbox is in [docs/chat-inbox-plan.md](docs/chat-inbox-plan.md).
+The support-chat widget and `/admin/inbox` currently form a browser-local demo: messages are retained only in that browser, not in a shared database. The agreed plan for a public visitor widget and protected admin Inbox is in [docs/chat-inbox-plan.md](docs/chat-inbox-plan.md).
 
 The supplied Google Drive logo currently requires sign-in, so the homepage uses a temporary DevDes.click wordmark. The logo strip uses demo brands and the feedback slider is explicitly illustrative; replace both with approved partner/client content. The email retains the original homepage address (`hello@webdao.vn`) until a new contact address is confirmed.
 

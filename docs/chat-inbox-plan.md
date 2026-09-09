@@ -5,7 +5,7 @@
 - Khách truy cập landing page **không cần đăng nhập** để nhắn tin qua widget chat.
 - Có một trang Inbox riêng cho người quản trị để xem và trả lời hội thoại, dự kiến đường dẫn `/admin/inbox`.
 - Inbox là khu vực nội bộ: cần đăng nhập/phân quyền trước khi đưa lên production. Không dùng việc "ẩn đường dẫn" thay cho xác thực.
-- Giai đoạn hiện tại giữ widget demo; tin nhắn đang chỉ nằm trong state của trình duyệt và phản hồi từ `lib/chat-demo.ts`.
+- Giai đoạn hiện tại có Inbox demo tại `/admin/inbox`; tin nhắn được lưu tạm trong `localStorage` của từng trình duyệt, chưa có cơ sở dữ liệu dùng chung.
 
 ## Luồng dự kiến
 
