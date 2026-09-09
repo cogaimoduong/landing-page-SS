@@ -108,8 +108,8 @@
   position: fixed;
   inset: 0 0 auto;
   z-index: 40;
-  color: #fff;
-  mix-blend-mode: difference;
+  color: var(--dd-black);
+  background: var(--dd-white);
 }
 .dd-header-inner {
   width: min(1440px, calc(100% - 112px));
@@ -119,36 +119,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 32px;
-  border-bottom: 1px solid #ffffff35;
+  border-bottom: 1px solid #d7d7d3;
 }
 .dd-brand {
   display: inline-flex;
-  gap: 11px;
+  flex-shrink: 0;
   align-items: center;
-  font-size: 25px;
-  font-weight: 700;
-  letter-spacing: -1.5px;
   white-space: nowrap;
-}
-.dd-brand-suffix {
-  font-weight: 400;
-}
-.dd-brand-mark {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  transform: rotate(-26deg);
-  width: 23px;
-  height: 28px;
-}
-.dd-brand-mark i {
-  height: 17px;
-  width: 5px;
-  border-radius: 1px;
-  background: currentColor;
-}
-.dd-brand-mark i:nth-child(2) {
-  height: 28px;
 }
 .dd-desktop-nav {
   display: flex;

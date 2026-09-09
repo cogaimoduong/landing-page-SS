@@ -2,9 +2,8 @@
 .catalog-page, .detail-page { min-height: 100vh; background: #f4f1e9; color: #151513; }
 .catalog-shell { width: min(1280px, calc(100% - 56px)); margin-inline: auto; }
 .catalog-nav { height: 86px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; border-bottom: 1px solid #cbc8c0; }
-.catalog-logo { font-size: 25px; font-weight: 800; letter-spacing: -1.8px; }
-.catalog-logo span { font-weight: 500; }
-.catalog-logo i { color: #7460ff; font-style: normal; }
+.catalog-logo { display: inline-flex; width: fit-content; }
+.catalog-logo.on-dark { color: #fafaf9; }
 .back-link, .catalog-contact { display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 700; }
 .catalog-contact { justify-self: end; padding: 13px 16px; color: white; background: #151513; }
 .catalog-hero { padding: 92px 0 72px; }

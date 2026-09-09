@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import { BrandLogo } from "@/components/brand-logo";
 import { useEffect, useRef, useState } from "react";
 import { useScrollTheme } from "@/components/use-scroll-theme";
 import {
@@ -38,14 +39,7 @@ function Brand({ onClick }: { onClick?: () => void }) {
       onClick={onClick}
       aria-label="DevDes.click — Về đầu trang"
     >
-      <span className="dd-brand-mark" aria-hidden="true">
-        <i />
-        <i />
-        <i />
-      </span>
-      <span>
-        DevDes<span className="dd-brand-suffix">.click</span>
-      </span>
+      <BrandLogo />
     </a>
   );
 }
