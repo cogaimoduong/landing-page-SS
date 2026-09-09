@@ -5,6 +5,7 @@ export type ChatAttachment = {
   url: string;
   name?: string;
   href?: string;
+  tone?: string;
 };
 
 export type StoredChatMessage = ChatMessage & { createdAt: string; attachment?: ChatAttachment };
