@@ -1,7 +1,7 @@
 import { DevicePreview } from "@/components/device-preview";
-import { TemplateLogo } from "@/components/template-logo";
+import { CatalogNav } from "@/components/catalog-nav";
 import { getTemplate, templates } from "@/lib/templates";
-import { ArrowLeft, ArrowUpRight, Check, Palette, PanelsTopLeft } from "lucide-react";
+import { ArrowUpRight, Check, Palette, PanelsTopLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const template = getTemplate(slug);
   if (!template) return {};
-  return { title: `${template.name} — Giao diện mẫu webdao`, description: template.description };
+  return { title: `${template.name} — Giao diện mẫu DevDes.click`, description: template.description };
 }
 
 export default async function TemplateDetailPage({ params }: Props) {
@@ -25,12 +25,8 @@ export default async function TemplateDetailPage({ params }: Props) {
   if (!template) notFound();
 
   return (
-    <main className="detail-page">
-      <nav className="catalog-nav catalog-shell">
-        <TemplateLogo />
-        <Link href="/giao-dien" className="back-link"><ArrowLeft size={16} /> Tất cả giao diện</Link>
-        <Link href="/#contact" className="catalog-contact">Chọn mẫu này <ArrowUpRight size={17} /></Link>
-      </nav>
+    <main className="detail-page devdes-detail">
+      <CatalogNav detail />
 
       <header className="detail-head catalog-shell">
         <div className="detail-title">

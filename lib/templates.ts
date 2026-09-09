@@ -1,4 +1,4 @@
-export type TemplateCategory = "rental" | "hotel" | "management" | "advertising";
+export type TemplateCategory = "rental" | "hotel" | "management" | "advertising" | "catalog";
 
 export type TemplateItem = {
   slug: string;
@@ -15,15 +15,21 @@ export type TemplateItem = {
   features: string[];
 };
 
-export const categories = [
-  { id: "all", label: "Tất cả", count: 12 },
-  { id: "rental", label: "Dịch vụ cho thuê", count: 3 },
-  { id: "hotel", label: "Khách sạn", count: 3 },
-  { id: "management", label: "Phần mềm quản lý", count: 3 },
-  { id: "advertising", label: "Website quảng cáo", count: 3 },
-] as const;
-
 export const templates: TemplateItem[] = [
+  {
+    slug: "folio-template-catalog",
+    category: "catalog",
+    categoryLabel: "Kho giao diện / Portfolio",
+    name: "Folio Catalog",
+    tagline: "Chọn một giao diện. Biến nó thành của bạn.",
+    description: "Mẫu website trưng bày bộ sưu tập giao diện với nền kem, điểm nhấn tím và typography khổ lớn. Phù hợp cho studio, thư viện sản phẩm số và portfolio sáng tạo.",
+    style: "Editorial / Kem & tím",
+    tone: "#e7e1f5",
+    accent: "#7460ff",
+    dark: "#151513",
+    image: "",
+    features: ["Trang giới thiệu bộ sưu tập", "Bộ lọc theo lĩnh vực", "Lưới giao diện & liên kết chi tiết", "Xem trước trên nhiều thiết bị", "Khu vực liên hệ nổi bật"],
+  },
   {
     slug: "ridenow-car-rental",
     category: "rental",
@@ -193,6 +199,18 @@ export const templates: TemplateItem[] = [
     features: ["Portfolio thương hiệu", "Case study nhận diện", "Gói chiến lược & thiết kế", "Giới thiệu đội ngũ", "Form trao đổi dự án"],
   },
 ];
+
+export const categories = ([
+  { id: "all", label: "Tất cả" },
+  { id: "rental", label: "Dịch vụ cho thuê" },
+  { id: "hotel", label: "Khách sạn" },
+  { id: "management", label: "Phần mềm quản lý" },
+  { id: "advertising", label: "Website quảng cáo" },
+  { id: "catalog", label: "Kho giao diện / Portfolio" },
+] as const).map((category) => ({
+  ...category,
+  count: category.id === "all" ? templates.length : templates.filter((template) => template.category === category.id).length,
+}));
 
 export function getTemplate(slug: string) {
   return templates.find((template) => template.slug === slug);

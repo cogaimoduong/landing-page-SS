@@ -12,11 +12,12 @@ export function TemplateGallery() {
   const visible = active === "all" ? templates : templates.filter((item) => item.category === active);
 
   return (
-    <section className="gallery-section catalog-shell">
+    <section className="gallery-section catalog-shell" id="collection" aria-label="Bộ sưu tập giao diện">
       <div className="filter-bar" aria-label="Lọc giao diện">
         {categories.map((category) => (
           <button
             className={active === category.id ? "active" : ""}
+            aria-pressed={active === category.id}
             key={category.id}
             onClick={() => setActive(category.id as Filter)}
           >
@@ -36,10 +37,17 @@ export function TemplateGallery() {
                   style={{ "--demo-accent": template.accent, "--demo-dark": template.dark, backgroundImage: template.image ? `linear-gradient(90deg, ${template.dark}dd 0%, ${template.dark}55 65%), url(${template.image})` : undefined } as React.CSSProperties}
                 >
                   <div className="mini-nav"><b>{template.name}</b><span>Menu&nbsp;&nbsp; About&nbsp;&nbsp; Contact</span></div>
-                  {template.category === "management" ? (
+                  {template.category === "catalog" ? (
+                    <div className="mini-catalog">
+                      <small>BỘ SƯU TẬP GIAO DIỆN</small>
+                      <strong>Chọn một giao diện.<br /><em>Biến nó thành của bạn.</em></strong>
+                      <div className="mini-catalog-filters"><span>Tất cả</span><span>Cho thuê</span><span>Khách sạn</span></div>
+                      <div className="mini-catalog-grid"><i /><i /><i /><i /></div>
+                    </div>
+                  ) : template.category === "management" ? (
                     <div className="mini-dashboard"><aside /><div><span /><span /><span /><section><i /><i /><i /></section></div></div>
                   ) : (
-                    <div className="mini-copy"><small>{template.categoryLabel}</small><strong>{template.tagline}</strong><button>Khám phá →</button></div>
+                    <div className="mini-copy"><small>{template.categoryLabel}</small><strong>{template.tagline}</strong><span className="mini-button">Khám phá →</span></div>
                   )}
                 </div>
               </div>

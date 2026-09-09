@@ -1,43 +1,38 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { TemplateGallery } from "@/components/template-gallery";
 import { TemplateLogo } from "@/components/template-logo";
-import { templates } from "@/lib/templates";
-import { ArrowLeft, ArrowUpRight, Sparkles } from "lucide-react";
+import { CatalogNav } from "@/components/catalog-nav";
+import { categories, templates } from "@/lib/templates";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Kho giao diện mẫu — webdao",
-  description: "Khám phá các giao diện website mẫu cho khách sạn, dịch vụ cho thuê, phần mềm quản lý và quảng cáo.",
+  title: "Kho giao diện — DevDes.click",
+  description: "Khám phá bộ sưu tập website mẫu của DevDes: cho thuê, khách sạn, quản lý, quảng cáo và portfolio. Xem thử và chọn giao diện cho thương hiệu của bạn.",
 };
 
 export default function TemplatesPage() {
   return (
-    <main className="catalog-page">
-      <nav className="catalog-nav catalog-shell">
-        <TemplateLogo />
-        <Link href="/" className="back-link"><ArrowLeft size={16} /> Về trang chính</Link>
-        <Link href="/#contact" className="catalog-contact">Tư vấn giao diện <ArrowUpRight size={17} /></Link>
-      </nav>
-
+    <main className="catalog-page devdes-catalog">
+      <CatalogNav />
       <header className="catalog-hero catalog-shell">
-        <div className="catalog-badge"><Sparkles size={14} /> 12 GIAO DIỆN ĐẦU TIÊN</div>
-        <h1>Chọn một giao diện.<br /><em>Biến nó thành của bạn.</em></h1>
+        <div className="catalog-eyebrow"><span>DEVDES® — BỘ SƯU TẬP GIAO DIỆN</span><span>DESIGN MEETS DEVELOPMENT</span></div>
+        <h1>Một khởi đầu tốt.<br /><span>Một website của bạn.</span></h1>
         <div className="catalog-intro">
-          <p>Khám phá giao diện mẫu theo từng lĩnh vực. Mỗi mẫu đều có thể tùy chỉnh màu sắc, nội dung và tính năng theo thương hiệu của bạn.</p>
-          <span><b>{templates.length}</b> mẫu đang có</span>
-          <span><b>40+</b> mẫu sắp ra mắt</span>
+          <a className="catalog-explore" href="#collection"><ArrowDown size={20} /><span>KHÁM PHÁ BỘ SƯU TẬP</span></a>
+          <p>Từ một ý tưởng đến một website có cá tính. Chọn giao diện bạn thích, chúng mình sẽ cùng tinh chỉnh để phù hợp với thương hiệu của bạn.</p>
+          <div className="catalog-count"><b>{String(templates.length).padStart(2, "0")}</b><span>GIAO DIỆN · {categories.length - 1} LĨNH VỰC</span></div>
         </div>
       </header>
-
+      <div className="catalog-collection-label catalog-shell"><span>(01 — BỘ SƯU TẬP)</span><span>CHỌN MẪU ĐỂ XEM & TRẢI NGHIỆM <ArrowUpRight size={14} /></span></div>
       <TemplateGallery />
-
-      <section className="catalog-cta">
+      <footer className="catalog-cta">
         <div className="catalog-shell">
-          <span>KHÔNG THẤY MẪU PHÙ HỢP?</span>
-          <h2>Tui thiết kế riêng<br />cho bạn một chiếc.</h2>
-          <Link href="/#contact">Kể tui nghe ý tưởng <ArrowUpRight /></Link>
+          <div className="catalog-footer-top"><span>(02 — CÙNG BẮT ĐẦU)</span><span>CÓ Ý TƯỞNG KHÁC?</span></div>
+          <Link href="/#contact" className="catalog-contact-title"><h2>Cùng làm nên<br /><span>điều khác biệt.</span></h2><ArrowUpRight /></Link>
+          <div className="catalog-footer-bottom"><TemplateLogo dark /><p>Thiết kế có tư duy. Phát triển có chiều sâu.</p><span>© 2026 DevDes.click</span></div>
         </div>
-      </section>
+      </footer>
     </main>
   );
 }
