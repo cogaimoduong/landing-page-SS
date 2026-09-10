@@ -2,9 +2,9 @@
 .support-chat button, .support-chat input { font: inherit; }
 .support-chat button { cursor: pointer; }
 .support-chat :is(button, input, a):focus-visible { outline: 2px solid #8b8500; outline-offset: 4px; }
-.support-chat-launcher { display: flex; align-items: center; justify-content: center; gap: 10px; margin-left: auto; min-height: 52px; padding: 14px 19px; border: 1px solid #363635; border-radius: 30px; background: #101010; color: #fff; box-shadow: 0 5px 24px #0002; font-size: 12px !important; position: relative; transition: transform .2s, background .2s; }
+.support-chat-launcher { display: flex; align-items: center; justify-content: center; margin-left: auto; width: 60px; height: 60px; padding: 9px; border: 1px solid #363635; border-radius: 30px; background: #101010; color: #fff; box-shadow: 0 5px 24px #0002; font-size: 12px !important; position: relative; transition: transform .2s, background .2s; }
 .support-chat-launcher:hover { background: #30302c; transform: translateY(-2px); }
-.support-chat-launcher > svg { color: #eeec22; }
+.support-chat-launcher > img { display: block; object-fit: contain; }
 .support-chat-unread { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #eeec22; border: 2px solid #101010; top: 2px; right: 10px; }
 .support-chat-panel { display: flex; flex-direction: column; width: 350px; height: 480px; max-height: calc(100dvh - 112px); margin-bottom: 12px; border: 1px solid #deded9; border-radius: 20px; background: #fafaf9; box-shadow: 0 16px 65px #0002; overflow: hidden; animation: chatAppear .2s ease-out; }
 .support-chat-header { display: flex; align-items: center; gap: 11px; background: #101010; color: #fafaf9; padding: 17px; flex-shrink: 0; }
@@ -48,7 +48,7 @@
 @media (max-width: 600px) {
   .support-chat { right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); }
   .support-chat-panel { width: min(350px, calc(100vw - 24px)); max-height: calc(100dvh - 94px); }
-  .support-chat-launcher { min-height: 48px; padding: 12px 16px; }
+  .support-chat-launcher { width: 56px; height: 56px; padding: 7px; }
   .support-chat-form input { font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
