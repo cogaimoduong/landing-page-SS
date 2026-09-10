@@ -6,9 +6,12 @@ export type ChatAttachment = {
   name?: string;
   href?: string;
   tone?: string;
+  animated?: boolean;
+  emoji?: string;
 };
 
-export type StoredChatMessage = ChatMessage & { createdAt: string; attachment?: ChatAttachment };
+export type ChatActor = ChatMessage["sender"];
+export type StoredChatMessage = ChatMessage & { createdAt: string; attachment?: ChatAttachment; reactions?: Partial<Record<ChatActor, string>> };
 
 const storageKey = "devdes-demo-chat-messages";
 export const chatChangedEvent = "devdes-demo-chat-changed";
@@ -34,4 +37,17 @@ export function saveChatMessages(messages: StoredChatMessage[]) {
 
 export function makeChatMessage(sender: ChatMessage["sender"], text: string, attachment?: ChatAttachment): StoredChatMessage {
   return { id: crypto.randomUUID(), sender, text, attachment, createdAt: new Date().toISOString() };
+}
+
+export function toggleChatReaction(messageId: string, actor: ChatActor, emoji: string) {
+  // Read the latest messages so reacting never overwrites a newer reply.
+  const messages = getStoredChatMessages();
+  if (!messages.some((message) => message.id === messageId)) return;
+  saveChatMessages(messages.map((message) => {
+    if (message.id !== messageId) return message;
+    const reactions = { ...message.reactions };
+    if (reactions[actor] === emoji) delete reactions[actor];
+    else reactions[actor] = emoji;
+    return { ...message, reactions };
+  }));
 }
