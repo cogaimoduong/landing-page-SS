@@ -89,6 +89,36 @@ export const homeProjects = [
     href: "https://loopix-demo.vercel.app/",
     label: "VIRTUAL TOUR / WEBSITE",
   },
+  {
+    slug: "bao-tq-admin",
+    name: "BAO TQ Admin",
+    caption: "Ứng dụng quản trị, theo dõi và khai thác dữ liệu đã thu thập.",
+    tags: ["App", "Interface Design"],
+    visual: "bao-tq-admin",
+    image: "/images/projects/bao-tq-admin.jpg",
+    href: "https://infomation-tq.vercel.app/",
+    label: "DATA MANAGEMENT / WEB APP",
+  },
+  {
+    slug: "kim-hien-van-tai",
+    name: "Kim Hiên & Văn Tài",
+    caption: "Thiệp cưới trực tuyến với hiệu ứng mở thiệp, album ảnh và lịch ngày vui.",
+    tags: ["Website", "Interface Design"],
+    visual: "kim-hien-van-tai",
+    image: "/images/projects/kim-hien-van-tai.jpg",
+    href: "https://thiepmoicuoikimhien.vercel.app/",
+    label: "WEDDING INVITATION / WEBSITE",
+  },
+  {
+    slug: "saint-cons",
+    name: "SaintCons",
+    caption: "Website giới thiệu doanh nghiệp thiết kế kiến trúc và thi công xây dựng tại Đồng Nai.",
+    tags: ["Website", "Interface Design"],
+    visual: "saint-cons",
+    image: "/images/projects/saint-cons.jpg",
+    href: "https://saint-cons.vercel.app/",
+    label: "ARCHITECTURE & CONSTRUCTION / WEBSITE",
+  },
 ];
 
 // Illustrative content, labelled in the UI; replace with approved client feedback.
