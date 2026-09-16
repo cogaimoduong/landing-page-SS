@@ -694,7 +694,7 @@ export function DevDesHome() {
               <p>
                 Mỗi ý tưởng, một cách thể hiện.
                 <br />
-                Khám phá những sản phẩm demo của chúng mình.
+                Khám phá những sản phẩm demo của chúng tôi.
               </p>
             </div>
             <div className="dd-project-toolbar">
@@ -776,16 +776,16 @@ export function DevDesHome() {
               </h2>
               <div>
                 <p>
-                  Chúng mình là DevDes — nơi tư duy thiết kế gặp kỹ thuật phát
+                  Chúng tôi là DevDes — nơi tư duy thiết kế gặp kỹ thuật phát
                   triển. Một đội ngũ gọn gàng, làm việc trực tiếp và quan tâm
                   đến từng chi tiết.
                 </p>
                 <p>
-                  Từ ý tưởng đầu tiên đến ngày ra mắt, chúng mình cùng bạn tạo
+                  Từ ý tưởng đầu tiên đến ngày ra mắt, chúng tôi cùng bạn tạo
                   nên website và ứng dụng vừa đẹp, vừa giải quyết đúng vấn đề.
                 </p>
                 <a className="dd-underlined" href="#contact">
-                  Làm quen với chúng mình <ArrowUpRight size={17} />
+                  Làm quen với chúng tôi <ArrowUpRight size={17} />
                 </a>
               </div>
             </div>
@@ -909,7 +909,7 @@ export function DevDesHome() {
               <p>
                 Có ý tưởng cho website hay ứng dụng?
                 <br />
-                Chúng mình sẵn sàng lắng nghe.
+                Chúng tôi sẵn sàng lắng nghe.
               </p>
               <a
                 className="dd-underlined"
