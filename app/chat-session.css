@@ -1,0 +1,31 @@
+.chat-email-form { padding: 26px 20px; display: grid; gap: 13px; color: #171715; }
+.chat-email-form h3 { font-size: 18px; }
+.chat-email-form p, .chat-email-form small { font-size: 11px; line-height: 1.9; color: #64645c; }
+.chat-email-form label { font-size: 12px; font-weight: 600; }
+.chat-email-form input { width: 100%; padding: 13px 12px; border: 1px solid #cecec4; background: #fff; border-radius: 9px; color: #171715; font: inherit; font-size: 14px; }
+.chat-email-form button, .chat-ended button { padding: 13px; border: 0; border-radius: 9px; color: #171715; background: #eeec22; font: inherit; font-size: 12px; cursor: pointer; }
+.chat-email-form .chat-secondary { background: #e9e9e1; }
+.chat-email-form button:disabled { opacity: .55; }
+.chat-session-note { padding: 24px; font-size: 12px; text-align: center; }
+.chat-session-error { margin: 10px 16px; color: #9a2727; font-size: 11px; line-height: 1.7; overflow-wrap: anywhere; }
+.chat-session-error button { border: 0; background: none; text-decoration: underline; color: inherit; cursor: pointer; }
+.chat-ended { padding: 18px; background: #f0f0e9; color: #33332e; font-size: 12px; line-height: 1.8; flex-shrink: 0; }
+.chat-ended p { margin: 6px 0 12px; font-size: 10px; }
+.chat-composer-fields { border: 0; min-width: 0; margin: 0; padding: 0; }
+.chat-composer-fields:disabled { opacity: .65; }
+.admin-login { max-width: 420px; margin: 60px auto; border-radius: 16px; background: #fff; }
+.admin-conversations { overflow-y: auto; }
+.admin-conversation { margin-bottom: 8px; background: transparent; }
+.admin-conversation.is-active { background: #e7e7df; }
+.admin-conversation > span:last-child { min-width: 0; }
+.admin-conversation strong { overflow-wrap: anywhere; }
+.admin-chat-header strong { overflow-wrap: anywhere; }
+.admin-pagination { display: flex; gap: 8px; margin: 16px 8px; }
+.admin-pagination button { padding: 7px 12px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; }
+.admin-pagination button:disabled { opacity: .4; cursor: default; }
+@media(max-width:680px) {
+  .admin-inbox-workspace { grid-template-rows: auto minmax(380px, 1fr); height: auto; }
+  .admin-conversations { display: block; max-height: 220px; border-right: 0; border-bottom: 1px solid #ddd; }
+  .admin-chat { height: 70dvh; min-height: 420px; }
+  .chat-email-form input { font-size: 16px; }
+}

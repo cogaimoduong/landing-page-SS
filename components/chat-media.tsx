@@ -22,7 +22,7 @@ export function ChatMessageBody({ message }: { message: StoredChatMessage }) {
 type ChatComposerProps = {
   draft: string;
   onDraftChange: (value: string) => void;
-  onSend: (text: string, attachment?: ChatAttachment) => void;
+  onSend: (text: string, attachment?: ChatAttachment) => Promise<boolean>;
   inputId: string;
   placeholder: string;
   className?: string;
@@ -32,6 +32,8 @@ export function ChatComposer({ draft, onDraftChange, onSend, inputId, placeholde
   const [panel, setPanel] = useState<"tools" | "emoji" | "gif" | "sticker" | "template" | null>(null);
   const [attachment, setAttachment] = useState<ChatAttachment>();
   const [notice, setNotice] = useState("");
+  const [sending, setSending] = useState(false);
+  const sendingRef = useRef(false);
   const [isRecording, setIsRecording] = useState(false);
   const input = useRef<HTMLInputElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -44,7 +46,7 @@ export function ChatComposer({ draft, onDraftChange, onSend, inputId, placeholde
     event.target.value = "";
     if (!file) return;
     if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) { setNotice("Chỉ hỗ trợ ảnh hoặc video."); return; }
-    if (file.size > maxMediaSize) { setNotice("Tệp tối đa 2,5 MB trong bản demo này."); return; }
+    if (file.size > maxMediaSize) { setNotice("Tệp tối đa 2,5 MB"); return; }
     const reader = new FileReader();
     reader.onload = () => { setAttachment({ kind: file.type.startsWith("video/") ? "video" : "image", url: String(reader.result), name: file.name }); setNotice(""); setPanel(null); };
     reader.readAsDataURL(file);
@@ -73,9 +75,18 @@ export function ChatComposer({ draft, onDraftChange, onSend, inputId, placeholde
       else setNotice(`Không thể khởi động micro (${name}). Hãy thử lại sau.`);
     });
   }
-  function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); if (!draft.trim() && !attachment) return; onSend(draft, attachment); onDraftChange(""); setAttachment(undefined); setNotice(""); setPanel(null); focusInput(); }
+  async function deliver(text: string, media?: ChatAttachment) {
+    if (sendingRef.current) return;
+    sendingRef.current = true; setSending(true);
+    try {
+      if (await onSend(text, media)) { onDraftChange(""); setAttachment(undefined); setNotice(""); setPanel(null); focusInput(); }
+      else setNotice("Chưa gửi được, nội dung vẫn được giữ để bạn thử lại");
+    } catch { setNotice("Mất kết nối, vui lòng thử gửi lại"); }
+    finally { sendingRef.current = false; setSending(false); }
+  }
+  function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); if (!draft.trim() && !attachment) return; void deliver(draft, attachment); }
   const setSelectedAttachment = (next: ChatAttachment) => { setAttachment(next); setPanel(null); setNotice(""); focusInput(); };
-  return <div className={`chat-media-composer ${className}`}>
+  return <fieldset disabled={sending} aria-busy={sending} className={`chat-media-composer chat-composer-fields ${className}`}>
     <input ref={fileInput} className="chat-file-input" type="file" accept="image/*,video/*" onChange={pickFile} />
     {attachment && <div className="chat-media-preview"><span>{attachment.kind === "image" || attachment.kind === "gif" || (attachment.kind === "sticker" && attachment.animated) ? <ChatMediaImage key={attachment.url} src={attachment.url} alt={attachment.name || "Xem trước ảnh"} emoji={attachment.emoji} /> : attachment.kind === "video" ? <video src={attachment.url} muted /> : attachment.kind === "audio" ? <audio src={attachment.url} controls /> : attachment.kind === "template" ? attachment.name : attachment.url}</span><button type="button" onClick={() => setAttachment(undefined)} aria-label="Bỏ tệp đính kèm"><X size={15} /></button></div>}
     {notice && <p className="chat-media-notice">{notice}</p>}
@@ -83,6 +94,6 @@ export function ChatComposer({ draft, onDraftChange, onSend, inputId, placeholde
     {(panel === "gif" || panel === "sticker") && <ChatMediaLibrary key={panel} initialTab={panel === "gif" ? "gif" : "animated"} onPick={setSelectedAttachment} onClose={() => setPanel(null)} />}
     {panel === "template" && <div className="chat-template-gallery" aria-label="Chọn mẫu giao diện">{templates.map((template) => <button type="button" key={template.slug} onClick={() => setSelectedAttachment({ kind: "template", url: template.image, name: template.name, href: `/giao-dien/${template.slug}`, tone: template.tone })}><span style={{ background: template.tone }}>{template.image && <img src={template.image} alt="" />}</span><strong>{template.name}</strong><small>{template.categoryLabel}</small></button>)}</div>}
     {panel === "emoji" && <div className="chat-media-emoji-picker"><EmojiPicker theme={Theme.LIGHT} width="100%" height={320} onEmojiClick={addEmoji} searchPlaceHolder="Tìm emoji" previewConfig={{ showPreview: false }} lazyLoadEmojis /></div>}
-    <form className="chat-media-form" onSubmit={submit}><button type="button" className={panel === "tools" ? "is-active" : ""} onClick={() => setPanel(panel === "tools" ? null : "tools")} aria-label="Thêm công cụ"><CirclePlus size={21} /></button><input ref={input} id={inputId} aria-label="Nội dung tin nhắn" placeholder={placeholder} value={draft} onChange={(event) => onDraftChange(event.target.value)} maxLength={1000} autoComplete="off" /><button type="button" className={panel === "emoji" ? "is-active" : ""} onClick={() => setPanel(panel === "emoji" ? null : "emoji")} aria-label="Chọn emoji"><Smile size={20} /></button>{draft.trim() || attachment ? <button type="submit" className="chat-media-send" aria-label="Gửi tin nhắn"><Send size={17} /></button> : <button type="button" className="chat-media-like" onClick={() => onSend("👍")} aria-label="Gửi lượt thích"><ThumbsUp size={20} fill="currentColor" /></button>}</form>
-  </div>;
+    <form className="chat-media-form" onSubmit={submit}><button type="button" className={panel === "tools" ? "is-active" : ""} onClick={() => setPanel(panel === "tools" ? null : "tools")} aria-label="Thêm công cụ"><CirclePlus size={21} /></button><input ref={input} id={inputId} aria-label="Nội dung tin nhắn" placeholder={placeholder} value={draft} onChange={(event) => onDraftChange(event.target.value)} maxLength={1000} autoComplete="off" /><button type="button" className={panel === "emoji" ? "is-active" : ""} onClick={() => setPanel(panel === "emoji" ? null : "emoji")} aria-label="Chọn emoji"><Smile size={20} /></button>{draft.trim() || attachment ? <button type="submit" className="chat-media-send" aria-label="Gửi tin nhắn"><Send size={17} /></button> : <button type="button" className="chat-media-like" onClick={() => void deliver("👍")} aria-label="Gửi lượt thích"><ThumbsUp size={20} fill="currentColor" /></button>}</form>
+  </fieldset>;
 }

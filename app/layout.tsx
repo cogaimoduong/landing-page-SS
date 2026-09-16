@@ -8,6 +8,7 @@ import "./chat.css";
 import "./chat-media.css";
 import "./chat-library.css";
 import "./chat-template.css";
+import "./chat-session.css";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
