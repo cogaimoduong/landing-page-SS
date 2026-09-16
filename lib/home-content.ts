@@ -23,9 +23,9 @@ export const homeServices = [
     id: "website",
     number: "01",
     title: "Website Development",
-    subtitle: "Một điểm chạm. Nhiều cơ hội.",
+    subtitle: "Một điểm chạm, nhiều cơ hội",
     description:
-      "Website dành cho doanh nghiệp muốn tạo dấu ấn và phát triển kinh doanh. Từ trang giới thiệu, thương mại điện tử đến nền tảng vận hành nội bộ — chỉn chu từ giao diện đến trải nghiệm.",
+      "Website dành cho doanh nghiệp muốn tạo dấu ấn và phát triển kinh doanh. Từ trang giới thiệu, thương mại điện tử đến nền tảng vận hành nội bộ — chỉn chu từ giao diện đến trải nghiệm",
     tags: [
       "UI/UX Design",
       "E-commerce",
@@ -38,9 +38,9 @@ export const homeServices = [
     id: "app",
     number: "02",
     title: "App Development",
-    subtitle: "Ý tưởng tốt. Vận hành thông minh.",
+    subtitle: "Ý tưởng tốt, vận hành thông minh",
     description:
-      "Ứng dụng giúp tổ chức kết nối khách hàng và quản lý công việc hiệu quả. Thiết kế theo quy trình thực tế, dễ sử dụng và sẵn sàng mở rộng cùng doanh nghiệp.",
+      "Ứng dụng giúp tổ chức kết nối khách hàng và quản lý công việc hiệu quả. Thiết kế theo quy trình thực tế, dễ sử dụng và sẵn sàng mở rộng cùng doanh nghiệp",
     tags: [
       "Product Design",
       "Business App",
@@ -62,7 +62,7 @@ export const homeProjects = [
   {
     slug: "sensescene",
     name: "Sense & Scene Studio",
-    caption: "Website studio sáng tạo về CGI, motion và trải nghiệm thị giác.",
+    caption: "Website studio sáng tạo về CGI, motion và trải nghiệm thị giác",
     tags: ["Website", "Interface Design"],
     visual: "sensescene",
     image: "/images/projects/sensescene.jpg",
@@ -72,7 +72,7 @@ export const homeProjects = [
   {
     slug: "vivui",
     name: "Ví Vui",
-    caption: "Ứng dụng ghi chép thu chi và đếm tiền mặt cá nhân.",
+    caption: "Ứng dụng ghi chép thu chi và đếm tiền mặt cá nhân",
     tags: ["App", "Interface Design"],
     visual: "vivui",
     image: "/images/projects/vivui.jpg",
@@ -82,7 +82,7 @@ export const homeProjects = [
   {
     slug: "loopix",
     name: "Loopix",
-    caption: "Website giới thiệu dịch vụ tham quan không gian 360°.",
+    caption: "Website giới thiệu dịch vụ tham quan không gian 360°",
     tags: ["Website", "Interface Design"],
     visual: "loopix",
     image: "/images/projects/loopix.jpg",
@@ -92,7 +92,7 @@ export const homeProjects = [
   {
     slug: "bao-tq-admin",
     name: "BAO TQ Admin",
-    caption: "Ứng dụng quản trị, theo dõi và khai thác dữ liệu đã thu thập.",
+    caption: "Ứng dụng quản trị, theo dõi và khai thác dữ liệu đã thu thập",
     tags: ["App", "Interface Design"],
     visual: "bao-tq-admin",
     image: "/images/projects/bao-tq-admin.jpg",
@@ -102,7 +102,7 @@ export const homeProjects = [
   {
     slug: "kim-hien-van-tai",
     name: "Kim Hiên & Văn Tài",
-    caption: "Thiệp cưới trực tuyến với hiệu ứng mở thiệp, album ảnh và lịch ngày vui.",
+    caption: "Thiệp cưới trực tuyến với hiệu ứng mở thiệp, album ảnh và lịch ngày vui",
     tags: ["Website", "Interface Design"],
     visual: "kim-hien-van-tai",
     image: "/images/projects/kim-hien-van-tai.jpg",
@@ -112,7 +112,7 @@ export const homeProjects = [
   {
     slug: "saint-cons",
     name: "SaintCons",
-    caption: "Website giới thiệu doanh nghiệp thiết kế kiến trúc và thi công xây dựng tại Đồng Nai.",
+    caption: "Website giới thiệu doanh nghiệp thiết kế kiến trúc và thi công xây dựng tại Đồng Nai",
     tags: ["Website", "Interface Design"],
     visual: "saint-cons",
     image: "/images/projects/saint-cons.jpg",
@@ -125,21 +125,21 @@ export const homeProjects = [
 export const homeTestimonials = [
   {
     quote:
-      "Một website đẹp là khởi đầu. Một trải nghiệm khiến khách hàng muốn quay lại mới là điều tạo nên khác biệt.",
+      "Một website đẹp là khởi đầu. Một trải nghiệm khiến khách hàng muốn quay lại mới là điều tạo nên khác biệt",
     name: "Góc nhìn thương hiệu",
     role: "Website doanh nghiệp",
     initials: "01",
   },
   {
     quote:
-      "Công cụ tốt giúp đội ngũ dành ít thời gian cho thao tác lặp lại, và nhiều thời gian hơn cho những việc thực sự có ý nghĩa.",
+      "Công cụ tốt giúp đội ngũ dành ít thời gian cho thao tác lặp lại, và nhiều thời gian hơn cho những việc thực sự có ý nghĩa",
     name: "Góc nhìn vận hành",
     role: "Ứng dụng quản lý nội bộ",
     initials: "02",
   },
   {
     quote:
-      "Từng chi tiết nhỏ đều góp phần tạo nên trải nghiệm lớn. Thiết kế và công nghệ cần cùng giải quyết một bài toán.",
+      "Từng chi tiết nhỏ đều góp phần tạo nên trải nghiệm lớn. Thiết kế và công nghệ cần cùng giải quyết một bài toán",
     name: "Góc nhìn sản phẩm",
     role: "Thiết kế trải nghiệm người dùng",
     initials: "03",

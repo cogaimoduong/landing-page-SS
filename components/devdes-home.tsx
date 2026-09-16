@@ -205,7 +205,7 @@ function Dashboard({ compact = false }: { compact?: boolean }) {
         <div className="dd-dash-heading">
           <div>
             <small>CHÀO BUỔI SÁNG, TEAM</small>
-            <h4>Mọi thứ trong tầm tay.</h4>
+            <h4>Mọi thứ trong tầm tay</h4>
           </div>
           <span>+ Tạo dự án</span>
         </div>
@@ -361,15 +361,15 @@ export function DevDesHome() {
             </div>
             <div className="dd-hero-stage">
               <h1 id="dd-hero-title">
-                <span>We design.</span>
+                <span>We design</span>
                 <span>
-                  You grow<span className="dd-title-dot">.</span>
+                  You grow
                 </span>
               </h1>
               <ChromeSculpture />
               <span className="dd-object-note">
-                A LITTLE ART.
-                <br />A LOT OF PURPOSE.
+                A LITTLE ART
+                <br />A LOT OF PURPOSE
               </span>
               {noticeOpen && (
                 <aside className="dd-notice">
@@ -377,8 +377,8 @@ export function DevDesHome() {
                     <Asterisk size={23} />
                   </div>
                   <div>
-                    <strong>Ý tưởng của bạn, bước tiến tiếp theo.</strong>
-                    <p>Cùng tạo nên một sản phẩm khác biệt.</p>
+                    <strong>Ý tưởng của bạn, bước tiến tiếp theo</strong>
+                    <p>Cùng tạo nên một sản phẩm khác biệt</p>
                     <a href="#contact">
                       Bắt đầu trò chuyện <ArrowUpRight size={13} />
                     </a>
@@ -394,9 +394,9 @@ export function DevDesHome() {
             </div>
             <div className="dd-hero-bottom">
               <p>
-                Thiết kế có chiều sâu. Công nghệ có mục đích.
+                Thiết kế có chiều sâu, công nghệ có mục đích
                 <br />
-                Website & ứng dụng đưa doanh nghiệp tiến xa.
+                Website & ứng dụng đưa doanh nghiệp tiến xa
               </p>
               <a className="dd-pill dd-pill-dark" href="#work">
                 Khám phá dự án <ArrowUpRight size={17} />
@@ -442,14 +442,14 @@ export function DevDesHome() {
             <div className="dd-section-heading">
               <h2 id="dd-services-title">
                 Precision —<br />
-                <span>Crafted Designs.</span>
+                <span>Crafted Designs</span>
               </h2>
               <p>
-                Hai thế mạnh. Một mục tiêu.
+                Hai thế mạnh, một mục tiêu
                 <br />
                 Biến bài toán của doanh nghiệp thành
                 <br className="dd-desktop-break" /> những trải nghiệm số hiệu
-                quả.
+                quả
               </p>
             </div>
             <div className="dd-service-list">
@@ -507,7 +507,7 @@ export function DevDesHome() {
                             <strong>
                               Make it
                               <br />
-                              <em>matter.</em>
+                              <em>matter</em>
                               <Asterisk />
                             </strong>
                             <small>DESIGNED TO MAKE A DIFFERENCE ↗</small>
@@ -549,12 +549,12 @@ export function DevDesHome() {
             </div>
             <div className="dd-section-heading">
               <h2 id="dd-work-title">
-                Made to stand out<span>.</span>
+                Made to stand out
               </h2>
               <p>
-                Mỗi ý tưởng, một cách thể hiện.
+                Mỗi ý tưởng, một cách thể hiện
                 <br />
-                Khám phá những dự án chúng tôi đã thực hiện.
+                Khám phá những dự án chúng tôi đã thực hiện
               </p>
             </div>
             <div className="dd-project-toolbar">
@@ -611,7 +611,7 @@ export function DevDesHome() {
               ))}
             </div>
             <div className="dd-work-bottom">
-              <span>YOUR NEXT PROJECT COULD BE HERE.</span>
+              <span>YOUR NEXT PROJECT COULD BE HERE</span>
               <Link className="dd-pill dd-pill-outline" href="/giao-dien">
                 Xem toàn bộ giao diện <ArrowUpRight size={17} />
               </Link>
@@ -632,19 +632,19 @@ export function DevDesHome() {
             </div>
             <div className="dd-about-intro">
               <h2 id="dd-about-title">
-                Small team.
+                Small team
                 <br />
-                Big possibilities<span>.</span>
+                Big possibilities
               </h2>
               <div>
                 <p>
                   Chúng tôi là DevDes — nơi tư duy thiết kế gặp kỹ thuật phát
                   triển. Một đội ngũ gọn gàng, làm việc trực tiếp và quan tâm
-                  đến từng chi tiết.
+                  đến từng chi tiết
                 </p>
                 <p>
                   Từ ý tưởng đầu tiên đến ngày ra mắt, chúng tôi cùng bạn tạo
-                  nên website và ứng dụng vừa đẹp, vừa giải quyết đúng vấn đề.
+                  nên website và ứng dụng vừa đẹp, vừa giải quyết đúng vấn đề
                 </p>
                 <a className="dd-underlined" href="#contact">
                   Làm quen với chúng tôi <ArrowUpRight size={17} />
@@ -657,9 +657,9 @@ export function DevDesHome() {
                   <Asterisk strokeWidth={1} />
                 </div>
                 <span>
-                  GOOD DESIGN.
+                  GOOD DESIGN
                   <br />
-                  BETTER TOGETHER.
+                  BETTER TOGETHER
                 </span>
                 <small>Góc nhìn trải nghiệm · Nội dung minh họa</small>
               </div>
@@ -736,7 +736,7 @@ export function DevDesHome() {
             <h2>
               Let’s make
               <br />
-              <span>something great.</span>
+              <span>something great</span>
             </h2>
             <span className="dd-contact-arrow">
               <ArrowUpRight strokeWidth={1} />
@@ -746,9 +746,9 @@ export function DevDesHome() {
             <div className="dd-footer-brand">
               <Brand />
               <p>
-                Thiết kế có chiều sâu.
+                Thiết kế có chiều sâu
                 <br />
-                Công nghệ có mục đích.
+                Công nghệ có mục đích
               </p>
             </div>
             <div>
@@ -767,11 +767,11 @@ export function DevDesHome() {
               </Link>
             </div>
             <div className="dd-footer-invitation">
-              <h3>MỌI DỰ ÁN BẮT ĐẦU TỪ MỘT LỜI CHÀO.</h3>
+              <h3>MỌI DỰ ÁN BẮT ĐẦU TỪ MỘT LỜI CHÀO</h3>
               <p>
                 Có ý tưởng cho website hay ứng dụng?
                 <br />
-                Chúng tôi sẵn sàng lắng nghe.
+                Chúng tôi sẵn sàng lắng nghe
               </p>
               <a
                 className="dd-underlined"
@@ -783,7 +783,7 @@ export function DevDesHome() {
           </div>
           <div className="dd-footer-bottom">
             <span>© 2026 DevDes.click</span>
-            <span>DESIGN WITH INTENT. BUILD WITH CARE.</span>
+            <span>DESIGN WITH INTENT · BUILD WITH CARE</span>
             <a href="#top">
               Về đầu trang <ArrowUpRight size={13} />
             </a>
