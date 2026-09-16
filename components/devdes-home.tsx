@@ -13,10 +13,10 @@ import {
   Command,
   Layers,
   Menu,
-  Plus,
   Quote,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
 import { useEffect, useRef, useState } from "react";
@@ -259,133 +259,6 @@ function Dashboard({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function ProjectVisual({ visual }: { visual: string }) {
-  if (visual === "flowdesk")
-    return (
-      <div className="dd-flowdesk-scene">
-        <span className="dd-scene-label">LESS BUSYWORK. MORE FLOW.</span>
-        <Dashboard />
-        <span className="dd-scene-caption">Designed for a better workday.</span>
-      </div>
-    );
-  if (visual === "muse")
-    return (
-      <div className="dd-muse-scene">
-        <div className="dd-muse-top">
-          <b>muse®</b>
-          <span>INDEPENDENT DESIGN STUDIO</span>
-          <ArrowUpRight size={22} />
-        </div>
-        <div className="dd-muse-body">
-          <span>
-            Good things
-            <br />
-            take <em>shape.</em>
-          </span>
-          <div className="dd-muse-shape">
-            <i />
-            <i />
-            <i />
-            <i />
-          </div>
-        </div>
-        <div className="dd-muse-bottom">
-          <span>STRATEGY. IDENTITY. DIGITAL.</span>
-          <span>© MUSE STUDIO</span>
-        </div>
-      </div>
-    );
-  if (visual === "minto")
-    return (
-      <div className="dd-minto-scene">
-        <span className="dd-minto-word">
-          minto<span>®</span>
-        </span>
-        <div className="dd-phone">
-          <div className="dd-phone-island" />
-          <div className="dd-phone-top">
-            9:41 <span>••• ▰</span>
-          </div>
-          <div className="dd-phone-greeting">
-            <span>Xin chào, Minh 👋</span>
-            <b>Cửa hàng của bạn.</b>
-          </div>
-          <div className="dd-phone-balance">
-            <span>Doanh thu hôm nay</span>
-            <strong>
-              12.580.000<small>đ</small>
-            </strong>
-            <em>↗ 18,6% so với hôm qua</em>
-            <div className="dd-phone-graph">
-              {[26, 44, 33, 55, 42, 70, 56, 84, 68, 98].map((h, i) => (
-                <i key={i} style={{ height: `${h}%` }} />
-              ))}
-            </div>
-          </div>
-          <div className="dd-phone-numbers">
-            <span>
-              Đơn hàng<b>48</b>
-            </span>
-            <span>
-              Sản phẩm<b>126</b>
-            </span>
-          </div>
-          <div className="dd-phone-order">
-            <b>Đơn hàng mới</b>
-            <span>Xem tất cả →</span>
-          </div>
-          {["Áo thun Essential", "Túi canvas Everyday"].map((name, i) => (
-            <div className="dd-phone-item" key={name}>
-              <i>{i ? "◫" : "✳"}</i>
-              <span>
-                {name}
-                <small>Vừa xong · Đã thanh toán</small>
-              </span>
-              <Check size={12} />
-            </div>
-          ))}
-          <div className="dd-phone-bottom">
-            <Layers size={16} />
-            <Circle size={16} />
-            <Plus size={16} />
-            <Menu size={16} />
-          </div>
-        </div>
-        <span className="dd-minto-note">
-          Small business.
-          <br />
-          Big possibilities.
-        </span>
-      </div>
-    );
-  return (
-    <div className="dd-aurelia-scene">
-      <div className="dd-aurelia-browser">
-        <div className="dd-aurelia-nav">
-          <b>AURELIA</b>
-          <span>THE RESORT &nbsp;&nbsp; EXPERIENCES</span>
-          <span>BOOK YOUR STAY ↗</span>
-        </div>
-        <div className="dd-aurelia-copy">
-          <small>A SLOWER KIND OF LUXURY</small>
-          <strong>
-            Somewhere
-            <br />
-            you belong.
-          </strong>
-          <span>
-            Discover your quiet escape <ArrowUpRight size={12} />
-          </span>
-        </div>
-        <div className="dd-aurelia-bottom">
-          <span>10°46′ N &nbsp; 106°41′ E</span>
-          <span>SCROLL TO EXPLORE ↓</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function DevDesHome() {
   const homeRef = useScrollTheme();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -430,7 +303,7 @@ export function DevDesHome() {
           <nav className="dd-desktop-nav" aria-label="Điều hướng chính">
             <a href="#services">Dịch vụ</a>
             <a href="#work">
-              Dự án <sup>04</sup>
+              Dự án <sup>{String(homeProjects.length).padStart(2, "0")}</sup>
             </a>
             <a href="#about">Về DevDes</a>
             <Link href="/giao-dien">
@@ -534,7 +407,7 @@ export function DevDesHome() {
               </a>
             </div>
             <div className="dd-partner-heading">
-              <span>THƯƠNG HIỆU TRONG CÁC BẢN DEMO</span>
+              <span>DỰ ÁN ĐÃ THỰC HIỆN</span>
               <span>IDEAS INTO EXPERIENCES ↘</span>
             </div>
           </div>
@@ -546,22 +419,9 @@ export function DevDesHome() {
                   key={group}
                   aria-hidden={group === 1 ? true : undefined}
                 >
-                  <span className="dd-partner-aurelia">
-                    AURELIA<span>HOTELS & RESORTS</span>
-                  </span>
-                  <span className="dd-partner-flow">
-                    <Command /> flowdesk
-                  </span>
-                  <span className="dd-partner-muse">muse®</span>
-                  <span className="dd-partner-orbit">
-                    <Circle /> orbit
-                  </span>
-                  <span className="dd-partner-minto">
-                    minto<span>®</span>
-                  </span>
-                  <span className="dd-partner-nestly">
-                    <Layers /> nestly
-                  </span>
+                  {homeProjects.map((project) => (
+                    <span key={project.slug}>{project.name}</span>
+                  ))}
                 </div>
               ))}
             </div>
@@ -685,7 +545,7 @@ export function DevDesHome() {
               <span className="dd-eyebrow">
                 <i /> SELECTED WORK
               </span>
-              <span className="dd-section-index">CONCEPTS & DEMOS / 2026</span>
+              <span className="dd-section-index">SELECTED PROJECTS</span>
             </div>
             <div className="dd-section-heading">
               <h2 id="dd-work-title">
@@ -694,7 +554,7 @@ export function DevDesHome() {
               <p>
                 Mỗi ý tưởng, một cách thể hiện.
                 <br />
-                Khám phá những sản phẩm demo của chúng tôi.
+                Khám phá những dự án chúng tôi đã thực hiện.
               </p>
             </div>
             <div className="dd-project-toolbar">
@@ -707,7 +567,7 @@ export function DevDesHome() {
                     onClick={() => setFilter(item)}
                   >
                     {item}
-                    {item === "All" && <sup>04</sup>}
+                    {item === "All" && <sup>{String(homeProjects.length).padStart(2, "0")}</sup>}
                   </button>
                 ))}
               </div>
@@ -723,12 +583,14 @@ export function DevDesHome() {
                 >
                   <Link
                     className="dd-project-image"
-                    href={`/mau/${project.slug}`}
-                    aria-label={`Khám phá demo ${project.name}`}
+                    href={project.href} target="_blank" rel="noopener noreferrer"
+                    aria-label={`Xem website ${project.name} (mở trong tab mới)`}
                   >
-                    <ProjectVisual visual={project.visual} />
+                    <div className="dd-project-preview">
+                      <Image src={project.image} alt={project.name} fill sizes="(max-width: 760px) 100vw, 55vw" />
+                    </div>
                     <span className="dd-project-open">
-                      Khám phá demo <ArrowUpRight size={17} />
+                      Xem website <ArrowUpRight size={17} />
                     </span>
                     <span className="dd-project-corner">
                       <ArrowUpRight size={21} />
@@ -737,7 +599,7 @@ export function DevDesHome() {
                   <div className="dd-project-info">
                     <div>
                       <h3>
-                        <Link href={`/mau/${project.slug}`}>
+                        <Link href={project.href} target="_blank" rel="noopener noreferrer">
                           {project.name}
                         </Link>
                       </h3>

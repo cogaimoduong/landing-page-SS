@@ -712,6 +712,17 @@
 .dd-project-image:hover > div {
   transform: scale(1.035);
 }
+.dd-project-preview {
+  position: relative;
+}
+.dd-project .dd-project-image {
+  height: auto;
+  aspect-ratio: 36 / 25;
+}
+.dd-project-preview img {
+  object-fit: cover;
+  object-position: top;
+}
 .dd-project-muse .dd-project-image,
 .dd-project-minto .dd-project-image {
   height: 370px;
