@@ -1,4 +1,4 @@
-export type TemplateCategory = "rental" | "hotel" | "management" | "advertising" | "catalog";
+export type TemplateCategory = "rental" | "hotel" | "management" | "advertising" | "catalog" | "fnb";
 
 export type TemplateItem = {
   slug: string;
@@ -16,6 +16,30 @@ export type TemplateItem = {
 };
 
 export const templates: TemplateItem[] = [
+  {
+    slug: "lua-viet-restaurant", category: "fnb", categoryLabel: "F&B / Nhà hàng",
+    name: "Lửa Việt", tagline: "Vị Việt, kể bằng lửa",
+    description: "Nhà hàng Việt đương đại với sắc nâu trầm, thực đơn theo mùa và trải nghiệm đặt bàn",
+    style: "Nhà hàng / Sang trọng", tone: "#efe6d7", accent: "#b86d40", dark: "#26251f",
+    image: "/images/templates/restaurant.jpg",
+    features: ["Thực đơn lọc theo món", "Câu chuyện nhà hàng", "Thông tin giờ mở cửa", "Form đặt bàn minh họa"],
+  },
+  {
+    slug: "com-nha-eatery", category: "fnb", categoryLabel: "F&B / Quán ăn",
+    name: "Cơm Nhà", tagline: "Một bữa ngon, một ngày vui",
+    description: "Quán cơm Việt với tông vàng ấm, thực đơn dễ xem và lựa chọn món yêu thích",
+    style: "Quán ăn / Gần gũi", tone: "#fff4d7", accent: "#b73c26", dark: "#3c291d",
+    image: "/images/templates/eatery.jpg",
+    features: ["Thực đơn & giá món", "Lọc món mặn, rau và canh", "Danh sách món đã chọn", "Form giữ bàn minh họa"],
+  },
+  {
+    slug: "moc-coffee", category: "fnb", categoryLabel: "F&B / Cà phê",
+    name: "Mộc Coffee", tagline: "Chậm một nhịp, thơm một ngày",
+    description: "Quán cà phê với tông xanh olive, câu chuyện hạt rang và thực đơn đồ uống, bánh ngọt",
+    style: "Cà phê / Tự nhiên", tone: "#f1efdf", accent: "#566842", dark: "#293428",
+    image: "/images/templates/coffee.jpg",
+    features: ["Thực đơn đồ uống & bánh", "Lọc theo nhóm sản phẩm", "Câu chuyện cà phê", "Form hẹn chỗ minh họa"],
+  },
   {
     slug: "folio-template-catalog",
     category: "catalog",
@@ -204,6 +228,7 @@ export const categories = ([
   { id: "all", label: "Tất cả" },
   { id: "rental", label: "Dịch vụ cho thuê" },
   { id: "hotel", label: "Khách sạn" },
+  { id: "fnb", label: "F&B / Nhà hàng & quán ăn" },
   { id: "management", label: "Phần mềm quản lý" },
   { id: "advertising", label: "Website quảng cáo" },
   { id: "catalog", label: "Kho giao diện / Portfolio" },

@@ -58,7 +58,20 @@ export const projectFilters = [
   "Interface Design",
 ] as const;
 export type ProjectFilter = (typeof projectFilters)[number];
-export const homeProjects = [
+type HomeProject = {
+  slug: string;
+  name: string;
+  caption: string;
+  introduction?: string;
+  tags: string[];
+  visual: string;
+  image: string;
+  href: string;
+  label: string;
+};
+
+// Add each project's longer introduction when the copy is ready.
+export const homeProjects: HomeProject[] = [
   {
     slug: "sensescene",
     name: "Sense & Scene Studio",
@@ -91,7 +104,7 @@ export const homeProjects = [
   },
   {
     slug: "bao-tq-admin",
-    name: "BAO TQ Admin",
+    name: "BXH tổng hợp",
     caption: "Ứng dụng quản trị, theo dõi và khai thác dữ liệu đã thu thập",
     tags: ["App", "Interface Design"],
     visual: "bao-tq-admin",

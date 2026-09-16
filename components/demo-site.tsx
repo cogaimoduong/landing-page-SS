@@ -19,6 +19,7 @@ import { DemoSections } from "./demo-sections";
 import { ManagementWorkspace } from "./management-demo";
 import { ServiceCatalog } from "./service-catalog";
 import { HospitalityShowcase, AgencyPortfolio } from "./topic-showcase";
+import { FoodDemo } from "./food-demo";
 
 export function DemoSite({ template }: { template: TemplateItem }) {
   const style = {
@@ -38,6 +39,7 @@ export function DemoSite({ template }: { template: TemplateItem }) {
       {template.category === "hotel" && <HotelDemo template={template} />}
       {template.category === "management" && <ManagementWorkspace template={template} />}
       {template.category === "advertising" && <AdvertisingDemo template={template} />}
+      {template.category === "fnb" && <FoodDemo template={template} />}
     </main>
   );
 }

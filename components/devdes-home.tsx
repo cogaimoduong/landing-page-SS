@@ -575,10 +575,10 @@ export function DevDesHome() {
                 {String(visibleProjects.length).padStart(2, "0")} dự án
               </span>
             </div>
-            <div className="dd-project-grid" key={filter}>
-              {visibleProjects.map((project) => (
+            <div className="dd-project-list" key={filter}>
+              {visibleProjects.map((project, index) => (
                 <article
-                  className={`dd-project dd-project-${project.visual}`}
+                  className={`dd-project dd-project-row dd-project-${project.visual}`}
                   key={project.slug}
                 >
                   <Link
@@ -596,16 +596,18 @@ export function DevDesHome() {
                       <ArrowUpRight size={21} />
                     </span>
                   </Link>
-                  <div className="dd-project-info">
-                    <div>
-                      <h3>
-                        <Link href={project.href} target="_blank" rel="noopener noreferrer">
-                          {project.name}
-                        </Link>
-                      </h3>
-                      <p>{project.caption}</p>
-                    </div>
-                    <span>{project.label}</span>
+                  <div className="dd-project-copy">
+                    <span className="dd-project-kicker">{String(index + 1).padStart(2, "0")} / {project.label}</span>
+                    <h3>
+                      <Link href={project.href} target="_blank" rel="noopener noreferrer">
+                        {project.name}
+                      </Link>
+                    </h3>
+                    <p>{project.caption}</p>
+                    {project.introduction && <p className="dd-project-introduction">{project.introduction}</p>}
+                    <a className="dd-underlined dd-project-visit" href={project.href} target="_blank" rel="noopener noreferrer">
+                      Xem website <ArrowUpRight size={17} />
+                    </a>
                   </div>
                 </article>
               ))}
