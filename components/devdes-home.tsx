@@ -19,7 +19,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useScrollTheme } from "@/components/use-scroll-theme";
 import {
   homeContact,
@@ -41,6 +41,22 @@ function Brand({ onClick }: { onClick?: () => void }) {
     >
       <BrandLogo />
     </a>
+  );
+}
+
+function ProjectMobileArtwork({ name, accent, dark }: { name: string; accent: string; dark: string }) {
+  return (
+    <div className="dd-project-mobile-scene" style={{ "--project-app-accent": accent, "--project-app-dark": dark } as CSSProperties} aria-hidden="true">
+      <div className="dd-project-mobile-phone">
+        <i className="dd-project-mobile-notch" />
+        <header><small>ỨNG DỤNG ĐIỆN THOẠI</small><b>{name}</b></header>
+        <span className="dd-project-mobile-status">ĐANG PHÁT TRIỂN</span>
+        <section><small>TỔNG QUAN HÔM NAY</small><strong>12</strong><span>mục đang theo dõi</span></section>
+        <div className="dd-project-mobile-stats"><b>86%</b><i /><b>24</b></div>
+        <div className="dd-project-mobile-list"><i /><i /><i /></div>
+        <footer><i /><i className="active" /><i /></footer>
+      </div>
+    </div>
   );
 }
 
@@ -583,14 +599,14 @@ export function DevDesHome() {
                 >
                   <Link
                     className="dd-project-image"
-                    href={project.href} target="_blank" rel="noopener noreferrer"
-                    aria-label={`Xem website ${project.name} (mở trong tab mới)`}
+                    href={project.href} target={project.external ? "_blank" : undefined} rel={project.external ? "noopener noreferrer" : undefined}
+                    aria-label={`${project.linkLabel} ${project.name}${project.external ? " (mở trong tab mới)" : ""}`}
                   >
                     <div className="dd-project-preview">
-                      <Image src={project.image} alt={project.name} fill sizes="(max-width: 760px) 100vw, 55vw" />
+                      {project.template.sourceKind === "app" ? <ProjectMobileArtwork name={project.name} accent={project.template.accent} dark={project.template.dark} /> : <Image src={project.image} alt={project.name} fill sizes="(max-width: 760px) 100vw, 55vw" />}
                     </div>
                     <span className="dd-project-open">
-                      Xem website <ArrowUpRight size={17} />
+                      {project.linkLabel} <ArrowUpRight size={17} />
                     </span>
                     <span className="dd-project-corner">
                       <ArrowUpRight size={21} />
@@ -599,15 +615,16 @@ export function DevDesHome() {
                   <div className="dd-project-copy">
                     <span className="dd-project-kicker">{String(index + 1).padStart(2, "0")} / {project.label}</span>
                     <h3>
-                      <Link href={project.href} target="_blank" rel="noopener noreferrer">
+                      <Link href={project.href} target={project.external ? "_blank" : undefined} rel={project.external ? "noopener noreferrer" : undefined}>
                         {project.name}
                       </Link>
                     </h3>
                     <p>{project.caption}</p>
+                    {project.inDevelopment && <span className="dd-project-development">App đang trong quá trình phát triển</span>}
                     {project.introduction && <p className="dd-project-introduction">{project.introduction}</p>}
-                    <a className="dd-underlined dd-project-visit" href={project.href} target="_blank" rel="noopener noreferrer">
-                      Xem website <ArrowUpRight size={17} />
-                    </a>
+                    <Link className="dd-underlined dd-project-visit" href={project.href} target={project.external ? "_blank" : undefined} rel={project.external ? "noopener noreferrer" : undefined}>
+                      {project.linkLabel} <ArrowUpRight size={17} />
+                    </Link>
                   </div>
                 </article>
               ))}

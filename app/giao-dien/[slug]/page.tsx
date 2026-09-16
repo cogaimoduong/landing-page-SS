@@ -33,6 +33,7 @@ export default async function TemplateDetailPage({ params }: Props) {
           <span>{template.categoryLabel} · {template.style}</span>
           <h1>{template.name}</h1>
           <p>{template.description}</p>
+          {template.inDevelopment && <small className="detail-development-note">App đang trong quá trình phát triển</small>}
         </div>
         <div className="detail-facts">
           <div><Palette /><span>MÀU CHỦ ĐẠO</span><b className="color-dot" style={{ background: template.accent }} /></div>
@@ -42,7 +43,7 @@ export default async function TemplateDetailPage({ params }: Props) {
 
       <section className="preview-section catalog-shell">
         <div className="preview-instruction"><span>LIVE PREVIEW</span><p>Chọn thiết bị bên dưới để xem giao diện thay đổi như thế nào.</p></div>
-        <DevicePreview slug={template.slug} name={template.name} />
+        <DevicePreview slug={template.slug} name={template.name} app={template.sourceKind === "app"} />
       </section>
 
       <section className="detail-bottom catalog-shell">

@@ -1,4 +1,6 @@
-export type TemplateCategory = "rental" | "hotel" | "management" | "advertising" | "catalog" | "fnb";
+import { projectSources, type ProjectSourceKind } from "./project-sources";
+
+export type TemplateCategory = "rental" | "hotel" | "management" | "advertising" | "catalog" | "fnb" | "project";
 
 export type TemplateItem = {
   slug: string;
@@ -13,9 +15,11 @@ export type TemplateItem = {
   dark: string;
   image: string;
   features: string[];
+  sourceKind?: ProjectSourceKind;
+  inDevelopment?: boolean;
 };
 
-export const templates: TemplateItem[] = [
+const coreTemplates: TemplateItem[] = [
   {
     slug: "lua-viet-restaurant", category: "fnb", categoryLabel: "F&B / Nhà hàng",
     name: "Lửa Việt", tagline: "Vị Việt, kể bằng lửa",
@@ -224,11 +228,21 @@ export const templates: TemplateItem[] = [
   },
 ];
 
+const projectTemplates: TemplateItem[] = projectSources.map((project) => ({
+  ...project.template,
+  category: "project",
+  image: project.image,
+  inDevelopment: project.inDevelopment || project.template.inDevelopment,
+}));
+
+export const templates: TemplateItem[] = [...projectTemplates, ...coreTemplates];
+
 export const categories = ([
   { id: "all", label: "Tất cả" },
   { id: "rental", label: "Dịch vụ cho thuê" },
   { id: "hotel", label: "Khách sạn" },
   { id: "fnb", label: "F&B / Nhà hàng & quán ăn" },
+  { id: "project", label: "Từ dự án thực tế" },
   { id: "management", label: "Phần mềm quản lý" },
   { id: "advertising", label: "Website quảng cáo" },
   { id: "catalog", label: "Kho giao diện / Portfolio" },

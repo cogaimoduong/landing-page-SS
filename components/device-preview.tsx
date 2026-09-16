@@ -11,15 +11,16 @@ const devices = [
 
 type Device = (typeof devices)[number]["id"];
 
-export function DevicePreview({ slug, name }: { slug: string; name: string }) {
-  const [device, setDevice] = useState<Device>("desktop");
+export function DevicePreview({ slug, name, app = false }: { slug: string; name: string; app?: boolean }) {
+  const availableDevices = app ? devices.filter((item) => item.id === "mobile") : devices;
+  const [device, setDevice] = useState<Device>(app ? "mobile" : "desktop");
   const current = devices.find((item) => item.id === device)!;
 
   return (
     <div className="device-preview">
       <div className="preview-toolbar">
         <div className="device-tabs">
-          {devices.map(({ id, label, icon: Icon }) => (
+          {availableDevices.map(({ id, label, icon: Icon }) => (
             <button className={device === id ? "active" : ""} onClick={() => setDevice(id)} key={id}>
               <Icon size={17} /><span>{label}</span>
             </button>
