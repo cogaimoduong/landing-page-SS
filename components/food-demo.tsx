@@ -1,75 +1,116 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { ArrowUpRight, Minus, Plus } from "lucide-react";
+import { useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { ArrowRight, ArrowUpRight, ChevronRight, Clock3, Coffee, Flame, Instagram, Leaf, MapPin, Menu, Minus, Phone, Plus, ShoppingBag, Sun, Wifi } from "lucide-react";
 import type { TemplateItem } from "@/lib/templates";
 import "./food-demo.css";
 
-type Dish = { name: string; group: string; detail: string; price: number };
+type Dish = { name: string; group: string; detail: string; price: number; note?: string };
+
 const menus: Record<string, Dish[]> = {
   "lua-viet-restaurant": [
-    { name: "Gỏi bưởi tôm nướng", group: "Khai vị", detail: "Bưởi tươi, tôm nướng than, rau thơm", price: 145000 },
-    { name: "Cuốn mùa xanh", group: "Khai vị", detail: "Rau theo mùa, nấm, sốt mè rang", price: 95000 },
-    { name: "Bò nướng mắc khén", group: "Món chính", detail: "Thăn bò, mắc khén, rau củ nướng", price: 285000 },
-    { name: "Cá hấp lá sen", group: "Món chính", detail: "Cá tươi, hạt sen, nước dùng thanh", price: 225000 },
-    { name: "Chè sen nhãn", group: "Tráng miệng", detail: "Hạt sen, nhãn, đường phèn", price: 65000 },
-    { name: "Kem dừa nướng", group: "Tráng miệng", detail: "Kem dừa, dừa sấy, đậu phộng", price: 75000 },
+    { name: "Gỏi bưởi tôm nướng", group: "Khai vị", detail: "Bưởi năm roi, tôm nướng than, rau thơm và nước mắm cốt", price: 145000, note: "Đầu bếp gợi ý" },
+    { name: "Cuốn mùa xanh", group: "Khai vị", detail: "Rau theo mùa, nấm nướng, sốt mè rang", price: 95000 },
+    { name: "Bò nướng mắc khén", group: "Món chính", detail: "Thăn bò, mắc khén, rau củ nướng và sốt tiêu xanh", price: 285000, note: "Best seller" },
+    { name: "Cá hấp lá sen", group: "Món chính", detail: "Cá tươi, hạt sen, nấm hương, nước dùng thanh", price: 225000 },
+    { name: "Chè sen nhãn", group: "Tráng miệng", detail: "Hạt sen Huế, nhãn lồng, đường phèn", price: 65000 },
+    { name: "Kem dừa nướng", group: "Tráng miệng", detail: "Kem dừa, dừa sấy, đậu phộng rang", price: 75000 },
   ],
   "com-nha-eatery": [
-    { name: "Thịt kho trứng", group: "Món mặn", detail: "Thịt kho mềm, trứng gà, nước dừa", price: 55000 },
-    { name: "Gà rang gừng", group: "Món mặn", detail: "Gà ta, gừng tươi, hành lá", price: 65000 },
-    { name: "Đậu hũ sốt cà", group: "Rau & đậu", detail: "Đậu chiên vàng, sốt cà chua", price: 35000 },
-    { name: "Rau luộc kho quẹt", group: "Rau & đậu", detail: "Rau theo mùa, kho quẹt đậm đà", price: 45000 },
+    { name: "Thịt kho trứng", group: "Món mặn", detail: "Thịt ba rọi kho mềm cùng trứng gà, nước dừa", price: 55000, note: "Món nhà" },
+    { name: "Gà rang gừng", group: "Món mặn", detail: "Gà ta, gừng tươi, hành lá thơm nức", price: 65000 },
+    { name: "Đậu hũ sốt cà", group: "Rau & đậu", detail: "Đậu chiên vàng, sốt cà chua chua ngọt", price: 35000 },
+    { name: "Rau luộc kho quẹt", group: "Rau & đậu", detail: "Rau theo mùa và kho quẹt đậm đà", price: 45000, note: "Ăn là nhớ" },
     { name: "Canh chua cá", group: "Canh", detail: "Cá, dứa, cà chua, rau ngổ", price: 55000 },
     { name: "Canh bí thịt bằm", group: "Canh", detail: "Bí xanh, thịt bằm, hành ngò", price: 35000 },
   ],
   "moc-coffee": [
-    { name: "Cà phê sữa đá", group: "Cà phê", detail: "Cà phê phin đậm vị, sữa đặc", price: 35000 },
-    { name: "Latte", group: "Cà phê", detail: "Espresso, sữa tươi đánh mịn", price: 55000 },
-    { name: "Trà đào cam sả", group: "Trà", detail: "Trà đen, đào, cam tươi, sả", price: 45000 },
-    { name: "Trà sen", group: "Trà", detail: "Trà ướp sen, hương thơm dịu", price: 45000 },
-    { name: "Croissant bơ", group: "Bánh", detail: "Bánh ngàn lớp, bơ thơm", price: 39000 },
+    { name: "Cà phê sữa đá", group: "Cà phê", detail: "Cà phê phin đậm vị, sữa đặc vừa đủ", price: 35000, note: "Mỗi ngày" },
+    { name: "Mộc latte", group: "Cà phê", detail: "Espresso, sữa tươi đánh mịn và một nét mật mía", price: 55000 },
+    { name: "Trà đào cam sả", group: "Trà", detail: "Trà đen, đào, cam tươi và sả thơm", price: 45000 },
+    { name: "Trà sen", group: "Trà", detail: "Trà ướp sen, thanh và dịu", price: 45000 },
+    { name: "Croissant bơ", group: "Bánh", detail: "Bánh ngàn lớp, bơ thơm, nướng trong ngày", price: 39000 },
     { name: "Bánh chuối", group: "Bánh", detail: "Chuối chín, quế, hạt óc chó", price: 35000 },
   ],
 };
-const money = (value: number) => new Intl.NumberFormat("vi-VN").format(value) + "đ";
 
-export function FoodDemo({ template }: { template: TemplateItem }) {
-  const cafe = template.slug === "moc-coffee";
-  const casual = template.slug === "com-nha-eatery";
-  const dishes = menus[template.slug];
+const money = (value: number) => `${new Intl.NumberFormat("vi-VN").format(value)}đ`;
+
+function FoodLink({ href, children, className }: { href: string; children: ReactNode; className?: string }) {
+  return <a href={href} className={className}>{children}<ArrowUpRight size={16} /></a>;
+}
+
+function ReservationForm({ compact = false, label = "Đặt bàn" }: { compact?: boolean; label?: string }) {
+  const [sent, setSent] = useState(false);
+  function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setSent(true); }
+  return <form className={`food-reservation-form ${compact ? "is-compact" : ""}`} onSubmit={submit} onChange={() => setSent(false)}>
+    <label>Họ và tên<input name="name" required autoComplete="name" placeholder="Tên của bạn" /></label>
+    <label>Số điện thoại<input name="phone" type="tel" required autoComplete="tel" pattern="[+0-9 ()-]{9,16}" placeholder="Số liên hệ" /></label>
+    <div className="food-reservation-fields"><label>Ngày<input name="date" type="date" required /></label><label>Giờ<input name="time" type="time" required /></label><label>Số khách<select name="guests" defaultValue="2">{[1, 2, 3, 4, 5, 6, 8, 10].map(item => <option key={item}>{item} khách</option>)}</select></label></div>
+    <button type="submit">{label} <ArrowRight size={17} /></button>
+    <p role="status">{sent ? "Đã ghi nhận yêu cầu mẫu — chúng tôi sẽ liên hệ xác nhận." : "Trải nghiệm demo — chưa có thông tin nào được gửi đi."}</p>
+  </form>;
+}
+
+function MenuPicker({ slug, variant = "default" }: { slug: string; variant?: "default" | "cards" | "list" }) {
+  const dishes = menus[slug];
   const [filter, setFilter] = useState("Tất cả");
   const [selected, setSelected] = useState<string[]>([]);
-  const [confirmed, setConfirmed] = useState(false);
-  const groups = ["Tất cả", ...new Set(dishes.map(dish => dish.group))];
-  const total = dishes.filter(dish => selected.includes(dish.name)).reduce((sum, dish) => sum + dish.price, 0);
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setConfirmed(true);
-  }
-  return (
-    <div className={`food-demo ${cafe ? "food-cafe" : casual ? "food-casual" : "food-dining"}`}>
-      <nav className="food-nav" aria-label="Điều hướng nhà hàng">
-        <a className="food-brand" href="#top">{template.name}</a>
-        <div><a href="#food-menu">Thực đơn</a><a href="#food-story">Câu chuyện</a><a href="#food-booking">{cafe ? "Hẹn tại Mộc" : "Đặt bàn"} <ArrowUpRight size={14} /></a></div>
-      </nav>
-      <section className="food-hero">
-        <div className="food-hero-copy"><span>{cafe ? "COFFEE · BAKES · SLOW DAYS" : casual ? "BẾP ẤM · CƠM NGON · MỖI NGÀY" : "CONTEMPORARY VIETNAMESE KITCHEN"}</span><h1>{template.tagline}</h1><p>{cafe ? "Một góc nhỏ để đọc vài trang sách, gặp một người bạn và thưởng thức ly cà phê vừa pha" : casual ? "Món quen từ căn bếp nhỏ, nấu bằng sự chăm chút dành cho mỗi bữa cơm" : "Nguyên liệu Việt theo mùa, bàn tay người bếp và những cuộc gặp gỡ đáng nhớ"}</p><a className="food-button" href="#food-menu">Khám phá thực đơn <ArrowUpRight size={18} /></a></div>
-        <div className="food-hero-image" role="img" aria-label={cafe ? "Cà phê và không gian quán" : "Không gian ẩm thực"}><span>{cafe ? "BREWED WITH CARE" : casual ? "HÔM NAY ĂN GÌ?" : "A TASTE OF VIETNAM"}</span></div>
-      </section>
-      <div className="food-strip"><span>{cafe ? "Hạt rang thơm mỗi ngày" : "Nguyên liệu theo mùa"}</span><span>Chăm chút từng hương vị</span><span>{cafe ? "Một chỗ ngồi thật yên" : "Cùng nhau bên bàn ăn"}</span></div>
-      <section className="food-section" id="food-menu">
-        <div className="food-heading"><div><small>01 / THỰC ĐƠN</small><h2>{cafe ? "Một ly bạn thích" : casual ? "Món nhà hôm nay" : "Hương vị có câu chuyện"}</h2></div><p>Thực đơn và giá minh họa cho giao diện mẫu</p></div>
-        <div className="food-filters" role="group" aria-label="Lọc thực đơn">{groups.map(group => <button key={group} aria-pressed={filter === group} onClick={() => setFilter(group)}>{group}</button>)}</div>
-        <div className="food-menu-grid">{dishes.filter(dish => filter === "Tất cả" || dish.group === filter).map(dish => <article key={dish.name}><small>{dish.group}</small><h3>{dish.name}</h3><p>{dish.detail}</p><div><strong>{money(dish.price)}</strong><button aria-label={`${selected.includes(dish.name) ? "Bỏ" : "Chọn"} ${dish.name}`} aria-pressed={selected.includes(dish.name)} onClick={() => setSelected(current => current.includes(dish.name) ? current.filter(name => name !== dish.name) : [...current, dish.name])}>{selected.includes(dish.name) ? <Minus size={18} /> : <Plus size={18} />}</button></div></article>)}</div>
-        <div className="food-selection" role="status">{selected.length ? <><span>{selected.length} món đã chọn · {selected.join(", ")}</span><strong>{money(total)}</strong><button onClick={() => setSelected([])}>Bỏ chọn tất cả</button></> : "Chọn món bằng dấu + để xem tổng giá tham khảo"}</div>
-      </section>
-      <section className="food-story food-section" id="food-story"><small>02 / CÂU CHUYỆN</small><h2>{cafe ? "Một khoảng lặng giữa phố" : casual ? "Cơm ngon là khi có nhau" : "Từ căn bếp đến bàn ăn"}</h2><p>{cafe ? "Chúng tôi dành sự tỉ mỉ cho từng mẻ rang và một chút khoảng thở cho không gian, để mỗi lần ghé là một lần bạn thấy nhẹ hơn" : casual ? "Không cần cầu kỳ, chỉ cần món ăn nóng hổi, rau tươi và một chén canh vừa vị — những điều nhỏ làm nên một bữa cơm thân thuộc" : "Ẩm thực Việt là ký ức và cảm hứng, từ hương rau thơm đến tiếng than hồng — mỗi món ăn là một lời mời khám phá lại điều thân quen"}</p></section>
-      <section className="food-booking food-section" id="food-booking">
-        <div><small>03 / HẸN GẶP BẠN</small><h2>{cafe ? "Giữ một góc cho bạn" : "Dành chỗ cho cuộc hẹn"}</h2><p>{cafe ? "07:00 — 22:00" : casual ? "10:30 — 21:00" : "11:00 — 14:00 / 17:30 — 22:00"}<br />Mở cửa mỗi ngày</p><p>Khu vực trung tâm TP. Hồ Chí Minh<br /><small>Địa điểm minh họa cho bản mẫu</small></p></div>
-        <form onSubmit={submit} onChange={() => setConfirmed(false)}><label>Họ tên<input name="name" required autoComplete="name" placeholder="Tên của bạn" /></label><label>Số điện thoại<input name="phone" type="tel" required autoComplete="tel" pattern="[+0-9 ()-]{9,16}" placeholder="Số liên hệ" /></label><div className="food-form-row"><label>Ngày hẹn<input name="date" type="date" required /></label><label>Giờ hẹn<input name="time" type="time" required /></label><label>Số khách<select name="guests">{[1,2,3,4,5,6,8,10].map(n => <option key={n}>{n}</option>)}</select></label></div><button className="food-button" type="submit">Thử đặt bàn <ArrowUpRight size={18} /></button><p className="food-form-note" role="status">{confirmed ? "Đã hoàn tất bước đặt bàn mẫu — chưa có yêu cầu nào được gửi đến quán" : "Bản trải nghiệm giao diện, không tiếp nhận đặt bàn thực tế"}</p></form>
-      </section>
-      <footer className="food-footer"><a href="#top">{template.name}</a><span>Giao diện mẫu F&B · DevDes</span><a href="#food-menu">Xem thực đơn ↗</a></footer>
-    </div>
-  );
+  const groups = ["Tất cả", ...new Set(dishes.map(item => item.group))];
+  const visible = dishes.filter(item => filter === "Tất cả" || item.group === filter);
+  const total = useMemo(() => dishes.filter(item => selected.includes(item.name)).reduce((sum, item) => sum + item.price, 0), [dishes, selected]);
+  const toggle = (name: string) => setSelected(current => current.includes(name) ? current.filter(item => item !== name) : [...current, name]);
+  return <>
+    <div className="food-menu-tabs" role="group" aria-label="Lọc thực đơn">{groups.map(group => <button key={group} aria-pressed={filter === group} onClick={() => setFilter(group)}>{group}</button>)}</div>
+    <div className={`food-menu-picker food-menu-${variant}`}>{visible.map((dish, index) => <article key={dish.name} className={selected.includes(dish.name) ? "is-picked" : ""}>
+      <span className="food-dish-index">{String(index + 1).padStart(2, "0")}</span><div><div className="food-dish-title"><h3>{dish.name}</h3>{dish.note && <small>{dish.note}</small>}</div><p>{dish.detail}</p></div><strong>{money(dish.price)}</strong>
+      <button type="button" aria-label={`${selected.includes(dish.name) ? "Bỏ" : "Chọn"} ${dish.name}`} aria-pressed={selected.includes(dish.name)} onClick={() => toggle(dish.name)}>{selected.includes(dish.name) ? <Minus size={17} /> : <Plus size={17} />}</button>
+    </article>)}</div>
+    <div className="food-cart" aria-live="polite">{selected.length ? <><ShoppingBag size={17} /><span>{selected.length} món đã chọn</span><strong>{money(total)}</strong><button type="button" onClick={() => setSelected([])}>Xóa chọn</button></> : <><ShoppingBag size={17} /><span>Chọn món để xem tổng tạm tính</span></>}</div>
+  </>;
+}
+
+function Footer({ name, light = false }: { name: string; light?: boolean }) {
+  return <footer className={`food-page-footer ${light ? "is-light" : ""}`}><div><a href="#top" className="food-footer-brand">{name}</a><p>Ẩm thực được làm với sự tử tế.<br />Giao diện mẫu F&B · DevDes</p></div><div><span>Khám phá</span><a href="#food-menu">Thực đơn</a><a href="#food-story">Câu chuyện</a><a href="#food-booking">Liên hệ</a></div><div><span>Kết nối</span><a href="tel:02873001234"><Phone size={14} /> 028 7300 1234</a><a href="#instagram"><Instagram size={14} /> @devdes.samples</a></div><small>© 2026 {name}. All rights reserved.</small></footer>;
+}
+
+function LuaViet({ template }: { template: TemplateItem }) {
+  return <div className="food-page lua-viet" id="top">
+    <header className="lua-header"><a href="#top" className="lua-monogram" aria-label="Lửa Việt">LV</a><nav aria-label="Điều hướng"><a href="#food-menu">Thực đơn</a><a href="#food-story">Triết lý</a><a href="#food-booking">Đặt bàn</a></nav><a href="#food-booking" className="lua-book">Đặt bàn <ArrowUpRight size={15} /></a></header>
+    <section className="lua-hero"><div className="lua-hero-media"><span>EST. 2021 · SAIGON</span><i>LV</i></div><div className="lua-hero-copy"><p className="lua-eyebrow"><Flame size={14} /> CONTEMPORARY VIETNAMESE KITCHEN</p><h1>{template.tagline}</h1><p>Đi qua những vùng vị Việt Nam bằng nguyên liệu theo mùa, lửa than và một cách kể chuyện thật chậm.</p><FoodLink href="#food-menu" className="lua-text-link">Xem thực đơn mùa này</FoodLink><div className="lua-hero-details"><span>11:30 — 14:00<br />17:30 — 22:30</span><span>District 1<br />Ho Chi Minh City</span></div></div></section>
+    <section className="lua-intro" id="food-story"><span>01 / TINH THẦN CỦA LỬA</span><h2>Để nguyên liệu<br /><em>nói bằng chính mình.</em></h2><p>Chúng tôi bắt đầu từ những điều gần gũi: mẻ mắm cốt, lá thơm trong vườn, con cá tươi mỗi sớm. Kỹ thuật đương đại chỉ để làm rõ hơn phần ký ức vốn đã đẹp.</p><div className="lua-values"><article><b>03</b><span>mùa thực đơn<br />mỗi năm</span></article><article><b>12</b><span>đối tác nông trại<br />đồng hành</span></article><article><b>01</b><span>bàn bếp mở<br />mỗi tối</span></article></div></section>
+    <section className="lua-menu" id="food-menu"><div className="lua-section-heading"><span>02 / MENU DEGUSTATION & À LA CARTE</span><h2>Hương vị<br />đương mùa.</h2><p>Mỗi món là một lát cắt nhỏ của Việt Nam hôm nay.</p></div><MenuPicker slug={template.slug} variant="list" /></section>
+    <section className="lua-chef"><div><span>NGƯỜI GIỮ LỬA</span><blockquote>“Nấu món Việt không phải là sao chép ký ức. Đó là cách để ký ức bước tiếp.”</blockquote><p>— Bếp trưởng Minh An</p></div><div className="lua-chef-media"><span>FROM FARM<br />TO FLAME</span></div></section>
+    <section className="lua-booking" id="food-booking"><div><span>03 / RESERVATION</span><h2>Một chỗ ngồi<br />cho cuộc hẹn đáng nhớ.</h2><p>Vui lòng đặt bàn trước để chúng tôi chuẩn bị trải nghiệm chu đáo nhất cho bạn.</p><div className="lua-booking-contact"><MapPin size={17} /><span>18 Nguyễn Hữu Cảnh, Quận 1<br />TP. Hồ Chí Minh</span></div></div><ReservationForm label="Gửi yêu cầu đặt bàn" /></section><Footer name={template.name} />
+  </div>;
+}
+
+function ComNha({ template }: { template: TemplateItem }) {
+  const [open, setOpen] = useState(false);
+  return <div className="food-page com-nha" id="top">
+    <header className="com-header"><a href="#top" className="com-brand"><span>CƠM</span><b>NHÀ</b></a><nav className={open ? "is-open" : ""}><a href="#food-menu" onClick={() => setOpen(false)}>Món hôm nay</a><a href="#food-story" onClick={() => setOpen(false)}>Chuyện nhà</a><a href="#food-booking" onClick={() => setOpen(false)}>Đặt cơm</a></nav><a className="com-call" href="tel:02873001234"><Phone size={16} /> Gọi đặt cơm</a><button className="com-menu-toggle" aria-label="Mở menu" aria-expanded={open} onClick={() => setOpen(!open)}><Menu size={21} /></button></header>
+    <section className="com-hero"><div className="com-hero-copy"><p className="com-sticker">Nấu mỗi ngày<br />như cho người thân</p><span>BẾP MỞ CỬA 10:30 — 21:00</span><h1>{template.tagline}</h1><p>Đĩa cơm nóng, món quen vừa vị và một góc nhỏ để bạn thấy mình được về nhà.</p><div><FoodLink href="#food-menu" className="com-button">Chọn món ăn trưa</FoodLink><a href="#food-booking" className="com-underlink">Giữ bàn cho cả nhà <ChevronRight size={15} /></a></div></div><div className="com-hero-art"><strong>HÔM<br />NAY<br />ĂN GÌ?</strong><span>NGON LÀNH · VỪA VỊ · ĐỦ ĐẦY</span></div></section>
+    <div className="com-ticker"><span>✳ CƠM NÓNG MỖI NGÀY</span><span>✳ RAU TƯƠI THEO MÙA</span><span>✳ NẤU BẰNG TẤT CẢ SỰ TỬ TẾ</span></div>
+    <section className="com-highlights"><article><span>01</span><b>Đủ món<br />như bữa nhà</b><p>Mặn, rau, canh và một chút tráng miệng.</p></article><article><span>02</span><b>Nấu khi<br />bạn gọi</b><p>Đồ ăn nóng hổi, không để sẵn cả ngày.</p></article><article><span>03</span><b>Đi một mình<br />cũng vui</b><p>Phần cơm vừa vặn, bàn nhỏ thật xinh.</p></article></section>
+    <section className="com-menu-section" id="food-menu"><div className="com-section-title"><span>THỰC ĐƠN HÔM NAY</span><h2>Món nào cũng<br /><i>muốn gọi thêm.</i></h2><p>Thực đơn thay đổi theo ngày để căn bếp luôn có điều mới mẻ.</p></div><MenuPicker slug={template.slug} variant="cards" /></section>
+    <section className="com-story" id="food-story"><div className="com-story-art"><span>NHỮNG ĐIỀU<br />NHỎ XÍU</span><i>♥</i></div><div><span>CHUYỆN BẾP</span><h2>Cơm ngon là<br />khi có nhau.</h2><p>Không cầu kỳ, chỉ có nồi canh nghi ngút khói, rau luộc xanh và miếng thịt kho mềm. Những điều nhỏ xíu ấy lại là điều khiến ta muốn quay về.</p><a href="#food-booking">Ghé nhà mình nhé <ArrowRight size={17} /></a></div></section>
+    <section className="com-booking" id="food-booking"><div className="com-booking-heading"><span>GIỮ MỘT BÀN NHỎ</span><h2>Có mặt là vui rồi.</h2><p><Clock3 size={17} /> Mở cửa mỗi ngày · 10:30 — 21:00</p><p><MapPin size={17} /> 38 Trần Hưng Đạo, Quận 1, TP.HCM</p></div><ReservationForm compact label="Giữ bàn giúp mình" /></section><Footer name={template.name} light />
+  </div>;
+}
+
+function MocCoffee({ template }: { template: TemplateItem }) {
+  return <div className="food-page moc-coffee" id="top">
+    <header className="moc-header"><a href="#top" className="moc-brand">Mộc<span>coffee</span></a><nav><a href="#food-menu">Menu</a><a href="#food-story">Nhật ký Mộc</a><a href="#food-booking">Ghé Mộc</a></nav><a href="#food-booking" className="moc-reserve">Chọn một góc <ArrowUpRight size={15} /></a></header>
+    <section className="moc-hero"><div className="moc-hero-image"><span>BREWED<br />WITH CARE</span><small>01 / 03</small></div><div className="moc-hero-copy"><p className="moc-kicker"><Sun size={14} /> SLOW MORNINGS · QUIET AFTERNOONS</p><h1>{template.tagline}</h1><p>Một nơi để bạn mở trang sách còn dang dở, nhấp một ngụm cà phê và để ngày trôi chậm hơn một chút.</p><FoodLink href="#food-menu" className="moc-link">Chọn ly hôm nay</FoodLink><div className="moc-opening"><span>HẰNG NGÀY<br /><b>07:00 — 22:00</b></span><span>ĐẶC BIỆT<br /><b>Hạt rang tại chỗ</b></span></div></div></section>
+    <section className="moc-notes"><article><Coffee /><div><span>HẠT CÀ PHÊ</span><b>Rang theo mẻ nhỏ,<br />ưu tiên vị ngọt tự nhiên.</b></div></article><article><Leaf /><div><span>KHÔNG GIAN</span><b>Nhiều ánh sáng, cây xanh<br />và những bàn ngồi yên.</b></div></article><article><Wifi /><div><span>VÌ MỘT NGÀY DÀI</span><b>Wi-Fi tốt, ổ cắm đủ<br />và playlist thật nhẹ.</b></div></article></section>
+    <section className="moc-menu-section" id="food-menu"><header><div><span>02 / OUR MENU</span><h2>Một ly bạn thích,<br />một ngày bạn cần.</h2></div><p>Những thức uống đơn giản, được pha thật kỹ.</p></header><MenuPicker slug={template.slug} variant="default" /></section>
+    <section className="moc-journal" id="food-story"><div className="moc-journal-copy"><span>NHẬT KÝ MỘC / 09.2026</span><h2>Chúng tôi tin vào<br /><em>những khoảng thở.</em></h2><p>Một quán cà phê không cần phải thật ồn ào để trở nên đáng nhớ. Đôi khi, chỉ cần một chiếc bàn cạnh cửa sổ và ly cà phê được pha vừa ý.</p><a href="#food-booking">Đọc thêm câu chuyện Mộc <ArrowRight size={17} /></a></div><div className="moc-journal-card"><small>HÔM NAY Ở MỘC</small><b>“Có những ngày, điều tốt nhất bạn có thể làm là ngồi lại.”</b><span>— Ghi chú bên cửa sổ</span></div></section>
+    <section className="moc-visit" id="food-booking"><div className="moc-visit-image"><span>COME AS<br />YOU ARE</span></div><div className="moc-visit-copy"><span>03 / VISIT MỘC</span><h2>Giữ một góc<br />cho riêng bạn.</h2><p><MapPin size={17} /> 12 Lê Văn Miến, Thảo Điền, TP.HCM</p><p><Clock3 size={17} /> Mỗi ngày · 07:00 — 22:00</p><ReservationForm compact label="Gửi lời hẹn" /></div></section><Footer name={template.name} />
+  </div>;
+}
+
+export function FoodDemo({ template }: { template: TemplateItem }) {
+  if (template.slug === "lua-viet-restaurant") return <LuaViet template={template} />;
+  if (template.slug === "com-nha-eatery") return <ComNha template={template} />;
+  return <MocCoffee template={template} />;
 }
