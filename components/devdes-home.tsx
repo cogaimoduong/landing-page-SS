@@ -19,6 +19,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
+import { HeroSpotlight } from "@/components/hero-spotlight";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useScrollTheme } from "@/components/use-scroll-theme";
 import {
@@ -56,137 +57,6 @@ function ProjectMobileArtwork({ name, accent, dark }: { name: string; accent: st
         <div className="dd-project-mobile-list"><i /><i /><i /></div>
         <footer><i /><i className="active" /><i /></footer>
       </div>
-    </div>
-  );
-}
-
-function ChromeSculpture() {
-  return (
-    <div className="dd-sculpture" aria-hidden="true">
-      <svg viewBox="0 0 600 600" fill="none">
-        <defs>
-          <linearGradient
-            id="dd-chrome"
-            x1="100"
-            y1="80"
-            x2="480"
-            y2="500"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="#fff" />
-            <stop offset=".12" stopColor="#c4c4c4" />
-            <stop offset=".23" stopColor="#242424" />
-            <stop offset=".3" stopColor="#747474" />
-            <stop offset=".36" stopColor="#ededed" />
-            <stop offset=".43" stopColor="#fff" />
-            <stop offset=".48" stopColor="#969696" />
-            <stop offset=".53" stopColor="#171717" />
-            <stop offset=".61" stopColor="#353535" />
-            <stop offset=".67" stopColor="#b7b7b7" />
-            <stop offset=".73" stopColor="#f9f9f9" />
-            <stop offset=".8" stopColor="#8c8c8c" />
-            <stop offset=".9" stopColor="#292929" />
-            <stop offset="1" stopColor="#ddd" />
-          </linearGradient>
-          <linearGradient
-            id="dd-edge"
-            x1="120"
-            y1="150"
-            x2="450"
-            y2="450"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="white" />
-            <stop offset=".4" stopColor="#fff" stopOpacity="0" />
-            <stop offset=".7" stopColor="#fff" stopOpacity=".7" />
-            <stop offset="1" stopColor="#222" />
-          </linearGradient>
-          <filter id="dd-shadow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="16" />
-          </filter>
-          <filter id="dd-depth" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="6" dy="15" stdDeviation="9" floodOpacity=".19" />
-          </filter>
-        </defs>
-        <ellipse
-          cx="305"
-          cy="523"
-          rx="135"
-          ry="17"
-          fill="#000"
-          opacity=".16"
-          filter="url(#dd-shadow)"
-        />
-        <g className="dd-sculpture-form" filter="url(#dd-depth)">
-          <g transform="rotate(-31 300 285)">
-            <rect
-              x="127"
-              y="132"
-              width="347"
-              height="302"
-              rx="148"
-              stroke="#5b5b5b"
-              strokeWidth="77"
-            />
-            <rect
-              x="125"
-              y="126"
-              width="347"
-              height="302"
-              rx="148"
-              stroke="url(#dd-chrome)"
-              strokeWidth="75"
-            />
-            <rect
-              x="96"
-              y="96"
-              width="405"
-              height="360"
-              rx="178"
-              stroke="url(#dd-edge)"
-              strokeWidth="2"
-            />
-            <rect
-              x="155"
-              y="156"
-              width="287"
-              height="242"
-              rx="118"
-              stroke="url(#dd-edge)"
-              strokeWidth="2"
-            />
-          </g>
-          <g transform="rotate(43 300 282)">
-            <rect
-              x="236"
-              y="72"
-              width="128"
-              height="417"
-              rx="64"
-              stroke="#555"
-              strokeWidth="57"
-            />
-            <rect
-              x="232"
-              y="67"
-              width="128"
-              height="417"
-              rx="64"
-              stroke="url(#dd-chrome)"
-              strokeWidth="55"
-            />
-            <rect
-              x="207"
-              y="42"
-              width="178"
-              height="467"
-              rx="89"
-              stroke="url(#dd-edge)"
-              strokeWidth="2"
-            />
-          </g>
-        </g>
-      </svg>
     </div>
   );
 }
@@ -278,7 +148,6 @@ function Dashboard({ compact = false }: { compact?: boolean }) {
 export function DevDesHome() {
   const homeRef = useScrollTheme();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [noticeOpen, setNoticeOpen] = useState(true);
   const [activeService, setActiveService] = useState<string | null>("website");
   const [filter, setFilter] = useState<ProjectFilter>("All");
   const [testimonial, setTestimonial] = useState(0);
@@ -366,7 +235,7 @@ export function DevDesHome() {
       <main id="main-content">
         <section
           className={`dd-hero theme-${homeSections.hero.backgroundTheme}`}
-          aria-labelledby="dd-hero-title"
+          aria-label="DevDes"
         >
           <div className="dd-shell dd-hero-inner">
             <div className="dd-hero-topline">
@@ -376,37 +245,7 @@ export function DevDesHome() {
               <span>DESIGN MEETS DEVELOPMENT®</span>
             </div>
             <div className="dd-hero-stage">
-              <h1 id="dd-hero-title">
-                <span>We design</span>
-                <span>
-                  You grow
-                </span>
-              </h1>
-              <ChromeSculpture />
-              <span className="dd-object-note">
-                A LITTLE ART
-                <br />A LOT OF PURPOSE
-              </span>
-              {noticeOpen && (
-                <aside className="dd-notice">
-                  <div className="dd-notice-icon">
-                    <Asterisk size={23} />
-                  </div>
-                  <div>
-                    <strong>Ý tưởng của bạn, bước tiến tiếp theo</strong>
-                    <p>Cùng tạo nên một sản phẩm khác biệt</p>
-                    <a href="#contact">
-                      Bắt đầu trò chuyện <ArrowUpRight size={13} />
-                    </a>
-                  </div>
-                  <button
-                    aria-label="Đóng thông báo"
-                    onClick={() => setNoticeOpen(false)}
-                  >
-                    <X size={15} />
-                  </button>
-                </aside>
-              )}
+              <HeroSpotlight />
             </div>
             <div className="dd-hero-bottom">
               <p>

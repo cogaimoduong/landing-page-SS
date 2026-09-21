@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <filter id="feather" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.2"/>
+    </filter>
+    <filter id="floor" x="-20%" y="-100%" width="140%" height="300%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+  <!-- Keep the complete device and its contact shadow; feather the backdrop. -->
+  <ellipse cx="360" cy="512" rx="320" ry="27" fill="white" opacity=".65" filter="url(#floor)"/>
+  <path d="M298 81 L744 77 Q768 76 768 100 L749 459 L731 482 L615 535 L65 509 Q55 506 58 478 L251 434 L270 112 Q272 84 298 81 Z" fill="white" filter="url(#feather)"/>
+</svg>

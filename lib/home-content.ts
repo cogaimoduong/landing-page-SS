@@ -8,7 +8,7 @@ export const homeSections: Record<
   "hero" | "services" | "projects" | "about" | "contact",
   { backgroundTheme: BackgroundTheme }
 > = {
-  hero: { backgroundTheme: "light" },
+  hero: { backgroundTheme: "dark" },
   services: { backgroundTheme: "dark" },
   projects: { backgroundTheme: "dark" },
   about: { backgroundTheme: "light" },
