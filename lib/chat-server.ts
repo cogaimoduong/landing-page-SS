@@ -6,6 +6,7 @@ import { CHAT_MAX_BYTES, CHAT_MAX_MESSAGES, chatDates, chatState } from "./chat-
 import { templates } from "./templates";
 export const VISITOR_COOKIE = "devdes_chat";
 export const ADMIN_COOKIE = "devdes_chat_admin";
+const FIRST_MESSAGE_AUTO_REPLY = "Cảm ơn bạn đã nhắn DevDes! Đội ngũ đã nhận được thông tin và thường phản hồi trong vòng 2 giờ. Chúng mình sẽ sớm liên hệ với bạn nhé.";
 export class ChatError extends Error {
   constructor(public status: number, message: string) { super(message); }
 }
@@ -98,7 +99,7 @@ export async function startConversation(email: unknown, token: string | null, no
   const existing = await findVisitor(token, now);
   if (existing && existing.expiresAt > now) return { session: serializeChat(existing, now), token: token! };
   const nextToken = randomBytes(32).toString("hex");
-  const welcome: StoredChatMessage = { id: randomUUID(), sender: "admin", text: "Chào bạn, DevDes đã sẵn sàng lắng nghe — bạn cần hỗ trợ gì?", createdAt: now.toISOString() };
+  const welcome: StoredChatMessage = { id: randomUUID(), sender: "admin", text: "Chào bạn, DevDes rất vui được hỗ trợ. Bạn cứ để lại nội dung cần tư vấn nhé.", createdAt: now.toISOString() };
   const doc: Conversation = { _id: randomUUID(), email: email.trim().toLowerCase(), tokenHash: hashToken(nextToken), createdAt: now, lastMessageAt: now, ...chatDates(now), messages: [welcome], count: 1, bytes: Buffer.byteLength(JSON.stringify(welcome)) };
   const { conversations } = await chatCollections();
   await conversations.insertOne(doc);
@@ -146,7 +147,26 @@ export async function appendMessage(id: string, actor: ChatActor, body: Record<s
   const message: StoredChatMessage = { id: body.id, sender: actor, text, createdAt: now.toISOString(), ...(attachment ? { attachment } : {}) };
   const bytes = Buffer.byteLength(JSON.stringify(message)) + 512;
   const { conversations } = await chatCollections();
-  const updated = await conversations.findOneAndUpdate({ _id: id, expiresAt: { $gt: now }, bytes: { $lte: CHAT_MAX_BYTES - bytes }, count: { $lt: CHAT_MAX_MESSAGES }, "messages.id": { $ne: message.id } }, {
+  if (actor === "user") {
+    // Keep this in the database operation so retries and simultaneous sends
+    // still create the acknowledgement exactly once.
+    const acknowledgement: StoredChatMessage = { id: randomUUID(), sender: "admin", text: FIRST_MESSAGE_AUTO_REPLY, createdAt: now.toISOString() };
+    const acknowledgementBytes = Buffer.byteLength(JSON.stringify(acknowledgement)) + 512;
+    const firstMessage = await conversations.findOneAndUpdate({
+      _id: id, expiresAt: { $gt: now }, bytes: { $lte: CHAT_MAX_BYTES - bytes - acknowledgementBytes }, count: { $lte: CHAT_MAX_MESSAGES - 2 },
+      "messages.id": { $ne: message.id }, "messages.sender": { $ne: "user" },
+    }, {
+      $push: { messages: { $each: [message, acknowledgement] } }, $inc: { bytes: bytes + acknowledgementBytes, count: 2 },
+      $max: { lastMessageAt: now, ...chatDates(now) },
+    }, { returnDocument: "after" });
+    if (firstMessage) return serializeChat(firstMessage, now);
+  }
+  const updated = await conversations.findOneAndUpdate({
+    _id: id, expiresAt: { $gt: now }, bytes: { $lte: CHAT_MAX_BYTES - bytes }, count: { $lt: CHAT_MAX_MESSAGES }, "messages.id": { $ne: message.id },
+    // A first visitor message must be stored with its acknowledgement above;
+    // this fallback is only for later visitor messages.
+    ...(actor === "user" ? { "messages.sender": "user" } : {}),
+  }, {
     $push: { messages: message }, $inc: { bytes, count: 1 },
     $max: { lastMessageAt: now, ...chatDates(now) },
   }, { returnDocument: "after" });

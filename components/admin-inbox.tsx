@@ -19,9 +19,14 @@ export function AdminInbox() {
   const [error, setError] = useState("");
   const log = useRef<HTMLDivElement>(null);
   const listVersion = useRef(0);
+  const refreshingList = useRef(false);
   const chat = useChatSession(authorized && selected ? `/api/chat/admin/${selected}` : null);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const refresh = useCallback(async () => {
+    // A slow list request used to be superseded every five seconds, so none
+    // of its results could be applied until a manual page reload.
+    if (refreshingList.current) return;
+    refreshingList.current = true;
     const version = ++listVersion.current;
     try {
       const result = await chatRequest<{ conversations: ChatSummary[]; hasMore: boolean }>(`/api/chat/admin?offset=${offset}`);
@@ -32,7 +37,10 @@ export function AdminInbox() {
       if (version !== listVersion.current) return;
       if (reason instanceof ChatRequestError && reason.status === 401) { setAuthorized(false); setItems([]); setSelected(null); setDrafts({}); }
       else setError(reason instanceof Error ? reason.message : "Không kết nối được hộp thư");
-    } finally { if (version === listVersion.current) setChecking(false); }
+    } finally {
+      refreshingList.current = false;
+      if (version === listVersion.current) setChecking(false);
+    }
   }, [offset]);
   useEffect(() => {
     void refresh();
@@ -40,8 +48,16 @@ export function AdminInbox() {
   }, [refresh]);
   useEffect(() => {
     if (!authorized) return;
-    const timer = setInterval(() => { if (document.visibilityState === "visible") void refresh(); }, 5000);
-    return () => clearInterval(timer);
+    const poll = () => { if (document.visibilityState === "visible") void refresh(); };
+    const wake = () => poll();
+    const timer = setInterval(poll, 2000);
+    window.addEventListener("focus", wake);
+    document.addEventListener("visibilitychange", wake);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("focus", wake);
+      document.removeEventListener("visibilitychange", wake);
+    };
   }, [authorized, refresh]);
   useEffect(() => { log.current?.scrollTo({ top: log.current.scrollHeight }); }, [chat.session?.id, chat.session?.messages.length]);
   async function login(event: FormEvent<HTMLFormElement>) {

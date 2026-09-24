@@ -8,7 +8,8 @@ export function useChatSession(endpoint: string | null, polling = true) {
   const [error, setError] = useState("");
   const [now, setNow] = useState(0);
   const generation = useRef(0);
-  const busy = useRef(false);
+  const refreshing = useRef(false);
+  const mutating = useRef(false);
   const requestNumber = useRef(0);
   const pendingMessage = useRef<{ signature: string; id: string } | null>(null);
   const accept = useCallback((value: ChatSession | null) => {
@@ -16,8 +17,11 @@ export function useChatSession(endpoint: string | null, polling = true) {
     setSession(value && Date.parse(value.deleteAt) > Date.now() ? value : null);
   }, []);
   const refresh = useCallback(async () => {
-    if (!endpoint || busy.current) return;
+    // Do not let slow requests continuously invalidate each other. That can
+    // otherwise leave a chat stale until the page is reloaded.
+    if (!endpoint || refreshing.current || mutating.current) return;
     const current = generation.current, ticket = ++requestNumber.current;
+    refreshing.current = true;
     try {
       const data = await chatRequest<{ session: ChatSession | null }>(endpoint);
       if (current !== generation.current || ticket !== requestNumber.current) return;
@@ -26,17 +30,22 @@ export function useChatSession(endpoint: string | null, polling = true) {
       if (current !== generation.current || ticket !== requestNumber.current) return;
       if (reason instanceof ChatRequestError && [401, 404].includes(reason.status)) accept(null);
       setError(reason instanceof Error ? reason.message : "Không kết nối được chat");
-    } finally { if (current === generation.current) setLoading(false); }
+    } finally {
+      if (current === generation.current) {
+        refreshing.current = false;
+        setLoading(false);
+      }
+    }
   }, [endpoint, accept]);
   useEffect(() => {
-    generation.current++; requestNumber.current++; busy.current = false;
+    generation.current++; requestNumber.current++; refreshing.current = false; mutating.current = false;
     setSession(null); setLoading(Boolean(endpoint)); setError(""); pendingMessage.current = null;
     return () => { generation.current++; };
   }, [endpoint]);
   useEffect(() => {
     if (!endpoint || !polling) return;
     void refresh();
-    const timer = setInterval(() => { if (document.visibilityState === "visible") void refresh(); }, 5000);
+    const timer = setInterval(() => { if (document.visibilityState === "visible") void refresh(); }, 2000);
     const wake = () => { if (document.visibilityState === "visible") void refresh(); };
     window.addEventListener("focus", wake); document.addEventListener("visibilitychange", wake);
     return () => { clearInterval(timer); window.removeEventListener("focus", wake); document.removeEventListener("visibilitychange", wake); };
@@ -49,9 +58,9 @@ export function useChatSession(endpoint: string | null, polling = true) {
     return () => clearInterval(timer);
   }, []);
   async function mutate(body: unknown) {
-    if (!endpoint || busy.current) return false;
+    if (!endpoint || mutating.current) return false;
     const current = generation.current;
-    busy.current = true; requestNumber.current++;
+    mutating.current = true; requestNumber.current++;
     try {
       const data = await chatRequest<{ session: ChatSession }>(endpoint, body);
       if (current !== generation.current) return false;
@@ -63,7 +72,7 @@ export function useChatSession(endpoint: string | null, polling = true) {
         if (reason instanceof ChatRequestError && reason.status === 409) setSession(value => value ? { ...value, status: "ended" } : null);
       }
       return false;
-    } finally { if (current === generation.current) busy.current = false; }
+    } finally { if (current === generation.current) mutating.current = false; }
   }
   async function send(text: string, attachment?: ChatAttachment) {
     const signature = JSON.stringify([text, attachment]);
