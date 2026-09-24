@@ -37,7 +37,7 @@ export const projectSources: ProjectSource[] = [
   {
     slug: "sensescene",
     name: "Sense & Scene Studio",
-    caption: "Website studio sáng tạo về CGI, motion và trải nghiệm thị giác",
+    caption: "Website cho studio sáng tạo — chuyên cung cấp các ứng dụng di động giải trí, các sản phẩm hình ảnh cùng trải nghiệm nghệ thuật thị giác.",
     tags: ["Website", "Interface Design"],
     visual: "sensescene",
     image: "/images/projects/sensescene.jpg",
@@ -89,7 +89,7 @@ export const projectSources: ProjectSource[] = [
   {
     slug: "loopix",
     name: "Loopix",
-    caption: "Website giới thiệu dịch vụ tham quan không gian 360°",
+    caption: "Website giới thiệu dịch vụ trải nghiệm không gian số hoá, đa dạng mô hình — Virtual 360 & Scan 3D.",
     tags: ["Website", "Interface Design"],
     visual: "loopix",
     image: "/images/projects/loopix.jpg",
@@ -113,8 +113,8 @@ export const projectSources: ProjectSource[] = [
   },
   {
     slug: "room-management",
-    name: "Quản lý phòng trọ",
-    caption: "Giao diện quản lý phòng, khách thuê, hóa đơn và tình trạng thu tiền trong một nơi",
+    name: "App Quản Lý Căn Hộ Dịch Vụ / Serviced Apartment Mobile App",
+    caption: "Quản lý người cư trú, hoạt động kinh doanh và bộ máy nội bộ tích hợp thanh toán, hoá đơn — tất cả trong một.",
     tags: ["App", "Interface Design"],
     visual: "room-management",
     image: "/images/projects/room-management-app.png",
@@ -139,8 +139,8 @@ export const projectSources: ProjectSource[] = [
   },
   {
     slug: "bao-tq-admin",
-    name: "BXH tổng hợp",
-    caption: "Ứng dụng quản trị, theo dõi và khai thác dữ liệu đã thu thập",
+    name: "App Dữ Liệu & Bảng Xếp Hạng Chuyên Sâu / Niche Product Analytics & Ranking App",
+    caption: "Tra cứu dữ liệu chuyên sâu & cung cấp bảng xếp hạng cho sản phẩm đặc thù.",
     tags: ["App", "Interface Design"],
     visual: "bao-tq-admin",
     image: "/images/projects/bao-tq-admin.jpg",
@@ -166,7 +166,7 @@ export const projectSources: ProjectSource[] = [
   },
   {
     slug: "kim-hien-van-tai",
-    name: "Kim Hiên & Văn Tài",
+    name: "E-Wedding Website",
     caption: "Thiệp cưới trực tuyến với hiệu ứng mở thiệp, album ảnh và lịch ngày vui",
     tags: ["Website", "Interface Design"],
     visual: "kim-hien-van-tai",

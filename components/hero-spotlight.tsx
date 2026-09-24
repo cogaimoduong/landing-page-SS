@@ -1,19 +1,30 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function HeroSpotlight() {
   const [lightRight, setLightRight] = useState(false);
+  const clickAudio = useRef<HTMLAudioElement | null>(null);
+
+  const playClick = () => {
+    const audio = clickAudio.current;
+    if (!audio) return;
+    audio.pause();
+    audio.currentTime = 0;
+    void audio.play().catch(() => {});
+  };
 
   useEffect(() => {
+    const audio = new Audio("/audio/spotlight-click.mp4");
+    audio.preload = "auto";
+    clickAudio.current = audio;
     let pastThreshold = false;
     const syncWithScroll = () => {
       const next = window.scrollY > 80;
-      // Only crossing the threshold changes the selection, so a click is not
-      // immediately undone by small scroll events on the same side of it.
       if (next !== pastThreshold) {
         pastThreshold = next;
+        playClick();
         setLightRight(next);
       }
     };
@@ -22,6 +33,8 @@ export function HeroSpotlight() {
     return () => {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", syncWithScroll);
+      audio.pause();
+      clickAudio.current = null;
     };
   }, []);
 
@@ -29,10 +42,13 @@ export function HeroSpotlight() {
     <button
       className={`dd-device-scene ${lightRight ? "is-right" : "is-left"}`}
       type="button"
-      onClick={() => setLightRight((value) => !value)}
-      aria-label="Chiếu sáng laptop"
-      aria-pressed={lightRight}
-      aria-describedby="dd-spotlight-hint"
+      onClick={() => {
+        setLightRight((value) => {
+          playClick();
+          return !value;
+        });
+      }}
+      aria-label="Đổi hướng ánh sáng"
     >
       <svg className="dd-device-light" viewBox="0 0 1200 580" preserveAspectRatio="none" fill="none" aria-hidden="true">
         <defs>
@@ -54,8 +70,8 @@ export function HeroSpotlight() {
             <stop offset=".4" stopColor="white" stopOpacity=".08" />
             <stop offset="1" stopColor="white" stopOpacity="0" />
           </radialGradient>
-          <filter id="dd-hero-beam-soft" x="-50%" y="-20%" width="200%" height="140%">
-            <feGaussianBlur stdDeviation="32" />
+          <filter id="dd-hero-beam-soft" x="-20%" y="-10%" width="140%" height="120%">
+            <feGaussianBlur stdDeviation="10" />
           </filter>
           <filter id="dd-hero-source-soft" x="-50%" y="-100%" width="200%" height="300%">
             <feGaussianBlur stdDeviation="12" />
@@ -70,26 +86,34 @@ export function HeroSpotlight() {
             <feBlend in="SourceGraphic" in2="lit-grain" mode="soft-light" />
           </filter>
         </defs>
-        <g className="dd-device-beam">
-          <path d="M530 26 Q600 6 670 26 L840 520 Q600 620 360 520 Z" fill="url(#dd-hero-beam-fade)" filter="url(#dd-hero-beam-soft)" />
+        <g className="dd-device-beam dd-device-beam-phone">
+          <path d="M280 42 L320 42 L430 530 L170 530 Z" fill="url(#dd-hero-beam-fade)" filter="url(#dd-hero-beam-soft)" />
         </g>
-        <g className="dd-device-pool">
-          <ellipse cx="312" cy="310" rx="395" ry="315" fill="url(#dd-hero-wall-glow)" filter="url(#dd-hero-glow-grain)" />
-          <ellipse cx="312" cy="485" rx="250" ry="40" fill="url(#dd-hero-light-halo)" opacity=".45" />
+        <g className="dd-device-beam dd-device-beam-laptop">
+          <path d="M875 42 L925 42 L1140 530 L660 530 Z" fill="url(#dd-hero-beam-fade)" filter="url(#dd-hero-beam-soft)" />
         </g>
-        <g className="dd-device-light-source" filter="url(#dd-hero-source-soft)">
-          <ellipse cx="600" cy="26" rx="116" ry="40" fill="url(#dd-hero-light-halo)" opacity=".55" />
+        <g className="dd-device-pool dd-device-pool-phone">
+          <ellipse cx="300" cy="470" rx="145" ry="30" fill="url(#dd-hero-light-halo)" opacity=".52" />
+        </g>
+        <g className="dd-device-pool dd-device-pool-laptop">
+          <ellipse cx="900" cy="475" rx="230" ry="35" fill="url(#dd-hero-light-halo)" opacity=".52" />
+        </g>
+        <g className="dd-device-light-source dd-device-light-source-phone" filter="url(#dd-hero-source-soft)">
+          <ellipse cx="300" cy="42" rx="62" ry="22" fill="url(#dd-hero-light-halo)" opacity=".72" />
+        </g>
+        <g className="dd-device-light-source dd-device-light-source-laptop" filter="url(#dd-hero-source-soft)">
+          <ellipse cx="900" cy="42" rx="76" ry="25" fill="url(#dd-hero-light-halo)" opacity=".72" />
         </g>
       </svg>
       <span className="dd-device-image dd-device-phone" aria-hidden="true">
         <Image src="/images/hero/phone-hd.png" alt="" fill unoptimized priority />
       </span>
       <span className="dd-device-image dd-device-laptop" aria-hidden="true">
-        <Image src="/images/hero/laptop-hd.png" alt="" fill unoptimized priority />
+        <Image src="/images/hero/laptop-no-phone.png" alt="" fill unoptimized priority />
       </span>
       <span className="dd-device-label dd-device-label-phone" aria-hidden="true"><i /> MOBILE APP</span>
       <span className="dd-device-label dd-device-label-laptop" aria-hidden="true"><i /> WEBSITE</span>
-      <span id="dd-spotlight-hint" className="dd-device-hint">Cuộn hoặc chạm để chuyển ánh sáng <span aria-hidden="true">↔</span></span>
+      <span id="dd-spotlight-hint" className="dd-device-hint">Cuộn hoặc chạm để đổi hướng ánh sáng <span aria-hidden="true">↔</span></span>
     </button>
   );
 }

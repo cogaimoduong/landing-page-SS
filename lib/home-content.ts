@@ -9,16 +9,39 @@ export const homeSections: Record<
   { backgroundTheme: BackgroundTheme }
 > = {
   hero: { backgroundTheme: "dark" },
-  services: { backgroundTheme: "dark" },
+  services: { backgroundTheme: "light" },
   projects: { backgroundTheme: "dark" },
   about: { backgroundTheme: "light" },
   contact: { backgroundTheme: "dark" },
 };
 
 export const homeContact = {
-  // Existing contact address, pending the new brand's confirmed email.
-  email: "hello@webdao.vn",
+  email: "devdes.space@gmail.com",
 };
+
+export const pricingPlans = [
+  {
+    name: "Starter",
+    audience: "Cá nhân, Start-Up / Landing Page / Website đơn giản",
+    price: "Từ 3.000.000 VNĐ",
+    features: ["Thiết kế theo nhận diện", "Responsive mọi thiết bị", "Tối ưu tốc độ cơ bản"],
+    featured: false,
+  },
+  {
+    name: "Growth",
+    audience: "Doanh nghiệp / Mobile App đơn giản",
+    price: "Từ 8.000.000 VNĐ",
+    features: ["UI/UX theo luồng nghiệp vụ", "Prototype tương tác", "Bàn giao thiết kế phát triển"],
+    featured: true,
+  },
+  {
+    name: "Custom",
+    audience: "Hệ thống phức tạp / Mobile App đặc thù",
+    price: "Báo giá riêng",
+    features: ["Khảo sát & tư vấn giải pháp", "Thiết kế hệ thống mở rộng", "Đồng hành triển khai"],
+    featured: false,
+  },
+] as const;
 
 export const homeServices = [
   {

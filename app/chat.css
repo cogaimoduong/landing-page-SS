@@ -2,10 +2,10 @@
 .support-chat button, .support-chat input { font: inherit; }
 .support-chat button { cursor: pointer; }
 .support-chat :is(button, input, a):focus-visible { outline: 2px solid #8b8500; outline-offset: 4px; }
-.support-chat-launcher { display: flex; align-items: center; justify-content: center; margin-left: auto; width: 60px; height: 60px; padding: 9px; border: 1px solid #363635; border-radius: 30px; background: #101010; color: #fff; box-shadow: 0 5px 24px #0002; font-size: 12px !important; position: relative; transition: transform .2s, background .2s; }
-.support-chat-launcher:hover { background: #30302c; transform: translateY(-2px); }
-.support-chat-launcher > img { display: block; object-fit: contain; }
-.support-chat-unread { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #eeec22; border: 2px solid #101010; top: 2px; right: 10px; }
+.support-chat-launcher { display: flex; align-items: center; justify-content: center; margin-left: auto; width: 60px; height: 60px; padding: 9px; border: 0; background: transparent; color: #101010; font-size: 12px !important; position: relative; transition: transform .2s, color .2s; }
+.support-chat-launcher:hover { color: #555550; transform: translateY(-2px); }
+.support-chat-launcher > img { position: absolute; display: block; object-fit: contain; pointer-events: none; }
+.support-chat-unread { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #eeec22; border: 2px solid #fafaf9; top: 4px; right: 7px; }
 .support-chat-panel { display: flex; flex-direction: column; width: 350px; height: 480px; max-height: calc(100dvh - 112px); margin-bottom: 12px; border: 1px solid #deded9; border-radius: 20px; background: #fafaf9; box-shadow: 0 16px 65px #0002; overflow: hidden; animation: chatAppear .2s ease-out; }
 .support-chat-header { display: flex; align-items: center; gap: 11px; background: #101010; color: #fafaf9; padding: 17px; flex-shrink: 0; }
 .support-chat-avatar { width: 41px; height: 41px; display: grid; place-items: center; border: 1px solid #484844; border-radius: 50%; }

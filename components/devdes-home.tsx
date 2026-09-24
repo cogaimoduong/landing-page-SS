@@ -20,7 +20,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
 import { HeroSpotlight } from "@/components/hero-spotlight";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import { useScrollTheme } from "@/components/use-scroll-theme";
 import {
   homeContact,
@@ -28,6 +28,7 @@ import {
   homeSections,
   homeServices,
   homeTestimonials,
+  pricingPlans,
   projectFilters,
   type ProjectFilter,
 } from "@/lib/home-content";
@@ -153,6 +154,13 @@ export function DevDesHome() {
   const [testimonial, setTestimonial] = useState(0);
   const menuButton = useRef<HTMLButtonElement>(null);
   const closeMenu = () => setMenuOpen(false);
+  const goToContact = (event: MouseEvent<HTMLAnchorElement>) => {
+    const contact = document.getElementById("contact");
+    if (!contact) return;
+    event.preventDefault();
+    contact.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.pushState(null, "", "#contact");
+  };
   const visibleProjects = homeProjects.filter(
     (project) => filter === "All" || project.tags.includes(filter),
   );
@@ -195,7 +203,7 @@ export function DevDesHome() {
               Kho giao diện <ArrowUpRight size={12} />
             </Link>
           </nav>
-          <a className="dd-header-cta" href="#contact">
+          <a className="dd-header-cta" href="#contact" onClick={goToContact}>
             Let’s talk <ArrowUpRight size={17} />
           </a>
           <button
@@ -228,7 +236,7 @@ export function DevDesHome() {
         <Link href="/giao-dien" onClick={closeMenu}>
           Kho giao diện <ArrowUpRight />
         </Link>
-        <a href="#contact" onClick={closeMenu}>
+        <a href="#contact" onClick={(event) => { closeMenu(); goToContact(event); }}>
           Bắt đầu dự án <ArrowUpRight />
         </a>
       </nav>
@@ -245,6 +253,10 @@ export function DevDesHome() {
               <span>DESIGN MEETS DEVELOPMENT®</span>
             </div>
             <div className="dd-hero-stage">
+              <h1 className="dd-hero-title">
+                <span>We design</span>
+                <span>You grow</span>
+              </h1>
               <HeroSpotlight />
             </div>
             <div className="dd-hero-bottom">
@@ -379,7 +391,7 @@ export function DevDesHome() {
                             <span key={tag}>{tag}</span>
                           ))}
                         </div>
-                        <a href="#contact">
+                        <a href="#contact" onClick={goToContact}>
                           Trao đổi nhu cầu của bạn <ArrowUpRight size={16} />
                         </a>
                       </div>
@@ -504,7 +516,7 @@ export function DevDesHome() {
                   Từ ý tưởng đầu tiên đến ngày ra mắt, chúng tôi cùng bạn tạo
                   nên website và ứng dụng vừa đẹp, vừa giải quyết đúng vấn đề
                 </p>
-                <a className="dd-underlined" href="#contact">
+                <a className="dd-underlined" href="#contact" onClick={goToContact}>
                   Làm quen với chúng tôi <ArrowUpRight size={17} />
                 </a>
               </div>
@@ -577,6 +589,30 @@ export function DevDesHome() {
           </div>
         </section>
       </main>
+      <section className="dd-pricing theme-dark" id="pricing" aria-labelledby="dd-pricing-title">
+        <div className="dd-shell">
+          <div className="dd-section-top">
+            <span className="dd-eyebrow"><i /> PRICING</span>
+            <span className="dd-section-index">START WITH CLARITY</span>
+          </div>
+          <div className="dd-pricing-heading">
+            <h2 id="dd-pricing-title">Tối ưu ngân sách,<br /><span>nâng tầm thương hiệu.</span></h2>
+            <p>Giải pháp thiết kế Web & App chuyên nghiệp dành cho cá nhân và doanh nghiệp — chỉ từ 3.000.000 VNĐ.</p>
+          </div>
+          <div className="dd-pricing-grid">
+            {pricingPlans.map((plan) => (
+              <article className={`dd-pricing-card ${plan.featured ? "is-featured" : ""}`} key={plan.name}>
+                {plan.featured && <span className="dd-pricing-badge">PHỔ BIẾN NHẤT</span>}
+                <h3>{plan.name}</h3>
+                <p>{plan.audience}</p>
+                <strong>{plan.price}</strong>
+                <ul>{plan.features.map((feature) => <li key={feature}><Check size={14} />{feature}</li>)}</ul>
+                <a className="dd-pill dd-pill-outline" href="#contact" onClick={goToContact}>Chọn gói này <ArrowUpRight size={16} /></a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
       <footer
         className={`dd-footer theme-${homeSections.contact.backgroundTheme}`}
         id="contact"

@@ -12,8 +12,7 @@ export function BrandLogo() {
         priority
       />
       <span className="devdes-logo-type">
-        <span><b>D</b>evelop</span>
-        <span><b>D</b>esign</span>
+        <span><b>DevDes</b><em>.click</em></span>
       </span>
     </span>
   );

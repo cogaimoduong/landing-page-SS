@@ -1,5 +1,5 @@
 "use client";
-import { ArrowUpRight, Minus } from "lucide-react";
+import { ArrowUpRight, MessageCircle, Minus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -53,6 +53,6 @@ export function SupportChat() {
       {chat.error && <div className="chat-session-error" role="alert">{chat.error} <button type="button" onClick={() => void chat.refresh()}>Thử kết nối lại</button></div>}
       <div className="support-chat-footnote"><span>Phiên gắn với trình duyệt này</span><Link href="/giao-dien">Xem giao diện <ArrowUpRight size={11} /></Link></div>
     </section>}
-    <button className="support-chat-launcher" type="button" onClick={() => setOpen(true)} aria-label="Mở chat với DevDes" aria-expanded={open} aria-controls={open ? "support-chat-panel" : undefined} aria-haspopup="dialog" title="Chat với DevDes"><Image src="/images/devdes-mark.png" alt="" width={24} height={40} /></button>
+    <button className="support-chat-launcher" type="button" onClick={() => setOpen(true)} aria-label="Mở chat với DevDes" aria-expanded={open} aria-controls={open ? "support-chat-panel" : undefined} aria-haspopup="dialog" title="Chat với DevDes"><MessageCircle size={42} strokeWidth={1.55} /><Image src="/images/devdes-mark.png" alt="" width={10} height={16} /></button>
   </aside>;
 }
