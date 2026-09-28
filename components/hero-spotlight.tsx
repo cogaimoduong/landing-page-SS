@@ -113,7 +113,7 @@ export function HeroSpotlight() {
       </span>
       <span className="dd-device-label dd-device-label-phone" aria-hidden="true"><i /> MOBILE APP</span>
       <span className="dd-device-label dd-device-label-laptop" aria-hidden="true"><i /> WEBSITE</span>
-      <span id="dd-spotlight-hint" className="dd-device-hint">CREATE. GROW. SERVE.</span>
+      <span id="dd-spotlight-hint" className="dd-device-hint">CREATE <i>·</i> GROW <i>·</i> SERVE</span>
     </button>
   );
 }

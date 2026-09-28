@@ -254,7 +254,7 @@ export function DevDesHome() {
             </div>
             <div className="dd-hero-stage">
               <h1 className="dd-hero-title">
-                <span>We design</span>
+                <span><em>We</em> design</span>
                 <span>You grow</span>
               </h1>
               <HeroSpotlight />

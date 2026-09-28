@@ -245,6 +245,10 @@
   position: absolute;
   white-space: nowrap;
 }
+.dd-hero-title em {
+  font-style: italic;
+  font-weight: 400;
+}
 .dd-hero-title > span:first-child { top: 14%; left: 8%; }
 .dd-hero-title > span:last-child { top: 25%; right: 8%; }
 .dd-device-scene {
@@ -343,6 +347,13 @@
   white-space: nowrap;
 }
 .dd-device-hint > span { margin-left: 12px; }
+.dd-device-hint > i {
+  display: inline-block;
+  margin: 0 5px;
+  color: #d7d7d1;
+  font-size: .8em;
+  font-style: normal;
+}
 .dd-hero-bottom {
   padding: 29px 0 62px;
   display: flex;
