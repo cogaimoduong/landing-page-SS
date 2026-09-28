@@ -93,7 +93,7 @@ export const projectSources: ProjectSource[] = [
     tags: ["Website", "Interface Design"],
     visual: "loopix",
     image: "/images/projects/loopix.jpg",
-    href: "https://loopix-demo.vercel.app/",
+    href: "https://www.loopixstudio.net/",
     label: "VIRTUAL TOUR / WEBSITE",
     linkLabel: "Xem website",
     external: true,
