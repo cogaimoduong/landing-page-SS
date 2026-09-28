@@ -2,7 +2,7 @@
 .chat-email-form h3 { font-size: 18px; }
 .chat-email-form p, .chat-email-form small { font-size: 11px; line-height: 1.9; color: #64645c; }
 .chat-email-form label { font-size: 12px; font-weight: 600; }
-.chat-email-form input { width: 100%; padding: 13px 12px; border: 1px solid #cecec4; background: #fff; border-radius: 9px; color: #171715; font: inherit; font-size: 14px; }
+.chat-email-form input, .chat-email-form select { width: 100%; padding: 13px 12px; border: 1px solid #cecec4; background: #fff; border-radius: 9px; color: #171715; font: inherit; font-size: 14px; }
 .chat-email-form button, .chat-ended button { padding: 13px; border: 0; border-radius: 9px; color: #171715; background: #eeec22; font: inherit; font-size: 12px; cursor: pointer; }
 .chat-email-form .chat-secondary { background: #e9e9e1; }
 .chat-email-form button:disabled { opacity: .55; }

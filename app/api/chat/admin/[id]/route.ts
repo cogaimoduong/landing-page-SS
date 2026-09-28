@@ -11,12 +11,12 @@ export async function GET(request: NextRequest, context: Context) {
 }
 export async function POST(request: NextRequest, context: Context) {
   try {
-    checkOrigin(request); requireAdmin(request);
+    checkOrigin(request); const staff = requireAdmin(request);
     await rateLimit(request, "admin-message", 120, 60 * 1000);
     const id = (await context.params).id;
     await findConversation(id);
     const body = await bodyJson(request);
-    if (body.action === "send") return chatResponse({ session: await appendMessage(id, "admin", body) });
+    if (body.action === "send") return chatResponse({ session: await appendMessage(id, "admin", body, new Date(), staff.name) });
     if (body.action === "react") return chatResponse({ session: await reactToMessage(id, "admin", body) });
     throw new ChatError(400, "Thao tác không hợp lệ");
   } catch (error) { return chatFailure(error); }

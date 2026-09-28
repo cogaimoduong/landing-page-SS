@@ -1,14 +1,16 @@
 import { NextRequest } from "next/server";
-import { ADMIN_COOKIE, adminCookieValue, bodyJson, chatFailure, chatResponse, checkOrigin, cookieOptions, rateLimit, validPassword, ChatError } from "@/lib/chat-server";
+import { ADMIN_COOKIE, ADMIN_STAFF, adminCookieValue, bodyJson, chatFailure, chatResponse, checkOrigin, cookieOptions, rateLimit, validPassword, ChatError } from "@/lib/chat-server";
 export const runtime = "nodejs";
 export async function POST(request: NextRequest) {
   try {
     checkOrigin(request);
     await rateLimit(request, "admin-login", 10, 15 * 60 * 1000);
     const body = await bodyJson(request, 2048);
-    if (!validPassword(body.password)) throw new ChatError(401, "Mật khẩu quản trị không đúng");
-    const response = chatResponse({ ok: true });
-    response.cookies.set(ADMIN_COOKIE, adminCookieValue(), cookieOptions(12 * 60 * 60));
+    const staff = ADMIN_STAFF.find(item => item.id === body.staffId);
+    if (!staff) throw new ChatError(400, "Vui lòng chọn người trả lời");
+    if (!validPassword(staff.id, body.password)) throw new ChatError(401, "Mật khẩu quản trị không đúng");
+    const response = chatResponse({ ok: true, staff });
+    response.cookies.set(ADMIN_COOKIE, adminCookieValue(staff.id), cookieOptions(12 * 60 * 60));
     return response;
   } catch (error) { return chatFailure(error); }
 }

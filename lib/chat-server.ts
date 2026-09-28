@@ -6,6 +6,12 @@ import { CHAT_MAX_BYTES, CHAT_MAX_MESSAGES, chatDates, chatState } from "./chat-
 import { templates } from "./templates";
 export const VISITOR_COOKIE = "devdes_chat";
 export const ADMIN_COOKIE = "devdes_chat_admin";
+export const ADMIN_STAFF = [
+  { id: "thanh-phong", name: "Thanh Phong" },
+  { id: "anh-gia", name: "Anh Gia" },
+  { id: "kim-thoa", name: "Kim Thoa" },
+] as const;
+export type AdminStaff = (typeof ADMIN_STAFF)[number];
 const FIRST_MESSAGE_AUTO_REPLY = "Cảm ơn bạn đã nhắn DevDes! Đội ngũ đã nhận được thông tin và thường phản hồi trong vòng 2 giờ. Chúng mình sẽ sớm liên hệ với bạn nhé.";
 export class ChatError extends Error {
   constructor(public status: number, message: string) { super(message); }
@@ -34,18 +40,25 @@ function secret() {
 }
 export function signature(value: string) { return createHmac("sha256", secret()).update(value).digest("hex"); }
 function equals(a: string, b: string) { return timingSafeEqual(createHash("sha256").update(a).digest(), createHash("sha256").update(b).digest()); }
-export function validPassword(password: unknown) {
-  const expected = process.env.CHAT_ADMIN_PASSWORD;
-  if (!expected || expected.length < 16) throw new Error("CHAT_NOT_CONFIGURED");
+const adminPasswordKeys: Record<AdminStaff["id"], string> = {
+  "thanh-phong": "CHAT_ADMIN_PASSWORD_THANH_PHONG",
+  "anh-gia": "CHAT_ADMIN_PASSWORD_ANH_GIA",
+  "kim-thoa": "CHAT_ADMIN_PASSWORD_KIM_THOA",
+};
+export function validPassword(staffId: AdminStaff["id"], password: unknown) {
+  const expected = process.env[adminPasswordKeys[staffId]];
+  if (!expected || expected.length < 8) throw new Error("CHAT_NOT_CONFIGURED");
   return typeof password === "string" && equals(password, expected);
 }
-export function adminCookieValue() {
-  const payload = `${Date.now() + 12 * 60 * 60 * 1000}.${randomBytes(16).toString("hex")}`;
+export function adminCookieValue(staffId: AdminStaff["id"]) {
+  const payload = `${Date.now() + 12 * 60 * 60 * 1000}.${randomBytes(16).toString("hex")}.${staffId}`;
   return `${payload}.${signature(payload)}`;
 }
 export function requireAdmin(request: NextRequest) {
-  const [expiry, nonce, mac] = (request.cookies.get(ADMIN_COOKIE)?.value || "").split(".");
-  if (!/^\d{13}$/.test(expiry || "") || !/^[a-f0-9]{32}$/.test(nonce || "") || !/^[a-f0-9]{64}$/.test(mac || "") || Number(expiry) <= Date.now() || !equals(signature(`${expiry}.${nonce}`), mac)) throw new ChatError(401, "Vui lòng đăng nhập quản trị");
+  const [expiry, nonce, staffId, mac] = (request.cookies.get(ADMIN_COOKIE)?.value || "").split(".");
+  const staff = ADMIN_STAFF.find(item => item.id === staffId);
+  if (!/^\d{13}$/.test(expiry || "") || !/^[a-f0-9]{32}$/.test(nonce || "") || !staff || !/^[a-f0-9]{64}$/.test(mac || "") || Number(expiry) <= Date.now() || !equals(signature(`${expiry}.${nonce}.${staffId}`), mac)) throw new ChatError(401, "Vui lòng đăng nhập quản trị");
+  return staff;
 }
 export function cookieOptions(maxAge: number) { return { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "strict" as const, path: "/", maxAge }; }
 export function visitorToken(request: NextRequest) {
@@ -99,7 +112,7 @@ export async function startConversation(email: unknown, token: string | null, no
   const existing = await findVisitor(token, now);
   if (existing && existing.expiresAt > now) return { session: serializeChat(existing, now), token: token! };
   const nextToken = randomBytes(32).toString("hex");
-  const welcome: StoredChatMessage = { id: randomUUID(), sender: "admin", text: "Chào bạn, DevDes rất vui được hỗ trợ. Bạn cứ để lại nội dung cần tư vấn nhé.", createdAt: now.toISOString() };
+  const welcome: StoredChatMessage = { id: randomUUID(), sender: "admin", senderName: "DevDes AI", text: "Chào bạn, DevDes rất vui được hỗ trợ. Bạn cứ để lại nội dung cần tư vấn nhé.", createdAt: now.toISOString() };
   const doc: Conversation = { _id: randomUUID(), email: email.trim().toLowerCase(), tokenHash: hashToken(nextToken), createdAt: now, lastMessageAt: now, ...chatDates(now), messages: [welcome], count: 1, bytes: Buffer.byteLength(JSON.stringify(welcome)) };
   const { conversations } = await chatCollections();
   await conversations.insertOne(doc);
@@ -139,18 +152,18 @@ function validateAttachment(value: unknown): ChatAttachment | undefined {
   if (typeof raw.emoji === "string") result.emoji = raw.emoji.slice(0, 32);
   return result;
 }
-export async function appendMessage(id: string, actor: ChatActor, body: Record<string, unknown>, now = new Date()) {
+export async function appendMessage(id: string, actor: ChatActor, body: Record<string, unknown>, now = new Date(), senderName?: string) {
   if (typeof body.id !== "string" || !/^[a-f0-9-]{36}$/.test(body.id) || typeof body.text !== "string" || body.text.length > 1000) throw new ChatError(400, "Tin nhắn không hợp lệ (tối đa 1000 ký tự)");
   const attachment = validateAttachment(body.attachment);
   const text = body.text.trim();
   if (!text && !attachment) throw new ChatError(400, "Vui lòng nhập tin nhắn");
-  const message: StoredChatMessage = { id: body.id, sender: actor, text, createdAt: now.toISOString(), ...(attachment ? { attachment } : {}) };
+  const message: StoredChatMessage = { id: body.id, sender: actor, text, createdAt: now.toISOString(), ...(actor === "admin" && senderName ? { senderName } : {}), ...(attachment ? { attachment } : {}) };
   const bytes = Buffer.byteLength(JSON.stringify(message)) + 512;
   const { conversations } = await chatCollections();
   if (actor === "user") {
     // Keep this in the database operation so retries and simultaneous sends
     // still create the acknowledgement exactly once.
-    const acknowledgement: StoredChatMessage = { id: randomUUID(), sender: "admin", text: FIRST_MESSAGE_AUTO_REPLY, createdAt: now.toISOString() };
+    const acknowledgement: StoredChatMessage = { id: randomUUID(), sender: "admin", senderName: "DevDes AI", text: FIRST_MESSAGE_AUTO_REPLY, createdAt: now.toISOString() };
     const acknowledgementBytes = Buffer.byteLength(JSON.stringify(acknowledgement)) + 512;
     const firstMessage = await conversations.findOneAndUpdate({
       _id: id, expiresAt: { $gt: now }, bytes: { $lte: CHAT_MAX_BYTES - bytes - acknowledgementBytes }, count: { $lte: CHAT_MAX_MESSAGES - 2 },
