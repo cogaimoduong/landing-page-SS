@@ -1,0 +1,28 @@
+.chat-email-link {
+  display: inline;
+  border-radius: 4px;
+  background: #fff6a0;
+  color: #4f4a00;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.chat-email-link:hover {
+  background: #eeec22;
+  color: #161614;
+}
+
+.chat-email-link:focus-visible {
+  outline: 2px solid #6d6800;
+  outline-offset: 2px;
+}
+
+.support-chat-message.is-user .chat-email-link,
+.admin-message.is-admin .chat-email-link {
+  background: #eeec22;
+  color: #161614;
+}

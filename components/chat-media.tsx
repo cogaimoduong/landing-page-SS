@@ -2,12 +2,29 @@
 
 import { CirclePlus, Gift, ImageIcon, LayoutTemplate, Mic, Send, Smile, Square, Sticker, ThumbsUp, X } from "lucide-react";
 import EmojiPicker, { type EmojiClickData, Theme } from "emoji-picker-react";
-import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
+import { useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import type { ChatAttachment, StoredChatMessage } from "@/lib/chat-store";
 import { templates } from "@/lib/templates";
 import { ChatMediaImage, ChatMediaLibrary } from "@/components/chat-media-library";
 
 const maxMediaSize = 2.5 * 1024 * 1024;
+const emailPattern = /[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+/gi;
+
+function MessageText({ text }: { text: string }) {
+  const parts: ReactNode[] = [];
+  let cursor = 0;
+
+  for (const match of text.matchAll(emailPattern)) {
+    const email = match[0];
+    const index = match.index ?? 0;
+    if (index > cursor) parts.push(text.slice(cursor, index));
+    parts.push(<a className="chat-email-link" href={`mailto:${email}`} key={`${index}-${email}`} title={`Gửi email đến ${email}`}>{email}</a>);
+    cursor = index + email.length;
+  }
+
+  if (cursor < text.length) parts.push(text.slice(cursor));
+  return <>{parts.length ? parts : text}</>;
+}
 
 function TemplateReview({ attachment }: { attachment: ChatAttachment }) {
   const [showDemo, setShowDemo] = useState(false);
@@ -16,7 +33,7 @@ function TemplateReview({ attachment }: { attachment: ChatAttachment }) {
 
 export function ChatMessageBody({ message }: { message: StoredChatMessage }) {
   const attachment = message.attachment;
-  return <>{attachment && <div className={`chat-attachment is-${attachment.kind}${attachment.animated ? " is-animated" : ""}`}>{attachment.kind === "image" || attachment.kind === "gif" || (attachment.kind === "sticker" && attachment.animated) ? <ChatMediaImage src={attachment.url} alt={attachment.name || "Ảnh đính kèm"} emoji={attachment.emoji} /> : attachment.kind === "video" ? <video src={attachment.url} controls preload="metadata" /> : attachment.kind === "audio" ? <audio src={attachment.url} controls /> : attachment.kind === "template" ? <TemplateReview attachment={attachment} /> : <span role="img" aria-label={attachment.name || "Sticker"}>{attachment.url}</span>}</div>}{message.text && <p>{message.text}</p>}</>;
+  return <>{attachment && <div className={`chat-attachment is-${attachment.kind}${attachment.animated ? " is-animated" : ""}`}>{attachment.kind === "image" || attachment.kind === "gif" || (attachment.kind === "sticker" && attachment.animated) ? <ChatMediaImage src={attachment.url} alt={attachment.name || "Ảnh đính kèm"} emoji={attachment.emoji} /> : attachment.kind === "video" ? <video src={attachment.url} controls preload="metadata" /> : attachment.kind === "audio" ? <audio src={attachment.url} controls /> : attachment.kind === "template" ? <TemplateReview attachment={attachment} /> : <span role="img" aria-label={attachment.name || "Sticker"}>{attachment.url}</span>}</div>}{message.text && <p><MessageText text={message.text} /></p>}</>;
 }
 
 type ChatComposerProps = {

@@ -6,6 +6,7 @@ import "./showcase.css";
 import "./catalog.css";
 import "./chat.css";
 import "./chat-media.css";
+import "./chat-email.css";
 import "./chat-library.css";
 import "./chat-template.css";
 import "./chat-session.css";
