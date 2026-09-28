@@ -287,7 +287,7 @@ export function DevDesHome() {
                   aria-hidden={group === 1 ? true : undefined}
                 >
                   {homeProjects.map((project) => (
-                    <span key={project.slug}>{project.name}</span>
+                    <span key={project.slug}>{project.name.split(" / ").at(-1)}</span>
                   ))}
                 </div>
               ))}
