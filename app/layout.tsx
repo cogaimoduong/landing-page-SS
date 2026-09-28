@@ -20,10 +20,24 @@ const beVietnamPro = Be_Vietnam_Pro({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.devdes.click"),
   title: "DevDes.click — Design meets Development",
   description:
     "DevDes thiết kế và phát triển website, ứng dụng kinh doanh và phần mềm quản lý nội bộ cho tổ chức, doanh nghiệp.",
   keywords: ["thiết kế website", "lập trình web", "landing page", "Next.js"],
+  openGraph: {
+    type: "website",
+    locale: "vi_VN",
+    siteName: "DevDes.click",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
 };
 
 export default function RootLayout({

@@ -9,6 +9,9 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Kho giao diện — DevDes.click",
   description: "Khám phá bộ sưu tập website mẫu của DevDes: cho thuê, khách sạn, quản lý, quảng cáo và portfolio. Xem thử và chọn giao diện cho thương hiệu của bạn.",
+  alternates: {
+    canonical: "/giao-dien",
+  },
 };
 
 export default function TemplatesPage() {

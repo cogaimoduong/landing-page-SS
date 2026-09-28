@@ -12,7 +12,15 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const template = getTemplate((await params).slug);
-  return template ? { title: `${template.name} — Live Demo` } : {};
+  return template
+    ? {
+        title: `${template.name} — Live Demo`,
+        robots: {
+          index: false,
+          follow: true,
+        },
+      }
+    : {};
 }
 
 export default async function DemoPage({ params }: Props) {

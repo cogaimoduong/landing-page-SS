@@ -16,7 +16,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const template = getTemplate(slug);
   if (!template) return {};
-  return { title: `${template.name} — Giao diện mẫu DevDes.click`, description: template.description };
+  return {
+    title: `${template.name} — Giao diện mẫu DevDes.click`,
+    description: template.description,
+    alternates: {
+      canonical: `/giao-dien/${template.slug}`,
+    },
+  };
 }
 
 export default async function TemplateDetailPage({ params }: Props) {
