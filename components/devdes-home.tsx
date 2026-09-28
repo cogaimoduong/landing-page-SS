@@ -676,7 +676,7 @@ export function DevDesHome() {
             </div>
           </div>
           <div className="dd-footer-bottom">
-            <span>© 2026 DevDes.click</span>
+            <span>Copyright © 2026 Sense &amp; Scene Studio. All right reserved</span>
             <span>DESIGN WITH INTENT · BUILD WITH CARE</span>
             <a href="#top">
               Về đầu trang <ArrowUpRight size={13} />
