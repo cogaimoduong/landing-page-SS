@@ -52,11 +52,15 @@ export default async function TemplateDetailPage({ params }: Props) {
         <DevicePreview slug={template.slug} name={template.name} app={template.sourceKind === "app"} />
       </section>
 
-      <section className="detail-bottom catalog-shell">
+      {template.originalUrl ? <section className="detail-bottom catalog-shell">
+        <div><span>WEBSITE GỐC</span><h2>Đúng thiết kế.<br />Đúng trải nghiệm.</h2></div>
+        <p>Mẫu này được hiển thị trực tiếp từ website bạn đã cung cấp, giữ nguyên nội dung, hình ảnh, font chữ và tương tác của bản gốc.</p>
+        <a href={template.originalUrl} target="_blank" rel="noreferrer">Xem website gốc <ArrowUpRight /></a>
+      </section> : <section className="detail-bottom catalog-shell">
         <div><span>CÓ SẴN TRONG MẪU</span><h2>Nền tảng tốt<br />để bắt đầu.</h2></div>
         <ul>{template.features.map((feature) => <li key={feature}><Check /> {feature}</li>)}<li><Check /> Chuẩn responsive</li><li><Check /> Tùy chỉnh theo thương hiệu</li></ul>
         <Link href="/#contact">Tôi muốn dùng mẫu này <ArrowUpRight /></Link>
-      </section>
+      </section>}
     </main>
   );
 }

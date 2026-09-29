@@ -30,7 +30,7 @@ export function TemplateGallery() {
         {visible.map((template, index) => (
           <article className="template-card" key={template.slug} style={{ "--card-delay": `${index * 45}ms` } as React.CSSProperties}>
             <Link href={`/giao-dien/${template.slug}`} className="template-thumb" style={{ background: template.tone, "--demo-accent": template.accent, "--demo-dark": template.dark } as React.CSSProperties}>
-              {template.sourceKind === "app" ? <div className="mini-app-preview">
+              {template.originalUrl ? <div className="original-template-cover" style={{ backgroundImage: `url(${template.image})` }} role="img" aria-label={`Ảnh website gốc ${template.name}`} /> : template.sourceKind === "app" ? <div className="mini-app-preview">
                 <div className="mini-app-phone">
                   <i /><header><small>GIAO DIỆN APP</small><b>{template.name}</b></header><div className="mini-app-summary"><span>12</span><small>MỤC ĐANG THEO DÕI</small><em>+12%</em></div><div className="mini-app-stat"><b>86%</b><span /><b>24</b></div><div className="mini-app-list"><i /><i /><i /></div><footer><span /><span className="active" /><span /></footer>
                 </div>

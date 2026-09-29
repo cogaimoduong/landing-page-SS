@@ -1,4 +1,9 @@
 /* The storefront shares DevDes styling; the Folio demo keeps its own theme. */
+.original-template-cover { width: 100%; height: 100%; background-size: cover; background-position: top center; }
+.template-thumb:has(.original-template-cover) { padding: 0; }
+.devdes-catalog .template-thumb:has(.original-template-cover) { padding: 0; }
+.original-preview-note { font-size: 12px; line-height: 1.7; color: #626260; }
+.original-preview-note a { text-decoration: underline; text-underline-offset: 3px; }
 :is(.devdes-catalog, .devdes-detail) { background: #fafaf9; color: #101010; -webkit-font-smoothing: antialiased; }
 :is(.devdes-catalog, .devdes-detail) .catalog-shell { width: min(1440px, calc(100% - 112px)); }
 :is(.devdes-catalog, .devdes-detail) .catalog-nav { height: 94px; border-color: #d7d7d3; gap: 28px; }

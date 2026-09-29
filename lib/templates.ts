@@ -16,6 +16,7 @@ export type TemplateItem = {
   image: string;
   features: string[];
   sourceKind?: ProjectSourceKind;
+  originalUrl?: string;
   inDevelopment?: boolean;
 };
 
@@ -230,6 +231,7 @@ const coreTemplates: TemplateItem[] = [
 
 const projectTemplates: TemplateItem[] = projectSources.map((project) => ({
   ...project.template,
+  ...(project.external ? { name: project.name, description: project.caption, originalUrl: project.href } : {}),
   category: "project",
   image: project.image,
   inDevelopment: project.inDevelopment || project.template.inDevelopment,

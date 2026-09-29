@@ -2,6 +2,7 @@
 
 import { ExternalLink, Laptop, Smartphone, Tablet } from "lucide-react";
 import { useState } from "react";
+import { getTemplate } from "@/lib/templates";
 
 const devices = [
   { id: "desktop", label: "Desktop", icon: Laptop, width: "100%" },
@@ -12,6 +13,8 @@ const devices = [
 type Device = (typeof devices)[number]["id"];
 
 export function DevicePreview({ slug, name, app = false }: { slug: string; name: string; app?: boolean }) {
+  const originalUrl = getTemplate(slug)?.originalUrl;
+  const previewUrl = originalUrl || `/mau/${slug}`;
   const availableDevices = app ? devices.filter((item) => item.id === "mobile") : devices;
   const [device, setDevice] = useState<Device>(app ? "mobile" : "desktop");
   const current = devices.find((item) => item.id === device)!;
@@ -27,14 +30,15 @@ export function DevicePreview({ slug, name, app = false }: { slug: string; name:
           ))}
         </div>
         <span className="viewport-label">{device === "desktop" ? "1440 × 900" : device === "tablet" ? "820 × 1180" : "390 × 844"}</span>
-        <a href={`/mau/${slug}`} target="_blank" rel="noreferrer">Mở toàn màn hình <ExternalLink size={15} /></a>
+        <a href={previewUrl} target="_blank" rel="noreferrer">{originalUrl ? "Mở website gốc" : "Mở toàn màn hình"} <ExternalLink size={15} /></a>
       </div>
       <div className={`device-stage ${device}`}>
         <div className="device-frame" style={{ width: current.width }}>
           <div className="frame-camera" />
-          <iframe title={`Xem trước giao diện ${name} trên ${current.label}`} src={`/mau/${slug}`} />
+          <iframe title={`Xem trước giao diện ${name} trên ${current.label}`} src={previewUrl} />
         </div>
       </div>
+      {originalUrl && <p className="original-preview-note">Đang hiển thị trực tiếp website gốc. Nếu website không cho phép xem trong khung, <a href={originalUrl} target="_blank" rel="noreferrer">mở website gốc tại đây ↗</a>.</p>}
     </div>
   );
 }

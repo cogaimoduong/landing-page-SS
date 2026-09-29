@@ -20,8 +20,8 @@ import { ManagementWorkspace } from "./management-demo";
 import { ServiceCatalog } from "./service-catalog";
 import { HospitalityShowcase, AgencyPortfolio } from "./topic-showcase";
 import { FoodDemo } from "./food-demo";
-import { ProjectAppShowcase } from "./project-app-showcase";
-import { ProjectWebsiteShowcase } from "./project-website-showcase";
+import { ProjectTemplateDemo } from "./project-template-demo";
+import "./template-identities.css";
 
 export function DemoSite({ template }: { template: TemplateItem }) {
   const style = {
@@ -42,7 +42,7 @@ export function DemoSite({ template }: { template: TemplateItem }) {
       {template.category === "management" && <ManagementWorkspace template={template} />}
       {template.category === "advertising" && <AdvertisingDemo template={template} />}
       {template.category === "fnb" && <FoodDemo template={template} />}
-      {template.category === "project" && (template.sourceKind === "app" ? <ProjectAppShowcase template={template} /> : <ProjectWebsiteShowcase template={template} />)}
+      {template.category === "project" && <ProjectTemplateDemo template={template} />}
     </main>
   );
 }

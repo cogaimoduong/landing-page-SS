@@ -1,0 +1,112 @@
+/* Each self-authored collection has its own composition and type hierarchy. */
+.sample-site :is(input, select, textarea) { font-family: var(--font-sans); }
+.sample-site :is(h1, h2, h3) { overflow-wrap: normal; }
+.sample-site .sample-nav-cta { color: #fff; }
+.sample-site.ridenow-car-rental .sample-nav-cta { background: #f4ff3d; color: #111; }
+.sample-site .sample-hero-copy h1, .sample-site .hotel-copy h1 { line-height: 1.06; letter-spacing: -.04em; }
+.sample-site .sample-section-title h2 { line-height: 1.12; letter-spacing: -.035em; }
+
+/* RideNow: motorsport, oversized italic headlines and a high-contrast pit lane. */
+.ridenow-car-rental .sample-hero { border-bottom: 12px solid #f4ff3d; }
+.ridenow-car-rental .sample-banner { background: #111; color: #f4ff3d; }
+.ridenow-car-rental .sample-banner h2 { text-transform: uppercase; font-style: italic; }
+.ridenow-car-rental .benefit-grid article { border-top: 3px solid #111; padding-top: 24px; }
+.ridenow-car-rental .rental-story { background: #f4ff3d; }
+
+/* Nestly: a warm lifestyle journal, inset photography and soft serif headings. */
+.nestly-home-rental { background: #f6f0e7; }
+.nestly-home-rental :is(.sample-hero-copy h1, .sample-section-title h2, .sample-banner h2, .story-copy blockquote) { font-family: var(--font-display); font-weight: 400; }
+.nestly-home-rental .image-hero { background: #f1e8dc; color: #283329; }
+.nestly-home-rental .image-hero::before { content: ""; position: absolute; inset: 120px 4% 40px 52%; background: var(--sample-image) center/cover; border-radius: 180px 180px 12px 12px; }
+.nestly-home-rental .sample-nav { color: #283329; border-color: #28332930; }
+.nestly-home-rental .sample-hero-copy { position: relative; padding-right: 52%; margin-top: 110px; }
+.nestly-home-rental .sample-hero-copy h1 { font-size: clamp(44px, 4.6vw, 72px); }
+.nestly-home-rental .hero-catalog-link { position: relative; max-width: 45%; background: #9f5b3f; color: #fff !important; border-radius: 40px; }
+.nestly-home-rental .sample-banner { margin: 0 5%; border-radius: 24px; }
+.nestly-home-rental .benefit-grid { gap: 40px; }
+
+/* GearUp: technical equipment catalogue, orange rule and drawing-grid panels. */
+.gearup-equipment-rental .image-hero { background-size: 58% auto; background-repeat: no-repeat; background-position: right center; background-color: #171717; }
+.gearup-equipment-rental .sample-hero-copy { padding-right: 40%; }
+.gearup-equipment-rental .sample-hero-copy h1 { font-size: clamp(48px, 5.4vw, 82px); border-left: 7px solid #ff6b00; padding-left: 24px; }
+.gearup-equipment-rental .sample-banner { background-color: #ff6b00; background-image: linear-gradient(#0001 1px, transparent 1px), linear-gradient(90deg, #0001 1px, transparent 1px); background-size: 28px 28px; }
+.gearup-equipment-rental .benefit-grid article { padding: 28px; border: 1px solid #171717; }
+.gearup-equipment-rental .expanded-guide { background: #232323; color: #fafafa; }
+
+/* Aurelia: quiet luxury with full-bleed photography and restrained serif type. */
+.aurelia-luxury-hotel :is(.hotel-copy h1, .hotel-intro h2, .sample-section-title h2, .hotel-testimonial blockquote) { font-family: var(--font-display); font-weight: 400; }
+.aurelia-luxury-hotel .hotel-copy h1 { font-size: clamp(50px, 6.5vw, 92px); }
+.aurelia-luxury-hotel .sample-nav { width: calc(100% - 100px); }
+.aurelia-luxury-hotel .hotel-hero { min-height: 850px; }
+.aurelia-luxury-hotel .hotel-copy { margin-top: 160px; }
+.aurelia-luxury-hotel .hotel-testimonial { background: #182b25; color: #efe4d1; }
+
+/* Sunday: colourful boutique, split cover and playful rounded compositions. */
+.sunday-boutique-hotel .hotel-hero { background: #ffd5dc; color: #193a37; min-height: 730px; }
+.sunday-boutique-hotel .hotel-hero::before { content: ""; position: absolute; inset: 120px 5% 55px 55%; background: var(--sample-image) center/cover; border-radius: 45% 45% 18px 18px; transform: rotate(3deg); box-shadow: 12px 12px 0 #eb4f74; }
+.sunday-boutique-hotel .sample-nav { color: #193a37; border-color: #193a3740; }
+.sunday-boutique-hotel .hotel-copy { position: relative; margin: 100px 0 0 6%; width: 43%; text-align: left; }
+.sunday-boutique-hotel .hotel-copy h1 { font-size: clamp(48px, 5.3vw, 80px); }
+.sunday-boutique-hotel .hotel-copy button { color: #193a37; border-color: #193a37; }
+.sunday-boutique-hotel .hotel-catalog-link { margin-left: 6%; transform: none; left: 0; border-radius: 40px; background: #193a37; color: #fff !important; }
+.sunday-boutique-hotel .hotel-intro { padding-block: 90px; }
+.sunday-boutique-hotel .amenity-grid article { border: 1px solid #193a37; border-radius: 50% 50% 16px 16px; padding: 40px 20px; background: #fff2c2; }
+.sunday-boutique-hotel .hotel-testimonial { background: #eb4f74; color: #fff; }
+
+/* Hush: monochrome Japanese-inspired editorial, generous white space. */
+.hush-minimal-hotel { background: #eeece6; }
+.hush-minimal-hotel :is(.hotel-copy h1, .hotel-intro h2, .sample-section-title h2) { font-family: var(--font-display); font-weight: 400; }
+.hush-minimal-hotel .hotel-hero { min-height: 760px; border: 24px solid #eeece6; background-image: linear-gradient(90deg, #eeece6 0%, #eeece6 42%, transparent 60%), var(--sample-image); }
+.hush-minimal-hotel .hotel-copy { margin-top: 130px; max-width: 440px; }
+.hush-minimal-hotel .hotel-copy h1 { font-size: clamp(46px, 5.2vw, 72px); }
+.hush-minimal-hotel .hotel-testimonial { background: #dfded6; color: #2d302d; }
+.hush-minimal-hotel .amenity-grid article { border-top: 1px solid #5d6c62; padding-top: 32px; }
+
+/* Agencies: brutalist poster / technology studio / printed editorial. */
+.loud-creative-agency .ad-copy h1 { line-height: 1.02; letter-spacing: -.045em; }
+.loud-creative-agency .ad-orb { border-radius: 0; filter: none; transform: rotate(12deg); opacity: .6; }
+.loud-creative-agency .ad-process { border-block: 8px solid #131313; }
+.halo-digital-marketing .advertising-hero { background: radial-gradient(ellipse at 85% 35%, #343c85, transparent 55%), #0c1024; }
+.halo-digital-marketing .ad-copy { max-width: 850px; position: relative; z-index: 1; }
+.halo-digital-marketing .ad-copy h1 { font-size: clamp(48px, 5.5vw, 82px); line-height: 1.1; }
+.halo-digital-marketing .ad-orb { border: 1px solid #7da9ff; background: repeating-radial-gradient(circle, transparent 0 24px, #9cb6ff55 25px 26px); filter: none; }
+.halo-digital-marketing .ad-stats { background: #ffffff12; border: 1px solid #ffffff30; border-radius: 20px; padding: 25px; }
+.halo-digital-marketing .offer-card { border-radius: 22px; box-shadow: 0 15px 45px #4e5bff12; }
+.muse-brand-studio .advertising-hero { background: #f3ead8; color: #242018; }
+.muse-brand-studio .sample-nav { color: #242018; border-color: #24201840; }
+.muse-brand-studio .ad-copy { position: relative; z-index: 1; max-width: 780px; }
+.muse-brand-studio .ad-copy h1 { font-family: var(--font-display); font-size: clamp(48px, 6vw, 88px); font-weight: 400; line-height: 1.1; letter-spacing: -.035em; }
+.muse-brand-studio .ad-orb { border-radius: 0; background: var(--sample-image) center/cover; filter: grayscale(1); width: 34%; height: 64%; top: 140px; right: 4%; opacity: .4; }
+.muse-brand-studio .sample-section-title h2 { font-family: var(--font-display); font-weight: 400; }
+.muse-brand-studio .ad-stats { color: #242018; }
+
+/* Management: dark CRM, horizontal project workspace, friendly retail console. */
+.orbit-crm-dashboard .dashboard-shell { background: #15172b; color: #e8eaff; }
+.orbit-crm-dashboard :is(.workspace-panel, .metric-grid article) { background: #20233b; border-color: #363952; color: #e8eaff; }
+.orbit-crm-dashboard :is(.workspace-panel p, .metric-grid span, .demo-note) { color: #b4b9d5; }
+.orbit-crm-dashboard :is(input, select, th) { background: #181b30; color: #e8eaff; border-color: #444761; }
+.flowdesk-project-management .dashboard-shell { grid-template-columns: 1fr; }
+.flowdesk-project-management .dashboard-sidebar { min-height: 0; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 24px; padding: 22px 36px; border-bottom: 1px solid #dbe2ec; }
+.flowdesk-project-management .dashboard-logo { margin: 0; }
+.flowdesk-project-management .dashboard-sidebar nav { display: flex; flex-wrap: wrap; gap: 4px; }
+.flowdesk-project-management .workspace-user { margin: 0 0 0 auto; }
+.flowdesk-project-management .dashboard-main { width: min(1400px, 100%); margin: auto; }
+.minto-store-management .dashboard-shell { background: #f3f8ee; }
+.minto-store-management .dashboard-sidebar { margin: 16px; min-height: calc(100vh - 32px); border-radius: 24px; }
+.minto-store-management .metric-grid article { border-radius: 22px; border: 0; background: #e0efd7; }
+.minto-store-management .workspace-panel { border-radius: 24px; border-color: #d9e4d2; }
+
+@media (max-width: 800px) {
+  .nestly-home-rental .image-hero::before, .sunday-boutique-hotel .hotel-hero::before { inset: auto 7% 35px; height: 280px; border-radius: 100px 100px 12px 12px; }
+  .nestly-home-rental .image-hero, .sunday-boutique-hotel .hotel-hero { padding-bottom: 360px; }
+  .nestly-home-rental .sample-hero-copy, .gearup-equipment-rental .sample-hero-copy { padding-right: 0; margin-top: 65px; }
+  .nestly-home-rental .hero-catalog-link { max-width: 86%; }
+  .sunday-boutique-hotel .hotel-copy { margin: 55px auto 0; width: 86%; }
+  .sunday-boutique-hotel .hotel-catalog-link { position: relative; margin: 25px auto; width: fit-content; }
+  .hush-minimal-hotel .hotel-hero { border-width: 12px; }
+  .aurelia-luxury-hotel .sample-nav { width: calc(100% - 40px); }
+  .aurelia-luxury-hotel .hotel-copy { margin-top: 110px; }
+  .gearup-equipment-rental .image-hero { background-size: cover; }
+  .flowdesk-project-management .dashboard-sidebar { padding: 20px; }
+  .minto-store-management .dashboard-sidebar { margin: 0; min-height: 0; border-radius: 0; }
+}
