@@ -3,7 +3,9 @@
   --paper: #f3f0e8;
   --acid: #c7ff19;
   --line: rgba(17, 17, 15, .18);
-  --font-main: var(--font-be-vietnam-pro), "Segoe UI", Arial, sans-serif;
+  --font-sans: var(--font-be-vietnam-pro), "Segoe UI", Arial, sans-serif;
+  --font-display: var(--font-noto-serif), Georgia, "Times New Roman", serif;
+  --font-main: var(--font-sans);
   --mono: var(--font-main);
 }
 

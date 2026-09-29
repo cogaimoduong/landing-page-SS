@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Be_Vietnam_Pro } from "next/font/google";
+import { Be_Vietnam_Pro, Noto_Serif } from "next/font/google";
 import { SupportChat } from "@/components/support-chat";
 import "./globals.css";
 import "./showcase.css";
@@ -17,6 +17,12 @@ const beVietnamPro = Be_Vietnam_Pro({
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-be-vietnam-pro",
+});
+
+const notoSerif = Noto_Serif({
+  subsets: ["latin", "vietnamese"],
+  display: "swap",
+  variable: "--font-noto-serif",
 });
 
 export const metadata: Metadata = {
@@ -44,7 +50,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="vi" className={beVietnamPro.variable}>
+    <html lang="vi" className={`${beVietnamPro.variable} ${notoSerif.variable}`}>
       <body>{children}<SupportChat /></body>
     </html>
   );
