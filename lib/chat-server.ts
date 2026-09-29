@@ -1,9 +1,9 @@
 import { createHash, createHmac, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
-import type { ChatActor, ChatAttachment, ChatSession, StoredChatMessage } from "./chat-store";
+import type { ChatActor, ChatAttachment, ChatLocale, ChatSession, StoredChatMessage } from "./chat-store";
 import { chatDb } from "./chat-db";
 import { CHAT_MAX_BYTES, CHAT_MAX_MESSAGES, chatDates, chatState } from "./chat-policy";
-import { templates } from "./templates";
+import { getTemplates } from "./templates";
 export const VISITOR_COOKIE = "devdes_chat";
 export const ADMIN_COOKIE = "devdes_chat_admin";
 export const ADMIN_STAFF = [
@@ -12,11 +12,20 @@ export const ADMIN_STAFF = [
   { id: "kim-thoa", name: "Kim Thoa" },
 ] as const;
 export type AdminStaff = (typeof ADMIN_STAFF)[number];
-const FIRST_MESSAGE_AUTO_REPLY = "Cảm ơn bạn đã nhắn DevDes! Đội ngũ đã nhận được thông tin và thường phản hồi trong vòng 2 giờ. Chúng mình sẽ sớm liên hệ với bạn nhé.";
+const CHAT_COPY: Record<ChatLocale, { welcome: string; acknowledgement: string }> = {
+  en: {
+    welcome: "Hello! DevDes is happy to help. Please leave the details you would like advice on.",
+    acknowledgement: "Thanks for messaging DevDes! Our team has received your details and usually replies within two hours. We'll get back to you soon.",
+  },
+  vi: {
+    welcome: "Chào bạn, DevDes rất vui được hỗ trợ. Bạn cứ để lại nội dung cần tư vấn nhé.",
+    acknowledgement: "Cảm ơn bạn đã nhắn DevDes! Đội ngũ đã nhận được thông tin và thường phản hồi trong vòng 2 giờ. Chúng mình sẽ sớm liên hệ với bạn nhé.",
+  },
+};
 export class ChatError extends Error {
   constructor(public status: number, message: string) { super(message); }
 }
-type Conversation = { _id: string; tokenHash: string; email: string; createdAt: Date; lastMessageAt: Date; expiresAt: Date; deleteAt: Date; bytes: number; count: number; messages: StoredChatMessage[] };
+type Conversation = { _id: string; tokenHash: string; email: string; locale?: ChatLocale; createdAt: Date; lastMessageAt: Date; expiresAt: Date; deleteAt: Date; bytes: number; count: number; messages: StoredChatMessage[] };
 type Limit = { _id: string; count: number; deleteAt: Date };
 let indexes: Promise<unknown> | undefined;
 export async function chatCollections() {
@@ -33,6 +42,16 @@ export async function chatCollections() {
   return { conversations, limits };
 }
 export const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");
+export function parseChatLocale(value: unknown): ChatLocale {
+  if (value === undefined) return "en";
+  if (value === "en" || value === "vi") return value;
+  throw new ChatError(400, "Ngôn ngữ không hợp lệ");
+}
+// Conversations created before language selection was added contain Vietnamese
+// system messages, so an absent field deliberately resolves to Vietnamese.
+export function conversationLocale(value: { locale?: ChatLocale }): ChatLocale {
+  return value.locale === "en" ? "en" : "vi";
+}
 function secret() {
   const value = process.env.CHAT_SESSION_SECRET;
   if (!value || value.length < 32) throw new Error("CHAT_NOT_CONFIGURED");
@@ -100,23 +119,28 @@ export async function rateLimit(request: NextRequest, scope: string, maximum: nu
   if (!entry || entry.count > maximum) throw new ChatError(429, "Bạn thao tác hơi nhanh, vui lòng thử lại sau");
 }
 export function serializeChat(doc: Conversation, now = new Date()): ChatSession {
-  return { id: doc._id, email: doc.email, status: chatState(doc.expiresAt, doc.deleteAt, now) === "active" ? "active" : "ended", expiresAt: doc.expiresAt.toISOString(), deleteAt: doc.deleteAt.toISOString(), lastMessageAt: doc.lastMessageAt.toISOString(), messages: doc.messages };
+  return { id: doc._id, email: doc.email, locale: conversationLocale(doc), status: chatState(doc.expiresAt, doc.deleteAt, now) === "active" ? "active" : "ended", expiresAt: doc.expiresAt.toISOString(), deleteAt: doc.deleteAt.toISOString(), lastMessageAt: doc.lastMessageAt.toISOString(), messages: doc.messages };
 }
 export async function findVisitor(token: string | null, now = new Date()) {
   if (!token) return null;
   const { conversations } = await chatCollections();
   return conversations.findOne({ tokenHash: hashToken(token), deleteAt: { $gt: now } });
 }
-export async function startConversation(email: unknown, token: string | null, now = new Date()) {
+export async function startConversation(email: unknown, token: string | null, localeOrNow: ChatLocale | Date = "en", now = new Date()) {
+  // Keep the former third `now` argument working for callers that predate
+  // language support. Those legacy calls keep the Vietnamese behavior.
+  const legacyCall = localeOrNow instanceof Date;
+  const resolvedLocale = legacyCall ? "vi" : parseChatLocale(localeOrNow);
+  const currentTime = legacyCall ? localeOrNow : now;
   if (typeof email !== "string" || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) throw new ChatError(400, "Vui lòng nhập email hợp lệ");
-  const existing = await findVisitor(token, now);
-  if (existing && existing.expiresAt > now) return { session: serializeChat(existing, now), token: token! };
+  const existing = await findVisitor(token, currentTime);
+  if (existing && existing.expiresAt > currentTime) return { session: serializeChat(existing, currentTime), token: token! };
   const nextToken = randomBytes(32).toString("hex");
-  const welcome: StoredChatMessage = { id: randomUUID(), sender: "admin", senderName: "DevDes AI", text: "Chào bạn, DevDes rất vui được hỗ trợ. Bạn cứ để lại nội dung cần tư vấn nhé.", createdAt: now.toISOString() };
-  const doc: Conversation = { _id: randomUUID(), email: email.trim().toLowerCase(), tokenHash: hashToken(nextToken), createdAt: now, lastMessageAt: now, ...chatDates(now), messages: [welcome], count: 1, bytes: Buffer.byteLength(JSON.stringify(welcome)) };
+  const welcome: StoredChatMessage = { id: randomUUID(), sender: "admin", senderName: "DevDes AI", text: CHAT_COPY[resolvedLocale].welcome, createdAt: currentTime.toISOString() };
+  const doc: Conversation = { _id: randomUUID(), email: email.trim().toLowerCase(), locale: resolvedLocale, tokenHash: hashToken(nextToken), createdAt: currentTime, lastMessageAt: currentTime, ...chatDates(currentTime), messages: [welcome], count: 1, bytes: Buffer.byteLength(JSON.stringify(welcome)) };
   const { conversations } = await chatCollections();
   await conversations.insertOne(doc);
-  return { session: serializeChat(doc, now), token: nextToken };
+  return { session: serializeChat(doc, currentTime), token: nextToken };
 }
 export async function findConversation(id: string, now = new Date()) {
   if (!/^[a-f0-9-]{36}$/.test(id)) throw new ChatError(404, "Không tìm thấy cuộc trò chuyện");
@@ -125,14 +149,19 @@ export async function findConversation(id: string, now = new Date()) {
   if (!doc) throw new ChatError(404, "Cuộc trò chuyện không còn tồn tại");
   return doc;
 }
-function validateAttachment(value: unknown): ChatAttachment | undefined {
+function validateAttachment(value: unknown, locale: ChatLocale): ChatAttachment | undefined {
   if (value === undefined) return undefined;
   if (!value || typeof value !== "object") throw new ChatError(400, "Tệp không hợp lệ");
   const raw = value as Record<string, unknown>;
   if (raw.kind === "template") {
-    const template = templates.find(item => `/giao-dien/${item.slug}` === raw.href);
+    const templateSlug = typeof raw.templateSlug === "string"
+      ? raw.templateSlug
+      : typeof raw.href === "string"
+        ? raw.href.match(/^\/giao-dien\/([^/?#]+)$/)?.[1]
+        : undefined;
+    const template = getTemplates(locale).find(item => item.slug === templateSlug);
     if (!template) throw new ChatError(400, "Mẫu không hợp lệ");
-    return { kind: "template", url: template.image, href: `/giao-dien/${template.slug}`, name: template.name, tone: template.tone };
+    return { kind: "template", templateSlug: template.slug, url: template.image, href: `/giao-dien/${template.slug}`, name: template.name, tone: template.tone };
   }
   if (typeof raw.url !== "string" || typeof raw.kind !== "string" || !["image", "video", "audio", "gif", "sticker"].includes(raw.kind)) throw new ChatError(400, "Tệp không hợp lệ");
   const result: ChatAttachment = { kind: raw.kind as ChatAttachment["kind"], url: raw.url, name: typeof raw.name === "string" ? raw.name.slice(0, 120) : undefined };
@@ -152,9 +181,9 @@ function validateAttachment(value: unknown): ChatAttachment | undefined {
   if (typeof raw.emoji === "string") result.emoji = raw.emoji.slice(0, 32);
   return result;
 }
-export async function appendMessage(id: string, actor: ChatActor, body: Record<string, unknown>, now = new Date(), senderName?: string) {
+export async function appendMessage(id: string, actor: ChatActor, body: Record<string, unknown>, now = new Date(), senderName?: string, locale: ChatLocale = "vi") {
   if (typeof body.id !== "string" || !/^[a-f0-9-]{36}$/.test(body.id) || typeof body.text !== "string" || body.text.length > 1000) throw new ChatError(400, "Tin nhắn không hợp lệ (tối đa 1000 ký tự)");
-  const attachment = validateAttachment(body.attachment);
+  const attachment = validateAttachment(body.attachment, locale);
   const text = body.text.trim();
   if (!text && !attachment) throw new ChatError(400, "Vui lòng nhập tin nhắn");
   const message: StoredChatMessage = { id: body.id, sender: actor, text, createdAt: now.toISOString(), ...(actor === "admin" && senderName ? { senderName } : {}), ...(attachment ? { attachment } : {}) };
@@ -163,7 +192,7 @@ export async function appendMessage(id: string, actor: ChatActor, body: Record<s
   if (actor === "user") {
     // Keep this in the database operation so retries and simultaneous sends
     // still create the acknowledgement exactly once.
-    const acknowledgement: StoredChatMessage = { id: randomUUID(), sender: "admin", senderName: "DevDes AI", text: FIRST_MESSAGE_AUTO_REPLY, createdAt: now.toISOString() };
+    const acknowledgement: StoredChatMessage = { id: randomUUID(), sender: "admin", senderName: "DevDes AI", text: CHAT_COPY[locale === "en" ? "en" : "vi"].acknowledgement, createdAt: now.toISOString() };
     const acknowledgementBytes = Buffer.byteLength(JSON.stringify(acknowledgement)) + 512;
     const firstMessage = await conversations.findOneAndUpdate({
       _id: id, expiresAt: { $gt: now }, bytes: { $lte: CHAT_MAX_BYTES - bytes - acknowledgementBytes }, count: { $lte: CHAT_MAX_MESSAGES - 2 },

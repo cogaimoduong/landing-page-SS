@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { chatRequest, ChatRequestError, type ChatAttachment, type ChatSession } from "@/lib/chat-store";
+import { chatRequest, ChatRequestError, type ChatAttachment, type ChatLocale, type ChatSession } from "@/lib/chat-store";
 
 export function useChatSession(endpoint: string | null, polling = true) {
   const [session, setSession] = useState<ChatSession | null>(null);
@@ -82,7 +82,7 @@ export function useChatSession(endpoint: string | null, polling = true) {
     return ok;
   }
   const ended = session ? session.status === "ended" || (now > 0 && now >= Date.parse(session.expiresAt)) : false;
-  return { session, loading, error, ended, refresh, send, start: (email: string) => mutate({ action: "start", email }), react: async (messageId: string, emoji: string) => {
+  return { session, loading, error, ended, refresh, send, start: (email: string, locale: ChatLocale = "en") => mutate({ action: "start", email, locale }), react: async (messageId: string, emoji: string) => {
     if (!await mutate({ action: "react", messageId, emoji })) throw new Error("Chưa lưu được cảm xúc");
   } };
 }

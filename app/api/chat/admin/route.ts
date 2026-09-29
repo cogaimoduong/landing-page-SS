@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const docs = await conversations.find({ deleteAt: { $gt: now } }, { projection: { messages: 0, tokenHash: 0 } }).sort({ lastMessageAt: -1 }).skip(offset).limit(51).toArray();
     const items = docs.slice(0, 50).map(doc => {
       const summary = serializeChat({ ...doc, messages: [] }, now);
-      return { id: summary.id, email: summary.email, status: summary.status, expiresAt: summary.expiresAt, deleteAt: summary.deleteAt, lastMessageAt: summary.lastMessageAt };
+      return { id: summary.id, email: summary.email, locale: summary.locale, status: summary.status, expiresAt: summary.expiresAt, deleteAt: summary.deleteAt, lastMessageAt: summary.lastMessageAt };
     });
     return chatResponse({ conversations: items, hasMore: docs.length > 50, staff });
   } catch (error) { return chatFailure(error); }

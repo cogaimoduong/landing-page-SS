@@ -1,3 +1,5 @@
+import { defaultLocale, type Locale } from "./i18n";
+
 export type ProjectSourceKind = "website" | "app";
 
 export type ProjectTemplateSource = {
@@ -33,7 +35,7 @@ export type ProjectSource = {
 
 // A single source of truth: project cards use the real-project fields above,
 // while the template catalog uses the generic `template` fields below.
-export const projectSources: ProjectSource[] = [
+const vietnameseProjectSources: ProjectSource[] = [
   {
     slug: "sensescene",
     name: "Sense & Scene Studio",
@@ -215,3 +217,145 @@ export const projectSources: ProjectSource[] = [
     },
   },
 ];
+
+type ProjectTranslation = Pick<
+  ProjectSource,
+  "name" | "caption" | "label" | "linkLabel"
+> & {
+  template: Pick<
+    ProjectTemplateSource,
+    "categoryLabel" | "tagline" | "description" | "style" | "features"
+  >;
+};
+
+const englishProjectTranslations: Record<string, ProjectTranslation> = {
+  sensescene: {
+    name: "Sense & Scene Studio",
+    caption:
+      "A website for a creative studio specializing in entertainment mobile apps, image-led products, and visual-art experiences.",
+    label: "CREATIVE STUDIO / WEBSITE",
+    linkLabel: "Visit website",
+    template: {
+      categoryLabel: "Interface from a real project",
+      tagline: "Turn ideas into visual experiences.",
+      description:
+        "A creative-studio website with an image-forward layout for CGI, motion, film teams, and inventive brands.",
+      style: "Creative / Immersive",
+      features: ["Image-led hero", "Showreel & featured work", "Studio services", "Brief form"],
+    },
+  },
+  vivui: {
+    name: "Ví Vui",
+    caption: "A personal cash-flow and expense-tracking app.",
+    label: "PERSONAL FINANCE / MOBILE APP",
+    linkLabel: "View app",
+    template: {
+      categoryLabel: "Interface from a real project",
+      tagline: "Tidy finances, lighter days.",
+      description:
+        "A personal-finance mobile app with a clear onboarding flow, income-and-expense overview, and easy-to-read information cards.",
+      style: "Mobile Finance App / Calm",
+      features: ["Onboarding screens", "Income & expense overview", "Group budgets", "Transaction history"],
+    },
+  },
+  loopix: {
+    name: "Loopix",
+    caption:
+      "A website for digital-space experiences in many formats — virtual 360° tours and 3D scans.",
+    label: "VIRTUAL TOUR / WEBSITE",
+    linkLabel: "Visit website",
+    template: {
+      categoryLabel: "Interface from a real project",
+      tagline: "Open up a space before you arrive.",
+      description:
+        "A website template for 360° tours, property, showrooms, or spaces that need to tell their story through images.",
+      style: "Service / Cinematic",
+      features: ["Full-screen hero", "Space gallery", "Delivery process", "Quote request form"],
+    },
+  },
+  "room-management": {
+    name: "Serviced Apartment Management App",
+    caption:
+      "Manage residents, business operations, payments, invoices, and internal workflows in one place.",
+    label: "PROPERTY MANAGEMENT / APP",
+    linkLabel: "View sample interface",
+    template: {
+      categoryLabel: "Interface from a real project",
+      tagline: "Manage homes with day-to-day clarity.",
+      description:
+        "A mobile app template for rental rooms and apartments, including recurring payments and streamlined operations in one screen.",
+      style: "Mobile Property App / Clear",
+      features: ["Visual room status", "Tenants & contracts", "Recurring invoices", "Revenue tracking"],
+    },
+  },
+  "bao-tq-admin": {
+    name: "Niche Product Analytics & Ranking App",
+    caption:
+      "A specialist data-search and ranking application for niche products.",
+    label: "DATA MANAGEMENT / MOBILE APP",
+    linkLabel: "View app",
+    template: {
+      categoryLabel: "Interface from a real project",
+      tagline: "More data, still simple to run.",
+      description:
+        "A mobile app template for tracking, sorting, and using essential data while operations are in motion.",
+      style: "Mobile Data App / Focused",
+      features: ["Centralized data hub", "Flexible filters", "Role-based access", "Operations reports"],
+    },
+  },
+  "kim-hien-van-tai": {
+    name: "E-Wedding Website",
+    caption:
+      "An online wedding invitation with an opening-card effect, photo album, and celebration schedule.",
+    label: "WEDDING INVITATION / WEBSITE",
+    linkLabel: "Visit website",
+    template: {
+      categoryLabel: "Interface from a real project",
+      tagline: "An invitation for a day to remember.",
+      description:
+        "A wedding-invitation or personal-event website template with an emotive hero, itinerary, album, and RSVP form.",
+      style: "Event / Romantic",
+      features: ["Interactive invitation", "Event itinerary", "Photo album", "RSVP form"],
+    },
+  },
+  "saint-cons": {
+    name: "SaintCons",
+    caption:
+      "A company website for an architecture and construction business in Đồng Nai.",
+    label: "ARCHITECTURE & CONSTRUCTION / WEBSITE",
+    linkLabel: "Visit website",
+    template: {
+      categoryLabel: "Interface from a real project",
+      tagline: "Spaces made with intention.",
+      description:
+        "An architecture and construction website template featuring project imagery, service capabilities, and a project-consultation form.",
+      style: "Architecture / Premium",
+      features: ["Full-screen project hero", "Project catalogue", "Services & process", "Consultation form"],
+    },
+  },
+};
+
+/**
+ * Content from the original source stays Vietnamese. English is the default
+ * presentation layer and every field falls back to the original when a
+ * translation has not been supplied yet.
+ */
+export function getProjectSources(locale: Locale = defaultLocale): ProjectSource[] {
+  if (locale === "vi") return vietnameseProjectSources;
+
+  return vietnameseProjectSources.map((project) => {
+    const translation = englishProjectTranslations[project.slug];
+    if (!translation) return project;
+
+    return {
+      ...project,
+      name: translation.name,
+      caption: translation.caption,
+      label: translation.label,
+      linkLabel: translation.linkLabel,
+      template: { ...project.template, ...translation.template },
+    };
+  });
+}
+
+export const projectSources = getProjectSources();

@@ -6,6 +6,12 @@ export type ChatMessage = {
 
 export const chatSuggestions = ["Mình muốn làm website", "Tư vấn chi phí", "Chọn giao diện"];
 
+export function getChatSuggestions(locale: "en" | "vi") {
+  return locale === "en"
+    ? ["I need a website", "Ask about pricing", "Choose a template"]
+    : chatSuggestions;
+}
+
 // Replace this demo responder with the chat service when the backend is ready.
 export function getDemoReply(message: string): string {
   const text = message.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d");

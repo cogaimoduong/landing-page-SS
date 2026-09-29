@@ -171,6 +171,15 @@
   background: white;
   color: black;
 }
+.dd-language-switcher {
+  margin-left: auto;
+}
+.dd-mobile-language-switcher {
+  margin-top: 18px;
+  padding-top: 17px;
+  border-top: 1px solid #ddd;
+  font-size: 13px;
+}
 .dd-menu-button {
   background: transparent;
   border: 0;
@@ -2023,6 +2032,9 @@
     background: #fafaf9;
   }
   .dd-desktop-nav {
+    display: none;
+  }
+  .dd-language-switcher {
     display: none;
   }
   .dd-header-cta {

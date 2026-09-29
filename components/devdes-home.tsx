@@ -20,26 +20,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
 import { HeroSpotlight } from "@/components/hero-spotlight";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { useLocale } from "@/components/locale-provider";
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import { useScrollTheme } from "@/components/use-scroll-theme";
 import {
+  getHomeContent,
   homeContact,
-  homeProjects,
   homeSections,
-  homeServices,
-  homeTestimonials,
-  pricingPlans,
-  projectFilters,
-  type ProjectFilter,
-} from "@/lib/home-content";
+  type HomeFilterId,
+} from "@/lib/home-i18n";
 
-function Brand({ onClick }: { onClick?: () => void }) {
+function Brand({ onClick, label }: { onClick?: () => void; label: string }) {
   return (
     <a
       className="dd-brand"
       href="#top"
       onClick={(event) => { event.preventDefault(); onClick?.(); window.dispatchEvent(new Event("devdes-open-chat")); }}
-      aria-label="Mở chat với DevDes"
+      aria-label={label}
     >
       <BrandLogo />
     </a>
@@ -47,13 +45,18 @@ function Brand({ onClick }: { onClick?: () => void }) {
 }
 
 function ProjectMobileArtwork({ name, accent, dark }: { name: string; accent: string; dark: string }) {
+  const { locale } = useLocale();
+  const copy = locale === "en"
+    ? { app: "MOBILE APP", development: "IN DEVELOPMENT", overview: "TODAY'S OVERVIEW", tracked: "items tracked" }
+    : { app: "ỨNG DỤNG ĐIỆN THOẠI", development: "ĐANG PHÁT TRIỂN", overview: "TỔNG QUAN HÔM NAY", tracked: "mục đang theo dõi" };
+
   return (
     <div className="dd-project-mobile-scene" style={{ "--project-app-accent": accent, "--project-app-dark": dark } as CSSProperties} aria-hidden="true">
       <div className="dd-project-mobile-phone">
         <i className="dd-project-mobile-notch" />
-        <header><small>ỨNG DỤNG ĐIỆN THOẠI</small><b>{name}</b></header>
-        <span className="dd-project-mobile-status">ĐANG PHÁT TRIỂN</span>
-        <section><small>TỔNG QUAN HÔM NAY</small><strong>12</strong><span>mục đang theo dõi</span></section>
+        <header><small>{copy.app}</small><b>{name}</b></header>
+        <span className="dd-project-mobile-status">{copy.development}</span>
+        <section><small>{copy.overview}</small><strong>12</strong><span>{copy.tracked}</span></section>
         <div className="dd-project-mobile-stats"><b>86%</b><i /><b>24</b></div>
         <div className="dd-project-mobile-list"><i /><i /><i /></div>
         <footer><i /><i className="active" /><i /></footer>
@@ -63,6 +66,9 @@ function ProjectMobileArtwork({ name, accent, dark }: { name: string; accent: st
 }
 
 function Dashboard({ compact = false }: { compact?: boolean }) {
+  const { locale } = useLocale();
+  const copy = getHomeContent(locale).copy.dashboard;
+
   return (
     <div
       className={`dd-dashboard ${compact ? "is-compact" : ""}`}
@@ -73,34 +79,34 @@ function Dashboard({ compact = false }: { compact?: boolean }) {
           <Command size={16} /> flowdesk
         </b>
         <span className="dd-dash-current">
-          <Layers size={12} /> Tổng quan
+          <Layers size={12} /> {copy.overview}
         </span>
-        <span>◫ &nbsp; Dự án</span>
-        <span>◷ &nbsp; Công việc</span>
-        <span>♧ &nbsp; Đội ngũ</span>
+        <span>◫ &nbsp; {copy.projects}</span>
+        <span>◷ &nbsp; {copy.tasks}</span>
+        <span>♧ &nbsp; {copy.team}</span>
         <div className="dd-dash-user">
           D
           <span>
-            Design team<small>Workspace</small>
+            {locale === "en" ? "Design team" : "Nhóm thiết kế"}<small>{copy.workspace}</small>
           </span>
         </div>
       </aside>
       <div className="dd-dash-main">
         <div className="dd-dash-nav">
-          Workspace / Tổng quan <Circle size={13} />
+          {copy.workspace} / {copy.overview} <Circle size={13} />
         </div>
         <div className="dd-dash-heading">
           <div>
-            <small>CHÀO BUỔI SÁNG, TEAM</small>
-            <h4>Mọi thứ trong tầm tay</h4>
+            <small>{copy.greeting}</small>
+            <h4>{copy.heading}</h4>
           </div>
-          <span>+ Tạo dự án</span>
+          <span>+ {copy.createProject}</span>
         </div>
         <div className="dd-dash-stats">
           {[
-            ["Dự án đang chạy", "12"],
-            ["Công việc hoàn thành", "84"],
-            ["Hiệu suất đội ngũ", "96%"],
+            [copy.activeProjects, "12"],
+            [copy.completedTasks, "84"],
+            [copy.teamPerformance, "96%"],
           ].map(([label, value]) => (
             <div key={label}>
               <small>{label}</small>
@@ -108,15 +114,15 @@ function Dashboard({ compact = false }: { compact?: boolean }) {
                 {value}
                 <em>↗</em>
               </strong>
-              <span>Tháng này</span>
+              <span>{copy.thisMonth}</span>
             </div>
           ))}
         </div>
         <div className="dd-dash-chart">
           <div>
-            <b>Tiến độ công việc</b>
+            <b>{copy.progress}</b>
             <span>
-              Tuần này <ChevronDown size={9} />
+              {copy.thisWeek} <ChevronDown size={9} />
             </span>
           </div>
           <div className="dd-chart-bars">
@@ -127,18 +133,18 @@ function Dashboard({ compact = false }: { compact?: boolean }) {
             )}
           </div>
           <div className="dd-chart-labels">
-            <span>Thứ 2</span>
-            <span>Thứ 3</span>
-            <span>Thứ 4</span>
-            <span>Thứ 5</span>
-            <span>Thứ 6</span>
+            <span>{copy.monday}</span>
+            <span>{copy.tuesday}</span>
+            <span>{copy.wednesday}</span>
+            <span>{copy.thursday}</span>
+            <span>{copy.friday}</span>
           </div>
         </div>
         <div className="dd-dash-task">
           <span>
-            <Check size={11} /> Thiết kế giao diện website
+            <Check size={11} /> {copy.task}
           </span>
-          <small>Hoàn thành</small>
+          <small>{copy.completed}</small>
           <b>JD</b>
         </div>
       </div>
@@ -147,10 +153,13 @@ function Dashboard({ compact = false }: { compact?: boolean }) {
 }
 
 export function DevDesHome() {
+  const { locale } = useLocale();
+  const content = getHomeContent(locale);
+  const { copy, filters, pricingPlans, projects, services, testimonials } = content;
   const homeRef = useScrollTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeService, setActiveService] = useState<string | null>("website");
-  const [filter, setFilter] = useState<ProjectFilter>("All");
+  const [filter, setFilter] = useState<HomeFilterId>("all");
   const [testimonial, setTestimonial] = useState(0);
   const menuButton = useRef<HTMLButtonElement>(null);
   const closeMenu = () => setMenuOpen(false);
@@ -161,10 +170,11 @@ export function DevDesHome() {
     contact.scrollIntoView({ behavior: "smooth", block: "start" });
     window.history.pushState(null, "", "#contact");
   };
-  const visibleProjects = homeProjects.filter(
-    (project) => filter === "All" || project.tags.includes(filter),
+  const activeFilter = filters.find((item) => item.id === filter);
+  const visibleProjects = projects.filter(
+    (project) => !activeFilter?.tag || project.tags.includes(activeFilter.tag),
   );
-  const currentTestimonial = homeTestimonials[testimonial];
+  const currentTestimonial = testimonials[testimonial];
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -188,30 +198,31 @@ export function DevDesHome() {
   return (
     <div className="dd-home" id="top" ref={homeRef}>
       <a className="dd-skip" href="#main-content">
-        Bỏ qua điều hướng
+        {copy.skipToContent}
       </a>
       <header className={`dd-header ${menuOpen ? "is-open" : ""}`}>
         <div className="dd-header-inner">
-          <Brand onClick={closeMenu} />
-          <nav className="dd-desktop-nav" aria-label="Điều hướng chính">
-            <a href="#services">Dịch vụ</a>
+          <Brand onClick={closeMenu} label={copy.brandChatLabel} />
+          <nav className="dd-desktop-nav" aria-label={copy.desktopNavigation}>
+            <a href="#services">{copy.nav.services}</a>
             <a href="#work">
-              Dự án <sup>{String(homeProjects.length).padStart(2, "0")}</sup>
+              {copy.nav.projects} <sup>{String(projects.length).padStart(2, "0")}</sup>
             </a>
-            <a href="#about">Về DevDes</a>
+            <a href="#about">{copy.nav.about}</a>
             <Link href="/giao-dien">
-              Kho giao diện <ArrowUpRight size={12} />
+              {copy.nav.templates} <ArrowUpRight size={12} />
             </Link>
           </nav>
+          <LanguageSwitcher className="dd-language-switcher" />
           <a className="dd-header-cta" href="#contact" onClick={goToContact}>
-            Let’s talk <ArrowUpRight size={17} />
+            {copy.talk} <ArrowUpRight size={17} />
           </a>
           <button
             className="dd-menu-button"
             ref={menuButton}
             aria-expanded={menuOpen}
             aria-controls="dd-mobile-nav"
-            aria-label={menuOpen ? "Đóng menu" : "Mở menu"}
+            aria-label={menuOpen ? copy.closeMenu : copy.openMenu}
             onClick={() => setMenuOpen(!menuOpen)}
           >
             {menuOpen ? <X /> : <Menu />}
@@ -221,24 +232,25 @@ export function DevDesHome() {
       <nav
         className="dd-mobile-nav"
         id="dd-mobile-nav"
-        aria-label="Điều hướng trên điện thoại"
+        aria-label={copy.mobileNavigation}
         hidden={!menuOpen}
       >
         <a href="#services" onClick={closeMenu}>
-          Dịch vụ <ArrowUpRight />
+          {copy.nav.services} <ArrowUpRight />
         </a>
         <a href="#work" onClick={closeMenu}>
-          Dự án <ArrowUpRight />
+          {copy.nav.projects} <ArrowUpRight />
         </a>
         <a href="#about" onClick={closeMenu}>
-          Về DevDes <ArrowUpRight />
+          {copy.nav.about} <ArrowUpRight />
         </a>
         <Link href="/giao-dien" onClick={closeMenu}>
-          Kho giao diện <ArrowUpRight />
+          {copy.nav.templates} <ArrowUpRight />
         </Link>
         <a href="#contact" onClick={(event) => { closeMenu(); goToContact(event); }}>
-          Bắt đầu dự án <ArrowUpRight />
+          {copy.nav.startProject} <ArrowUpRight />
         </a>
+        <LanguageSwitcher className="dd-mobile-language-switcher" />
       </nav>
       <main id="main-content">
         <section
@@ -248,34 +260,34 @@ export function DevDesHome() {
           <div className="dd-shell dd-hero-inner">
             <div className="dd-hero-topline">
               <span>
-                <i className="dd-status-dot" /> AVAILABLE FOR NEW PROJECTS
+                <i className="dd-status-dot" /> {copy.hero.availability}
               </span>
               <span>DESIGN MEETS DEVELOPMENT®</span>
             </div>
             <div className="dd-hero-stage">
               <h1 className="dd-hero-title">
-                <span>We <em>design</em></span>
-                <span>You <em>grow</em></span>
+                <span>{copy.hero.firstBefore}<em>{copy.hero.firstEmphasis}</em></span>
+                <span>{copy.hero.secondBefore}<em>{copy.hero.secondEmphasis}</em></span>
               </h1>
               <HeroSpotlight />
             </div>
             <div className="dd-hero-bottom">
               <p>
-                Thiết kế có chiều sâu, công nghệ có mục đích
+                {copy.hero.descriptionLineOne}
                 <br />
-                Website & ứng dụng đưa doanh nghiệp tiến xa
+                {copy.hero.descriptionLineTwo}
               </p>
               <a className="dd-pill dd-pill-dark" href="#work">
-                Khám phá dự án <ArrowUpRight size={17} />
+                {copy.hero.exploreProjects} <ArrowUpRight size={17} />
               </a>
               <a className="dd-scroll-link" href="#services">
-                <span>SCROLL TO EXPLORE</span>
+                <span>{copy.hero.scroll}</span>
                 <ArrowDown size={18} />
               </a>
             </div>
             <div className="dd-partner-heading">
-              <span>DỰ ÁN ĐÃ THỰC HIỆN</span>
-              <span>IDEAS INTO EXPERIENCES ↘</span>
+              <span>{copy.hero.completedProjects}</span>
+              <span>{locale === "en" ? "IDEAS INTO EXPERIENCES ↘" : "Ý TƯỞNG THÀNH TRẢI NGHIỆM ↘"}</span>
             </div>
           </div>
           <div className="dd-partners">
@@ -286,7 +298,7 @@ export function DevDesHome() {
                   key={group}
                   aria-hidden={group === 1 ? true : undefined}
                 >
-                  {homeProjects.map((project) => (
+                  {projects.map((project) => (
                     <span key={project.slug}>{project.name.split(" / ").at(-1)}</span>
                   ))}
                 </div>
@@ -302,25 +314,24 @@ export function DevDesHome() {
           <div className="dd-shell">
             <div className="dd-section-top">
               <span className="dd-eyebrow">
-                <i /> WHAT WE DO
+                <i /> {copy.services.eyebrow}
               </span>
               <span className="dd-section-index">(01 — 02)</span>
             </div>
             <div className="dd-section-heading">
               <h2 id="dd-services-title">
-                Precision —<br />
-                <span>Crafted Designs</span>
+                {copy.services.headingLineOne}<br />
+                <span>{copy.services.headingLineTwo}</span>
               </h2>
               <p>
-                Hai thế mạnh, một mục tiêu
+                {copy.services.descriptionLineOne}
                 <br />
-                Biến bài toán của doanh nghiệp thành
-                <br className="dd-desktop-break" /> những trải nghiệm số hiệu
-                quả
+                {copy.services.descriptionLineTwo}
+                <br className="dd-desktop-break" /> {copy.services.descriptionLineThree}
               </p>
             </div>
             <div className="dd-service-list">
-              {homeServices.map((service) => (
+              {services.map((service) => (
                 <article
                   className={`dd-service ${activeService === service.id ? "is-active" : ""}`}
                   key={service.id}
@@ -392,7 +403,7 @@ export function DevDesHome() {
                           ))}
                         </div>
                         <a href="#contact" onClick={goToContact}>
-                          Trao đổi nhu cầu của bạn <ArrowUpRight size={16} />
+                          {copy.services.contact} <ArrowUpRight size={16} />
                         </a>
                       </div>
                     </div>
@@ -410,36 +421,36 @@ export function DevDesHome() {
           <div className="dd-shell">
             <div className="dd-section-top">
               <span className="dd-eyebrow">
-                <i /> SELECTED WORK
+                <i /> {copy.work.eyebrow}
               </span>
-              <span className="dd-section-index">SELECTED PROJECTS</span>
+              <span className="dd-section-index">{copy.work.index}</span>
             </div>
             <div className="dd-section-heading">
               <h2 id="dd-work-title">
-                Made to stand out
+                {copy.work.heading}
               </h2>
               <p>
-                Mỗi ý tưởng, một cách thể hiện
+                {copy.work.descriptionLineOne}
                 <br />
-                Khám phá những dự án chúng tôi đã thực hiện
+                {copy.work.descriptionLineTwo}
               </p>
             </div>
             <div className="dd-project-toolbar">
-              <div className="dd-filters" role="group" aria-label="Lọc dự án">
-                {projectFilters.map((item) => (
+              <div className="dd-filters" role="group" aria-label={copy.work.filterLabel}>
+                {filters.map((item) => (
                   <button
-                    key={item}
-                    aria-pressed={filter === item}
-                    className={filter === item ? "is-active" : ""}
-                    onClick={() => setFilter(item)}
+                    key={item.id}
+                    aria-pressed={filter === item.id}
+                    className={filter === item.id ? "is-active" : ""}
+                    onClick={() => setFilter(item.id)}
                   >
-                    {item}
-                    {item === "All" && <sup>{String(homeProjects.length).padStart(2, "0")}</sup>}
+                    {item.label}
+                    {item.id === "all" && <sup>{String(projects.length).padStart(2, "0")}</sup>}
                   </button>
                 ))}
               </div>
               <span className="dd-result-count" role="status">
-                {String(visibleProjects.length).padStart(2, "0")} dự án
+                {String(visibleProjects.length).padStart(2, "0")} {copy.work.projectCount}
               </span>
             </div>
             <div className="dd-project-list" key={filter}>
@@ -451,7 +462,7 @@ export function DevDesHome() {
                   <Link
                     className="dd-project-image"
                     href={project.href} target={project.external ? "_blank" : undefined} rel={project.external ? "noopener noreferrer" : undefined}
-                    aria-label={`${project.linkLabel} ${project.name}${project.external ? " (mở trong tab mới)" : ""}`}
+                    aria-label={`${project.linkLabel} ${project.name}${project.external ? ` ${copy.work.openInNewTab}` : ""}`}
                   >
                     <div className="dd-project-preview">
                       {project.template.sourceKind === "app" ? <ProjectMobileArtwork name={project.name} accent={project.template.accent} dark={project.template.dark} /> : <Image src={project.image} alt={project.name} fill sizes="(max-width: 760px) 100vw, 55vw" />}
@@ -471,7 +482,7 @@ export function DevDesHome() {
                       </Link>
                     </h3>
                     <p>{project.caption}</p>
-                    {project.inDevelopment && <span className="dd-project-development">App đang trong quá trình phát triển</span>}
+                    {project.inDevelopment && <span className="dd-project-development">{copy.work.inDevelopment}</span>}
                     {project.introduction && <p className="dd-project-introduction">{project.introduction}</p>}
                     <Link className="dd-underlined dd-project-visit" href={project.href} target={project.external ? "_blank" : undefined} rel={project.external ? "noopener noreferrer" : undefined}>
                       {project.linkLabel} <ArrowUpRight size={17} />
@@ -481,9 +492,9 @@ export function DevDesHome() {
               ))}
             </div>
             <div className="dd-work-bottom">
-              <span>YOUR NEXT PROJECT COULD BE HERE</span>
+              <span>{copy.work.nextProject}</span>
               <Link className="dd-pill dd-pill-outline" href="/giao-dien">
-                Xem toàn bộ giao diện <ArrowUpRight size={17} />
+                {copy.work.viewAll} <ArrowUpRight size={17} />
               </Link>
             </div>
           </div>
@@ -496,28 +507,25 @@ export function DevDesHome() {
           <div className="dd-shell">
             <div className="dd-section-top">
               <span className="dd-eyebrow">
-                <i /> THE PEOPLE BEHIND THE PIXELS
+                <i /> {copy.about.eyebrow}
               </span>
-              <span className="dd-section-index">HELLO, WE’RE DEVDES®</span>
+              <span className="dd-section-index">{copy.about.index}</span>
             </div>
             <div className="dd-about-intro">
               <h2 id="dd-about-title">
-                Small team
+                {copy.about.headingLineOne}
                 <br />
-                Big possibilities
+                {copy.about.headingLineTwo}
               </h2>
               <div>
                 <p>
-                  Chúng tôi là DevDes — nơi tư duy thiết kế gặp kỹ thuật phát
-                  triển. Một đội ngũ gọn gàng, làm việc trực tiếp và quan tâm
-                  đến từng chi tiết
+                  {copy.about.firstParagraph}
                 </p>
                 <p>
-                  Từ ý tưởng đầu tiên đến ngày ra mắt, chúng tôi cùng bạn tạo
-                  nên website và ứng dụng vừa đẹp, vừa giải quyết đúng vấn đề
+                  {copy.about.secondParagraph}
                 </p>
                 <a className="dd-underlined" href="#contact" onClick={goToContact}>
-                  Làm quen với chúng tôi <ArrowUpRight size={17} />
+                  {copy.about.meetUs} <ArrowUpRight size={17} />
                 </a>
               </div>
             </div>
@@ -527,17 +535,17 @@ export function DevDesHome() {
                   <Asterisk strokeWidth={1} />
                 </div>
                 <span>
-                  GOOD DESIGN
+                  {copy.about.togetherLineOne}
                   <br />
-                  BETTER TOGETHER
+                  {copy.about.togetherLineTwo}
                 </span>
-                <small>Góc nhìn trải nghiệm · Nội dung minh họa</small>
+                <small>{copy.about.testimonialNote}</small>
               </div>
               <div
                 className="dd-testimonial"
                 role="region"
                 aria-roledescription="carousel"
-                aria-label="Góc nhìn trải nghiệm"
+                aria-label={copy.about.testimonialRegion}
               >
                 <Quote size={32} strokeWidth={1.5} />
                 <div
@@ -558,27 +566,27 @@ export function DevDesHome() {
                 <div className="dd-testimonial-controls">
                   <span>
                     {String(testimonial + 1).padStart(2, "0")}{" "}
-                    <i>/ {String(homeTestimonials.length).padStart(2, "0")}</i>
+                    <i>/ {String(testimonials.length).padStart(2, "0")}</i>
                   </span>
                   <div>
                     <button
                       onClick={() =>
                         setTestimonial(
-                          (testimonial - 1 + homeTestimonials.length) %
-                            homeTestimonials.length,
+                          (testimonial - 1 + testimonials.length) %
+                            testimonials.length,
                         )
                       }
-                      aria-label="Xem đánh giá trước"
+                      aria-label={copy.about.previousTestimonial}
                     >
                       <ArrowLeft size={18} />
                     </button>
                     <button
                       onClick={() =>
                         setTestimonial(
-                          (testimonial + 1) % homeTestimonials.length,
+                          (testimonial + 1) % testimonials.length,
                         )
                       }
-                      aria-label="Xem đánh giá tiếp theo"
+                      aria-label={copy.about.nextTestimonial}
                     >
                       <ArrowRight size={18} />
                     </button>
@@ -592,22 +600,22 @@ export function DevDesHome() {
       <section className="dd-pricing theme-dark" id="pricing" aria-labelledby="dd-pricing-title">
         <div className="dd-shell">
           <div className="dd-section-top">
-            <span className="dd-eyebrow"><i /> PRICING</span>
-            <span className="dd-section-index">START WITH CLARITY</span>
+            <span className="dd-eyebrow"><i /> {copy.pricing.eyebrow}</span>
+            <span className="dd-section-index">{copy.pricing.index}</span>
           </div>
           <div className="dd-pricing-heading">
-            <h2 id="dd-pricing-title">Tối ưu ngân sách,<br /><span>nâng tầm thương hiệu.</span></h2>
-            <p>Giải pháp thiết kế Web & App chuyên nghiệp dành cho cá nhân và doanh nghiệp — chỉ từ 3.000.000 VNĐ.</p>
+          <h2 id="dd-pricing-title">{copy.pricing.headingLineOne}<br /><span>{copy.pricing.headingLineTwo}</span></h2>
+          <p>{copy.pricing.description}</p>
           </div>
           <div className="dd-pricing-grid">
             {pricingPlans.map((plan) => (
               <article className={`dd-pricing-card ${plan.featured ? "is-featured" : ""}`} key={plan.name}>
-                {plan.featured && <span className="dd-pricing-badge">PHỔ BIẾN NHẤT</span>}
+                {plan.featured && <span className="dd-pricing-badge">{copy.pricing.mostPopular}</span>}
                 <h3>{plan.name}</h3>
                 <p>{plan.audience}</p>
                 <strong>{plan.price}</strong>
                 <ul>{plan.features.map((feature) => <li key={feature}><Check size={14} />{feature}</li>)}</ul>
-                <a className="dd-pill dd-pill-outline" href="#contact" onClick={goToContact}>Chọn gói này <ArrowUpRight size={16} /></a>
+                <a className="dd-pill dd-pill-outline" href="#contact" onClick={goToContact}>{copy.pricing.choosePlan} <ArrowUpRight size={16} /></a>
               </article>
             ))}
           </div>
@@ -620,17 +628,17 @@ export function DevDesHome() {
         <div className="dd-shell">
           <div className="dd-section-top">
             <span className="dd-eyebrow">
-              <i /> HAVE SOMETHING IN MIND?
+              <i /> {copy.footer.eyebrow}
             </span>
             <span className="dd-section-index">
-              <i className="dd-status-dot" /> LET’S MAKE IT HAPPEN
+              <i className="dd-status-dot" /> {copy.footer.status}
             </span>
           </div>
           <a className="dd-contact-title" href={`mailto:${homeContact.email}`}>
             <h2>
-              Let’s make
+              {copy.footer.contactTitleLineOne}
               <br />
-              <span>something great</span>
+              <span>{copy.footer.contactTitleLineTwo}</span>
             </h2>
             <span className="dd-contact-arrow">
               <ArrowUpRight strokeWidth={1} />
@@ -638,40 +646,40 @@ export function DevDesHome() {
           </a>
           <div className="dd-footer-grid">
             <div className="dd-footer-brand">
-              <Brand />
+              <Brand label={copy.brandChatLabel} />
               <p>
-                Thiết kế có chiều sâu
+                {copy.footer.brandLineOne}
                 <br />
-                Công nghệ có mục đích
+                {copy.footer.brandLineTwo}
               </p>
             </div>
             <div>
-              <h3>KHÁM PHÁ</h3>
-              <a href="#services">Dịch vụ</a>
-              <a href="#work">Dự án</a>
-              <a href="#about">Về DevDes</a>
+              <h3>{copy.footer.explore}</h3>
+              <a href="#services">{copy.nav.services}</a>
+              <a href="#work">{copy.nav.projects}</a>
+              <a href="#about">{copy.nav.about}</a>
             </div>
             <div>
-              <h3>KẾT NỐI</h3>
+              <h3>{copy.footer.connect}</h3>
               <a href={`mailto:${homeContact.email}`}>
-                Gửi email <ArrowUpRight size={13} />
+                {copy.footer.email} <ArrowUpRight size={13} />
               </a>
               <Link href="/giao-dien">
-                Kho giao diện <ArrowUpRight size={13} />
+                {copy.nav.templates} <ArrowUpRight size={13} />
               </Link>
             </div>
             <div className="dd-footer-invitation">
-              <h3>MỌI DỰ ÁN BẮT ĐẦU TỪ MỘT LỜI CHÀO</h3>
+              <h3>{copy.footer.projectIntro}</h3>
               <p>
-                Có ý tưởng cho website hay ứng dụng?
+                {copy.footer.projectQuestionLineOne}
                 <br />
-                Chúng tôi sẵn sàng lắng nghe
+                {copy.footer.projectQuestionLineTwo}
               </p>
               <a
                 className="dd-underlined"
-                href={`mailto:${homeContact.email}?subject=${encodeURIComponent("Trao đổi dự án cùng DevDes")}`}
+                href={`mailto:${homeContact.email}?subject=${encodeURIComponent(copy.footer.briefSubject)}`}
               >
-                Gửi brief của bạn <ArrowUpRight size={16} />
+                {copy.footer.sendBrief} <ArrowUpRight size={16} />
               </a>
             </div>
           </div>
@@ -679,7 +687,7 @@ export function DevDesHome() {
             <span>Copyright © 2026 Sense &amp; Scene Studio. All right reserved</span>
             <span>DESIGN WITH INTENT · BUILD WITH CARE</span>
             <a href="#top">
-              Về đầu trang <ArrowUpRight size={13} />
+              {copy.footer.backToTop} <ArrowUpRight size={13} />
             </a>
           </div>
         </div>

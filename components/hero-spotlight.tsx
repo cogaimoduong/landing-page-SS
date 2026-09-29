@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useLocale } from "@/components/locale-provider";
 
 export function HeroSpotlight() {
+  const { locale } = useLocale();
   const [lightRight, setLightRight] = useState(false);
   const clickAudio = useRef<HTMLAudioElement | null>(null);
 
@@ -48,7 +50,7 @@ export function HeroSpotlight() {
           return !value;
         });
       }}
-      aria-label="Đổi hướng ánh sáng"
+      aria-label={locale === "en" ? "Change light direction" : "Đổi hướng ánh sáng"}
     >
       <svg className="dd-device-light" viewBox="0 0 1200 580" preserveAspectRatio="none" fill="none" aria-hidden="true">
         <defs>

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Be_Vietnam_Pro, Noto_Serif } from "next/font/google";
 import { SupportChat } from "@/components/support-chat";
+import { LocaleProvider } from "@/components/locale-provider";
+import { defaultLocale, localeCookieName, localeFrom } from "@/lib/i18n";
 import "./globals.css";
 import "./showcase.css";
 import "./catalog.css";
@@ -29,11 +32,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.devdes.click"),
   title: "DevDes.click — Design meets Development",
   description:
-    "DevDes thiết kế và phát triển website, ứng dụng kinh doanh và phần mềm quản lý nội bộ cho tổ chức, doanh nghiệp.",
-  keywords: ["thiết kế website", "lập trình web", "landing page", "Next.js"],
+    "DevDes designs and develops purposeful websites, business applications, and internal software for ambitious teams.",
+  keywords: ["website design", "web development", "landing page", "Next.js"],
   openGraph: {
     type: "website",
-    locale: "vi_VN",
+    locale: "en_US",
     siteName: "DevDes.click",
   },
   robots: {
@@ -46,12 +49,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const cookieStore = await cookies();
+  const locale = localeFrom(cookieStore.get(localeCookieName)?.value, defaultLocale);
+
   return (
-    <html lang="vi" className={`${beVietnamPro.variable} ${notoSerif.variable}`}>
-      <body>{children}<SupportChat /></body>
+    <html lang={locale} className={`${beVietnamPro.variable} ${notoSerif.variable}`} suppressHydrationWarning>
+      <body>
+        <LocaleProvider initialLocale={locale}>
+          {children}
+          <SupportChat />
+        </LocaleProvider>
+      </body>
     </html>
   );
 }
