@@ -265,9 +265,9 @@ export function DevDesHome() {
               <span>DESIGN MEETS DEVELOPMENT®</span>
             </div>
             <div className="dd-hero-stage">
-              <h1 className="dd-hero-title">
-                <span>{copy.hero.firstBefore}<em>{copy.hero.firstEmphasis}</em></span>
-                <span>{copy.hero.secondBefore}<em>{copy.hero.secondEmphasis}</em></span>
+              <h1 className="dd-hero-title" lang="en" translate="no">
+                <span>We <em>design</em></span>
+                <span>You <em>grow</em></span>
               </h1>
               <HeroSpotlight />
             </div>

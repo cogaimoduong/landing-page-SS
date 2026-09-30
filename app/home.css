@@ -256,7 +256,7 @@
 }
 .dd-hero-title em {
   font-style: italic;
-  font-weight: 400;
+  font-weight: 300;
 }
 .dd-hero-title > span:first-child { top: 14%; left: 8%; }
 .dd-hero-title > span:last-child { top: 25%; right: 8%; }

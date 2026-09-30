@@ -48,10 +48,6 @@ const copy = {
     talk: "Let's talk",
     hero: {
       availability: "AVAILABLE FOR NEW PROJECTS",
-      firstBefore: "We ",
-      firstEmphasis: "design",
-      secondBefore: "You ",
-      secondEmphasis: "grow",
       descriptionLineOne: "Thoughtful design, purposeful technology",
       descriptionLineTwo: "Websites & apps that move businesses forward",
       exploreProjects: "Explore projects",
@@ -165,10 +161,6 @@ const copy = {
     talk: "Trao đổi",
     hero: {
       availability: "SẴN SÀNG CHO DỰ ÁN MỚI",
-      firstBefore: "Chúng tôi ",
-      firstEmphasis: "thiết kế",
-      secondBefore: "Bạn ",
-      secondEmphasis: "phát triển",
       descriptionLineOne: "Thiết kế có chiều sâu, công nghệ có mục đích",
       descriptionLineTwo: "Website & ứng dụng đưa doanh nghiệp tiến xa",
       exploreProjects: "Khám phá dự án",
