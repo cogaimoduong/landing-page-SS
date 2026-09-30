@@ -1,5 +1,5 @@
 import { DemoSite } from "@/components/demo-site";
-import { CatalogDemo } from "@/components/catalog-demo";
+import { FashionDemo } from "@/components/fashion-demo";
 import { getTemplate, templates } from "@/lib/templates";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
@@ -27,6 +27,6 @@ export default async function DemoPage({ params }: Props) {
   const template = getTemplate((await params).slug);
   if (!template) notFound();
   if (template.originalUrl) redirect(template.originalUrl);
-  if (template.slug === "folio-template-catalog") return <CatalogDemo />;
+  if (template.slug === "folio-template-catalog") return <FashionDemo />;
   return <DemoSite template={template} />;
 }

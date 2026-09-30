@@ -72,11 +72,10 @@ export function TemplateGallery() {
                 >
                   <div className="mini-nav"><b>{template.name}</b><span>Menu&nbsp;&nbsp; About&nbsp;&nbsp; Contact</span></div>
                   {template.category === "catalog" ? (
-                    <div className="mini-catalog">
-                      <small>{copy.collection.toUpperCase()}</small>
-                      <strong>{locale === "en" ? "Choose an interface." : "Chọn một giao diện."}<br /><em>{locale === "en" ? "Make it yours." : "Biến nó thành của bạn."}</em></strong>
-                      <div className="mini-catalog-filters"><span>{locale === "en" ? "All" : "Tất cả"}</span><span>{locale === "en" ? "Rental" : "Cho thuê"}</span><span>{locale === "en" ? "Hotels" : "Khách sạn"}</span></div>
-                      <div className="mini-catalog-grid"><i /><i /><i /><i /></div>
+                    <div className="mini-copy mini-fashion-copy">
+                      <small>THE AUTUMN EDIT / 2026</small>
+                      <strong>{locale === "en" ? "Wear less." : "Mặc đơn giản."}<br /><em>{locale === "en" ? "Mean more." : "Sống có gu."}</em></strong>
+                      <span className="mini-button">{locale === "en" ? "Shop the collection ↗" : "Khám phá bộ sưu tập ↗"}</span>
                     </div>
                   ) : template.category === "management" ? (
                     <div className="mini-dashboard"><aside /><div><span /><span /><span /><section><i /><i /><i /></section></div></div>

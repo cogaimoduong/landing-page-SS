@@ -1,4 +1,4 @@
-/* The storefront shares DevDes styling; the Folio demo keeps its own theme. */
+/* The storefront shares DevDes styling; individual demos keep their own themes. */
 .original-template-cover { width: 100%; height: 100%; background-size: cover; background-position: top center; }
 .template-thumb:has(.original-template-cover) { padding: 0; }
 .devdes-catalog .template-thumb:has(.original-template-cover) { padding: 0; }
@@ -58,19 +58,7 @@
 :is(.devdes-catalog, .devdes-detail) :is(a, button):focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
 .template-thumb:focus-visible .preview-hover { transform: translateY(0); }
 
-/* A miniature of the preserved Folio catalog. */
-.mini-site.mini-catalog { color: #151513; background: #f4f1e9; }
-.mini-catalog > small { display: block; margin-top: 25px; font-size: 5px; }
-.mini-catalog > strong { display: block; font-size: clamp(14px, 1.75vw, 26px); line-height: 1.12; letter-spacing: -.06em; margin-block: 15px 22px; }
-.mini-catalog strong em { color: #7460ff; font-weight: 500; }
-.mini-catalog-filters { display: flex; gap: 5px; border-top: 1px solid #cbc8c0; padding-block: 10px; }
-.mini-catalog-filters span { border: 1px solid #bbb; padding: 5px; font-size: 5px; }
-.mini-catalog-filters span:first-child { background: #151513; color: #fff; }
-.mini-catalog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.mini-catalog-grid i { height: 65px; background: linear-gradient(135deg, #f4ff3d 25%, #222 25%, #222 80%, #f4ff3d 80%); }
-.mini-catalog-grid i:nth-child(2) { background: linear-gradient(140deg, #e7ddcb 25%, #283329 25%, #a78152 80%, #e7ddcb 80%); }
-.mini-catalog-grid i:nth-child(3) { background: #ffd5dc; }
-.mini-catalog-grid i:nth-child(4) { background: #7460ff; }
+.mini-site.mini-catalog { color: #fff; background-color: #30332a; }
 @media (max-width: 1000px) {
   :is(.devdes-catalog, .devdes-detail) .catalog-shell { width: calc(100% - 64px); }
   .catalog-nav-links { gap: 20px; font-size: 10px; }
