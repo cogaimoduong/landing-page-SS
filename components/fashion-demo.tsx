@@ -1,66 +1,83 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight, ArrowRight, ShoppingBag, Plus, Minus, Truck, RotateCcw, Scissors } from "lucide-react";
-import Link from "next/link";
-import { DemoDialog } from "./demo-dialog";
+import Image from "next/image";
+import { ArrowRight, ArrowUpRight, Flower2, Gift, Heart, Leaf, Plus, RotateCcw, Ruler, Search, ShoppingBag, Sparkles, Sun, X } from "lucide-react";
 import { useLocale } from "./locale-provider";
+import { BebeSections } from "./bebe-sections";
+import { BebeDialogs } from "./bebe-dialogs";
+import { ProductArt } from "./bebe-product-art";
+import { bebeProducts, bebeCategories, bebeCollections, type BebeProduct, type BebeCategory, type BebeCollection, type BebeAge } from "@/lib/bebe-products";
 import "./fashion-demo.css";
 
-const products = [
-  { id: 1, name: "Everyday Cotton Tee", group: "tops", material: "100% cotton", price: 390000, image: "photo-1521572163474-6864f9cf17ab", color: "Ivory", tag: "BESTSELLER" },
-  { id: 2, name: "The Essential Shirt", group: "tops", material: "Cotton poplin", price: 690000, image: "photo-1598554747436-c9293d6a588f", color: "White", tag: "NEW" },
-  { id: 3, name: "Straight-leg Denim", group: "bottoms", material: "Cotton denim", price: 890000, image: "photo-1542272604-787c3835535d", color: "Vintage blue", tag: "ESSENTIAL" },
-  { id: 4, name: "Everywhere Backpack", group: "accessories", material: "Canvas", price: 490000, image: "photo-1553062407-98eeb64c6a62", color: "Navy", tag: "NEW" },
-];
-const photo = (id: string, width = 800) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
-type CartItem = { id: number; size: string; quantity: number };
+export type BebeCartItem = { id: number; size: string; quantity: number };
+type Sort = "featured" | "price-asc" | "price-desc";
+const featuredOrder = [4, 8, 0, 6, 1, 5, 12, 13, 7, 9, 10, 11, 2, 3, 14, 15];
 
 export function FashionDemo() {
   const { locale } = useLocale();
   const en = locale === "en";
   const t = (vi: string, english: string) => en ? english : vi;
-  const [filter, setFilter] = useState("all");
-  const [selected, setSelected] = useState<(typeof products)[number] | null>(null);
-  const [size, setSize] = useState("M");
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [category, setCategory] = useState<BebeCategory>("all");
+  const [collection, setCollection] = useState<BebeCollection>("all");
+  const [age, setAge] = useState<BebeAge>("all");
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<Sort>("featured");
+  const [limit, setLimit] = useState(8);
+  const [favorites, setFavorites] = useState<number[]>([]);
+  const [onlyFavorites, setOnlyFavorites] = useState(false);
+  const [selected, setSelected] = useState<BebeProduct | null>(null);
+  const [cart, setCart] = useState<BebeCartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
-  const [notice, setNotice] = useState("");
+  const [guideOpen, setGuideOpen] = useState(false);
   const money = (value: number) => new Intl.NumberFormat(en ? "en-US" : "vi-VN", { style: "currency", currency: "VND" }).format(value);
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const total = cart.reduce((sum, item) => sum + products.find(p => p.id === item.id)!.price * item.quantity, 0);
-  function addToCart() {
-    if (!selected) return;
-    const chosenSize = selected.group === "accessories" ? "One size" : size;
-    setCart(items => items.some(item => item.id === selected.id && item.size === chosenSize)
-      ? items.map(item => item.id === selected.id && item.size === chosenSize ? { ...item, quantity: item.quantity + 1 } : item)
-      : [...items, { id: selected.id, size: chosenSize, quantity: 1 }]);
-    setSelected(null); setNotice(""); setCartOpen(true);
+  const normalize = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").toLowerCase();
+  const filtered = bebeProducts.filter(product =>
+    (category === "all" || product.categories.includes(category)) &&
+    (collection === "all" || product.collections.includes(collection)) &&
+    (age === "all" || product.ages.includes(age)) &&
+    (!onlyFavorites || favorites.includes(product.id)) &&
+    normalize(`${product.name[locale]} ${product.material[locale]}`).includes(normalize(query.trim()))
+  ).sort((a, b) => sort === "price-asc" ? a.price - b.price : sort === "price-desc" ? b.price - a.price : featuredOrder.indexOf(a.id) - featuredOrder.indexOf(b.id));
+  const currentCollection = bebeCollections.find(item => item.id === collection);
+  function scrollToShop() { document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" }); }
+  function resetFilters() { setCategory("all"); setCollection("all"); setAge("all"); setQuery(""); setOnlyFavorites(false); setLimit(8); }
+  function browseCategory(value: BebeCategory) { resetFilters(); setCategory(value); scrollToShop(); }
+  function browseCollection(value: BebeCollection) { resetFilters(); setCollection(value); scrollToShop(); }
+  function toggleFavorite(id: number) { setFavorites(items => items.includes(id) ? items.filter(item => item !== id) : [...items, id]); }
+  function addItem(id: number, size: string) {
+    setCart(items => items.some(item => item.id === id && item.size === size)
+      ? items.map(item => item.id === id && item.size === size ? { ...item, quantity: item.quantity + 1 } : item)
+      : [...items, { id, size, quantity: 1 }]);
+    setSelected(null); setCartOpen(true);
   }
-  function changeQuantity(id: number, itemSize: string, delta: number) {
-    setNotice("");
-    setCart(items => items.map(item => item.id === id && item.size === itemSize ? { ...item, quantity: item.quantity + delta } : item).filter(item => item.quantity > 0));
+  function changeQuantity(id: number, size: string, delta: number) {
+    setCart(items => items.map(item => item.id === id && item.size === size ? { ...item, quantity: item.quantity + delta } : item).filter(item => item.quantity > 0));
   }
-  return <main className="fashion-shop" id="top">
-    <div className="fashion-announcement">{t("Một chút mới mẻ cho tủ đồ của bạn.", "A fresh perspective for your everyday wardrobe.")} <span>BEBÉ BOUTIQUE / FALL 2026</span></div>
-    <nav className="fashion-nav" aria-label={t("Điều hướng cửa hàng", "Shop navigation")}>
-      <a className="fashion-logo" href="#top">Bebé<span>BOUTIQUE</span></a>
-      <div className="fashion-links"><a href="#collection">{t("Sản phẩm", "Shop")}</a><a href="#edit">The autumn edit</a><a href="#story">{t("Về Bebé Boutique", "Our story")}</a></div>
-      <button className="fashion-bag" onClick={() => { setCartOpen(true); setNotice(""); }} aria-label={`${t("Giỏ hàng", "Shopping bag")} (${count})`}><ShoppingBag size={19} /><span>{t("Giỏ hàng", "Bag")}</span><b>{count}</b></button>
+
+  return <main className="bebe-shop" id="top">
+    <div className="bebe-announcement"><span><Gift size={14} /> {t("Gói ghém yêu thương trong từng món nhỏ", "A little love in every little parcel")}</span><span>{t("Miễn phí giao hàng từ 699.000đ", "Free shipping on orders over ₫699,000")}</span></div>
+    <nav className="bebe-nav bebe-shell" aria-label={t("Điều hướng cửa hàng", "Shop navigation")}>
+      <a className="bebe-logo" href="#top">bebé<span>BOUTIQUE · LITTLE & LOVED</span></a>
+      <div className="bebe-nav-links">{bebeCategories.map(item => <button key={item.id} onClick={() => browseCategory(item.id)}>{item.label[locale]}</button>)}<a href="#collections">{t("Bộ sưu tập", "Collections")}</a></div>
+      <div className="bebe-nav-actions"><button aria-label={t("Xem sản phẩm yêu thích", "View favourites")} onClick={() => { resetFilters(); setOnlyFavorites(true); scrollToShop(); }}><Heart size={21} /><span>{favorites.length}</span></button><button aria-label={`${t("Giỏ hàng", "Shopping bag")} (${count})`} onClick={() => setCartOpen(true)}><ShoppingBag size={21} /><span>{count}</span></button></div>
     </nav>
-    <header className="fashion-hero">
-      <div className="fashion-hero-copy"><span className="fashion-eyebrow">LESS, BUT BETTER / COLLECTION 01</span><h1>{t("Mặc đơn giản.", "Wear less.")}<br /><em>{t("Sống có gu.", "Mean more.")}</em></h1><p>{t("Những thiết kế dễ mặc, chất liệu dễ yêu. Một tủ đồ vừa đủ để bạn luôn là chính mình.", "Considered silhouettes. Textures to fall for. Everyday pieces that feel entirely like you.")}</p><a className="fashion-cta" href="#collection">{t("Khám phá bộ sưu tập", "Explore the collection")} <ArrowUpRight size={19} /></a><div className="fashion-hero-bottom"><span>DESIGNED FOR EVERY DAY.</span><span>01 — 04</span></div></div>
-      <div className="fashion-hero-image" role="img" aria-label={t("Phong cách thời trang đường phố", "Street style fashion")}><span>THE ART OF<br />EVERYDAY DRESSING.</span><a href="#edit">AUTUMN / WINTER 2026 <ArrowUpRight size={19} /></a></div>
+    <header className="bebe-hero bebe-shell">
+      <div className="bebe-hero-copy"><span className="bebe-eyebrow"><span /> {t("THẾ GIỚI NHỎ, NIỀM VUI TO", "SMALL WORLD, BIG WONDER")}</span><h1>{t("Nhỏ xíu thôi.", "Little clothes.")}<br /><em>{t("Yêu hết nấc.", "Big adventures.")}</em></h1><p>{t("Mềm một chút, xinh một chút. Để mỗi ngày lớn lên của bé là một ngày thật nhiều niềm vui.", "A little softer. A little sweeter. Thoughtful little pieces for all their big, beautiful adventures.")}</p><button className="bebe-cta" onClick={() => browseCategory("all")}>{t("Sắm đồ xinh cho bé", "Find their next favourite")} <ArrowRight size={18} /></button><a className="bebe-hero-secondary" href="#collections">{t("Dạo một vòng bộ sưu tập", "Wander through our collections")} <ArrowUpRight size={16} /></a><div className="bebe-hero-note"><Flower2 size={29} /><span>{t("Dành cho những năm tháng", "Made for the little years,")}<br /><b>{t("nhỏ xíu mà đáng nhớ.", "and the biggest memories.")}</b></span></div></div>
+      <div className="bebe-hero-visual"><Image className="bebe-campaign" src="/images/bebe/garden-campaign.png" alt={t("Hai bé mặc yếm vàng và váy hồng đào, nắm tay dạo chơi trong vườn", "Two children in yellow dungarees and a peach dress holding hands in a sunny garden")} fill sizes="(max-width: 760px) 90vw, 50vw" preload /><div className="bebe-sun" aria-hidden="true"><Sun /><span>hello,<br />little sunshine!</span></div><div className="bebe-photo-label"><span>THE LITTLE GARDEN CLUB</span><b>{t("Lớn lên cùng những ngày vui", "Growing up in happy colours")}</b><a href="#collections" aria-label={t("Xem bộ sưu tập", "Explore collections")}><ArrowUpRight size={21} /></a></div></div>
     </header>
-    <div className="fashion-values"><span><Scissors size={18} />{t("Chỉn chu từng đường may", "Thoughtfully made")}</span><span><Truck size={18} />{t("Miễn phí vận chuyển từ 1 triệu", "Free shipping over ₫1,000,000")}</span><span><RotateCcw size={18} />{t("Đổi size trong 14 ngày", "14-day size exchanges")}</span></div>
-    <section className="fashion-collection" id="collection"><div className="fashion-section-heading"><div><span className="fashion-eyebrow">YOUR EVERYDAY ROTATION</span><h2>{t("Những món bạn sẽ yêu.", "Your new favourites.")}</h2></div><span>{t("Ít hơn. Chất hơn. Mặc lâu hơn.", "Buy less. Choose well. Wear longer.")}</span></div>
-      <div className="fashion-filters" aria-label={t("Lọc sản phẩm", "Filter products")}>{[["all", t("Tất cả", "All pieces")], ["tops", t("Áo", "Tops")], ["bottoms", t("Quần", "Bottoms")], ["accessories", t("Phụ kiện", "Accessories")]].map(([id, label]) => <button key={id} aria-pressed={filter === id} onClick={() => setFilter(id)}>{label}</button>)}<span aria-live="polite">{products.filter(p => filter === "all" || p.group === filter).length} {t("sản phẩm", "pieces")}</span></div>
-      <div className="fashion-products">{products.filter(p => filter === "all" || p.group === filter).map(product => <article key={product.id}><button className="fashion-product-image" onClick={() => { setSelected(product); setSize("M"); }} aria-label={`${t("Xem", "View")} ${product.name}`} style={{ backgroundImage: `url(${photo(product.image)})` }}><span>{product.tag}</span><i><Plus size={20} /></i></button><div className="fashion-product-info"><h3><button onClick={() => { setSelected(product); setSize("M"); }}>{product.name}</button></h3><b>{money(product.price)}</b></div><p>{product.material} · {product.color}</p></article>)}</div>
+    <div className="bebe-promise-strip"><span><Leaf /> {t("Chất liệu mềm mại", "Soft, lovely fabrics")}</span><Flower2 aria-hidden="true" /><span><Heart /> {t("Thoải mái là ưu tiên", "Comfort comes first")}</span><Flower2 aria-hidden="true" /><span><RotateCcw /> {t("Đổi size trong 14 ngày", "14-day size exchanges")}</span><Flower2 aria-hidden="true" /><span><Gift /> {t("Có gói quà xinh", "Gift-ready happiness")}</span></div>
+    <section className="bebe-categories bebe-shell" aria-labelledby="bebe-category-heading"><div className="bebe-section-title"><div><span className="bebe-eyebrow">A LITTLE SOMETHING FOR EVERYONE</span><h2 id="bebe-category-heading">{t("Bé nhà mình đang tuổi nào?", "For every little chapter.")}</h2></div><span>{t("Từ cái ôm đầu tiên đến ngày tựu trường.", "From first cuddles to first school days.")}</span></div><div className="bebe-category-grid">{bebeCategories.map((item, index) => <button className={`bebe-category bebe-tone-${index}`} key={item.id} onClick={() => browseCategory(item.id)}><div><ProductArt id={item.image} /><span><ArrowUpRight size={22} /></span></div><h3>{item.label[locale]}</h3><p>{item.ages[locale]}</p></button>)}</div></section>
+    <section className="bebe-shop-section bebe-shell" id="collection"><div className="bebe-section-title"><div><span className="bebe-eyebrow"><Sparkles size={14} /> LITTLE THINGS TO LOVE</span><h2>{onlyFavorites ? t("Những món bạn đã thương.", "Your little favourites.") : currentCollection ? currentCollection.name[locale] : t("Xinh từ cái nhìn đầu tiên.", "Love at first little sight.")}</h2></div><button className="bebe-text-link" onClick={() => setGuideOpen(true)}><Ruler size={17} /> {t("Giúp mình chọn size", "Help me choose a size")}</button></div>
+      <div className="bebe-filter-tabs" aria-label={t("Danh mục sản phẩm", "Product categories")}><button aria-pressed={category === "all"} onClick={() => { setCategory("all"); setLimit(8); }}>{t("Tất cả đồ xinh", "All little things")}</button>{bebeCategories.map(item => <button key={item.id} aria-pressed={category === item.id} onClick={() => { setCategory(item.id); setLimit(8); }}>{item.label[locale]}</button>)}<button className="bebe-favorites-filter" aria-pressed={onlyFavorites} onClick={() => { setOnlyFavorites(!onlyFavorites); setLimit(8); }}><Heart size={14} />{t("Yêu thích", "Favourites")} ({favorites.length})</button></div>
+      <div className="bebe-shop-tools"><label className="bebe-search"><Search size={17} /><input aria-label={t("Tìm sản phẩm", "Search products")} placeholder={t("Tìm món xinh cho bé…", "Find a little favourite…")} value={query} onChange={event => { setQuery(event.target.value); setLimit(8); }} />{query && <button aria-label={t("Xóa tìm kiếm", "Clear search")} onClick={() => setQuery("")}><X size={15} /></button>}</label><label>{t("Độ tuổi", "Age")}<select value={age} onChange={event => { setAge(event.target.value as BebeAge); setLimit(8); }}><option value="all">{t("Mọi độ tuổi", "All ages")}</option><option value="baby">{t("0–24 tháng", "0–24 months")}</option><option value="toddler">{t("2–4 tuổi", "2–4 years")}</option><option value="kids">{t("5–8 tuổi", "5–8 years")}</option></select></label><label>{t("Sắp xếp", "Sort")}<select value={sort} onChange={event => setSort(event.target.value as Sort)}><option value="featured">{t("Bebé gợi ý", "Bebé picks")}</option><option value="price-asc">{t("Giá tăng dần", "Price: low to high")}</option><option value="price-desc">{t("Giá giảm dần", "Price: high to low")}</option></select></label></div>
+      <div className="bebe-results"><span role="status">{filtered.length} {t("món nhỏ xinh", "lovely little pieces")}</span>{(category !== "all" || collection !== "all" || age !== "all" || query || onlyFavorites) && <button onClick={resetFilters}>{t("Xóa bộ lọc", "Clear filters")} <X size={13} /></button>}</div>
+      <div className="bebe-product-grid">{filtered.slice(0, limit).map(product => <article className="bebe-product" key={product.id}><div className="bebe-product-cover"><button className="bebe-product-open" onClick={() => setSelected(product)} aria-label={`${t("Xem", "View")} ${product.name[locale]}`}><ProductArt id={product.id} /></button>{product.badge && <span className={`bebe-product-badge ${product.badge}`}>{product.badge === "new" ? t("Mới xinh", "Just arrived") : t("Bebé yêu thích", "Bebé favourite")}</span>}<button className="bebe-heart" aria-pressed={favorites.includes(product.id)} aria-label={`${t("Yêu thích", "Save")} ${product.name[locale]}`} onClick={() => toggleFavorite(product.id)}><Heart size={17} fill={favorites.includes(product.id) ? "currentColor" : "none"} /></button><button className="bebe-quick-add" onClick={() => setSelected(product)} aria-label={`${t("Chọn size", "Choose size")} ${product.name[locale]}`}><Plus size={16} />{t("Chọn size", "Choose size")}</button></div><div className="bebe-product-meta"><span>{product.material[locale]}</span><h3><button onClick={() => setSelected(product)}>{product.name[locale]}</button></h3><div><b>{money(product.price)}</b><span className="bebe-color" title={product.colorName[locale]} style={{ background: product.color }} /></div><small>{product.sizeType === "baby" ? t("0–24 tháng", "0–24 months") : product.sizeType === "clothes" ? t("2–8 tuổi", "2–8 years") : product.sizes.join(" · ")}</small></div></article>)}</div>
+      {filtered.length === 0 && <div className="bebe-empty"><Search size={34} /><h3>{t("Chưa tìm thấy món phù hợp.", "No little matches just yet.")}</h3><p>{t("Thử một từ khóa khác hoặc bỏ bớt bộ lọc nhé.", "Try another search or clear a few filters.")}</p><button className="bebe-cta" onClick={resetFilters}>{t("Xem tất cả sản phẩm", "See all pieces")}<ArrowRight size={17} /></button></div>}
+      {filtered.length > limit && <div className="bebe-show-more"><button className="bebe-outline" onClick={() => setLimit(value => value + 8)}>{t(`Xem thêm ${filtered.length - limit} món xinh`, `Discover ${filtered.length - limit} more pieces`)} <Plus size={17} /></button></div>}
     </section>
-    <section className="fashion-edit" id="edit"><div className="fashion-edit-image" role="img" aria-label={t("Bộ sưu tập trang phục mùa thu", "Autumn clothing collection")} /><div><span className="fashion-eyebrow">THE AUTUMN EDIT / 2026</span><h2>{t("Một mùa mới.", "A new season.")}<br /><em>{t("Vẫn là bạn.", "Still you.")}</em></h2><p>{t("Sắc màu trung tính, phom dáng tự do và những lớp chất liệu mềm mại. Tìm thấy cảm hứng mới trong những điều quen thuộc.", "Neutral tones, relaxed silhouettes, and soft layers. Find a new perspective in the familiar.")}</p><a href="#collection" onClick={() => setFilter("tops")}>{t("Khám phá những thiết kế mới", "Discover the new edit")} <ArrowRight size={20} /></a></div></section>
-    <section className="fashion-story" id="story"><span className="fashion-eyebrow">THE BEBÉ BOUTIQUE PHILOSOPHY</span><h2>{t("Không cần nhiều hơn.", "You don’t need more.")}<br /><em>{t("Chỉ cần đúng với bạn.", "Just more you.")}</em></h2><p>{t("Bebé Boutique bắt đầu từ một ý tưởng giản đơn: quần áo đẹp là những món bạn muốn mặc đi mặc lại. Chúng tôi dành sự quan tâm cho phom dáng, chất liệu và từng chi tiết nhỏ — để bạn thoải mái viết nên câu chuyện của riêng mình.", "Bebé Boutique starts with a simple idea: great clothes are the pieces you reach for again and again. We care about the fit, the fabric, and the small details, so you can make each piece part of your own story.")}</p></section>
-    <footer className="fashion-footer"><a className="fashion-logo" href="#top">Bebé<span>BOUTIQUE</span></a><p>EVERYDAY PIECES. ENDLESS POSSIBILITIES.</p><Link href="/giao-dien">{t("Mẫu giao diện bởi DevDes", "A template by DevDes")} <ArrowUpRight size={15} /></Link><small>© 2026 BEBÉ BOUTIQUE — {t("Cửa hàng minh họa", "Demo storefront")}</small></footer>
-    {selected && <DemoDialog title={selected.name} onClose={() => setSelected(null)}><div className="fashion-quickview"><div role="img" aria-label={selected.name} style={{ backgroundImage: `url(${photo(selected.image)})` }} /><section><span className="fashion-eyebrow">{selected.material} / {selected.color}</span><h3>{money(selected.price)}</h3><p>{t("Một thiết kế dễ kết hợp cho tủ đồ hằng ngày. Phom thoải mái, đường nét tối giản.", "An easy-to-style everyday essential with a relaxed fit and clean lines.")}</p><p>{t("Chọn kích cỡ", "Select size")}</p><div className="fashion-sizes">{(selected.group === "accessories" ? ["One size"] : ["S", "M", "L", "XL"]).map(s => <button key={s} aria-pressed={selected.group === "accessories" || size === s} onClick={() => setSize(s)}>{s}</button>)}</div><button className="fashion-cta" onClick={addToCart}>{t("Thêm vào giỏ hàng", "Add to bag")} <Plus size={18} /></button></section></div></DemoDialog>}
-    {cartOpen && <DemoDialog title={`${t("Giỏ hàng của bạn", "Your shopping bag")} (${count})`} onClose={() => setCartOpen(false)}><div className="fashion-cart">{cart.length ? <>{cart.map(item => { const product = products.find(p => p.id === item.id)!; return <div className="fashion-cart-row" key={`${item.id}-${item.size}`}><div className="fashion-cart-image" role="img" aria-label={product.name} style={{ backgroundImage: `url(${photo(product.image, 200)})` }} /><div><h3>{product.name}</h3><p>{item.size} · {money(product.price)}</p><div className="fashion-quantity"><button aria-label={`${t("Giảm số lượng", "Decrease quantity")} ${product.name}`} onClick={() => changeQuantity(item.id, item.size, -1)}><Minus size={14} /></button><span>{item.quantity}</span><button aria-label={`${t("Tăng số lượng", "Increase quantity")} ${product.name}`} onClick={() => changeQuantity(item.id, item.size, 1)}><Plus size={14} /></button></div></div><b>{money(product.price * item.quantity)}</b></div>; })}<div className="fashion-cart-total"><span>{t("Tạm tính", "Subtotal")}</span><b>{money(total)}</b></div><p>{t("Giỏ hàng minh họa. Không phát sinh đơn hàng hay thanh toán thực tế.", "Demo bag. No real orders or payments are processed.")}</p><button className="fashion-cta" onClick={() => setNotice(t("Bạn đã trải nghiệm xong bước mua sắm mẫu. Cảm ơn bạn đã ghé Bebé Boutique!", "You’ve completed the sample shopping flow. Thank you for visiting Bebé Boutique!"))}>{t("Thử thanh toán", "Try demo checkout")} <ArrowRight size={18} /></button><p role="status">{notice}</p></> : <div className="fashion-empty"><ShoppingBag size={40} /><h3>{t("Giỏ hàng đang chờ món đồ đầu tiên.", "Your bag is waiting for its first piece.")}</h3><button className="fashion-cta" onClick={() => { setCartOpen(false); document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" }); }}>{t("Khám phá sản phẩm", "Explore the collection")} <ArrowRight size={18} /></button></div>}</div></DemoDialog>}
+    <BebeSections browseCategory={browseCategory} browseCollection={browseCollection} openGuide={() => setGuideOpen(true)} />
+    <BebeDialogs selected={selected} closeProduct={() => setSelected(null)} addItem={addItem} cart={cart} cartOpen={cartOpen} closeCart={() => setCartOpen(false)} changeQuantity={changeQuantity} guideOpen={guideOpen} closeGuide={() => setGuideOpen(false)} browse={() => { setCartOpen(false); browseCategory("all"); }} />
   </main>;
 }

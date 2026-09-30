@@ -73,9 +73,9 @@ export function TemplateGallery() {
                   <div className="mini-nav"><b>{template.name}</b><span>Menu&nbsp;&nbsp; About&nbsp;&nbsp; Contact</span></div>
                   {template.category === "catalog" ? (
                     <div className="mini-copy mini-fashion-copy">
-                      <small>THE AUTUMN EDIT / 2026</small>
-                      <strong>{locale === "en" ? "Wear less." : "Mặc đơn giản."}<br /><em>{locale === "en" ? "Mean more." : "Sống có gu."}</em></strong>
-                      <span className="mini-button">{locale === "en" ? "Shop the collection ↗" : "Khám phá bộ sưu tập ↗"}</span>
+                      <small>LITTLE & LOVED / 0–8 YEARS</small>
+                      <strong>{locale === "en" ? "Little clothes." : "Nhỏ xíu thôi."}<br /><em>{locale === "en" ? "Big adventures." : "Yêu hết nấc."}</em></strong>
+                      <span className="mini-button">{locale === "en" ? "Shop little favourites ↗" : "Sắm đồ xinh cho bé ↗"}</span>
                     </div>
                   ) : template.category === "management" ? (
                     <div className="mini-dashboard"><aside /><div><span /><span /><span /><section><i /><i /><i /></section></div></div>
