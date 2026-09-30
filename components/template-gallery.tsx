@@ -38,7 +38,7 @@ export function TemplateGallery() {
         originalImage: "Ảnh website gốc",
         view: "Xem",
       };
-  const visible = active === "all" ? templates : templates.filter((item) => item.category === active);
+  const visible = active === "all" ? templates : templates.filter(item => item.category === active);
 
   return (
     <section className="gallery-section catalog-shell" id="collection" aria-label={copy.collection}>
@@ -55,6 +55,7 @@ export function TemplateGallery() {
         ))}
       </div>
 
+      <p className="collection-results" role="status">{visible.length} {locale === "en" ? "templates to explore" : "giao diện để khám phá"}<span>{locale === "en" ? "DESKTOP · TABLET · MOBILE" : "MÁY TÍNH · TABLET · ĐIỆN THOẠI"}</span></p>
       <div className="template-grid">
         {visible.map((template, index) => (
           <article className="template-card" key={template.slug} style={{ "--card-delay": `${index * 45}ms` } as React.CSSProperties}>

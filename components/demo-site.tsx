@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useState, type CSSProperties } from "react";
 import { DemoSections } from "./demo-sections";
+import { TemplatePlanner } from "./template-planner";
 import { ManagementWorkspace } from "./management-demo";
 import { ServiceCatalog } from "./service-catalog";
 import { HospitalityShowcase, AgencyPortfolio } from "./topic-showcase";
@@ -25,6 +26,7 @@ import { ProjectTemplateDemo } from "./project-template-demo";
 import { LanguageSwitcher } from "./language-switcher";
 import { useLocale } from "./locale-provider";
 import "./template-identities.css";
+import "./template-refinements.css";
 
 type DemoCopy = {
   nav: {
@@ -269,6 +271,7 @@ function RentalDemo({ template, locale }: { template: TemplateItem; locale: Loca
         <div className="story-photo" />
         <div className="story-copy"><span>{copy.storyEyebrow}</span><Quote /><blockquote>{copy.storyQuote}</blockquote><b>{copy.storyBy}</b></div>
       </section>
+      <TemplatePlanner template={template} />
       <DemoSections template={template} />
       <DemoFooter name={template.name} line={isHome ? copy.homeFooter : copy.footer} locale={locale} />
     </>
@@ -292,6 +295,7 @@ function HotelDemo({ template, locale }: { template: TemplateItem; locale: Local
       <section className="hotel-amenities sample-content"><div className="sample-section-title"><span>{copy.amenitiesEyebrow}</span><h2>{copy.amenitiesTitle.split("<br />")[0]}<br />{copy.amenitiesTitle.split("<br />")[1]}</h2></div><div className="amenity-grid"><article><Waves /><b>{minimal ? copy.minimalAmenity : playful ? copy.playfulAmenity : copy.defaultAmenity}</b><span>{minimal ? copy.minimalAmenityMeta : playful ? copy.playfulAmenityMeta : copy.defaultAmenityMeta}</span></article><article><Coffee /><b>{copy.breakfast}</b><span>{copy.breakfastMeta}</span></article><article><Wifi /><b>{copy.wifi}</b><span>{copy.wifiMeta}</span></article><article><MapPin /><b>{copy.airport}</b><span>{copy.airportMeta}</span></article></div></section>
       <section className="hotel-testimonial"><Quote /><blockquote>{copy.testimonial}</blockquote><div><span>★★★★★</span><b>{copy.testimonialBy}</b></div></section>
       <section className="hotel-location sample-content"><div className="location-map"><i>●</i><span>{minimal ? "KYOTO" : playful ? "SAIGON" : "NINH VÂN BAY"}</span></div><div><span>{copy.locationEyebrow}</span><h2>{copy.locationTitle.split("<br />")[0]}<br />{copy.locationTitle.split("<br />")[1]}</h2><p>{minimal ? copy.minimalLocation : playful ? copy.playfulLocation : copy.defaultLocation}</p><a href="#inquiry">{copy.transport} <ArrowUpRight /></a></div></section>
+      <TemplatePlanner template={template} />
       <DemoSections template={template} />
       <DemoFooter name={template.name} line={copy.footer} locale={locale} />
     </>
@@ -309,6 +313,7 @@ function AdvertisingDemo({ template, locale }: { template: TemplateItem; locale:
       <section className="ad-services" id="service"><div className="ad-service-intro"><span>{copy.serviceEyebrow}</span><h2>{copy.serviceTitle.split("<br />")[0]}<br />{copy.serviceTitle.split("<br />")[1]}</h2><p>{copy.serviceIntro}</p></div><div className="ad-service-list">{copy.services.map(item => <article key={item[0]}><span>{item[0]}</span><h3>{item[1]}</h3><p>{item[2]}</p><ArrowUpRight /></article>)}</div></section>
       <section className="ad-process sample-content" id="about"><div className="sample-section-title"><span>{copy.processEyebrow}</span><h2>{copy.processTitle.split("<br />")[0]}<br />{copy.processTitle.split("<br />")[1]}</h2></div><div className="ad-process-grid">{copy.process.map(item => <article key={item[0]}><span>{item[0]}</span><h3>{item[1]}</h3><p>{item[2]}</p></article>)}</div></section>
       <section className="ad-quote"><Quote /><blockquote>{copy.quote}</blockquote><div><b>{copy.quoteBy}</b><span>{copy.quoteRole}</span></div></section>
+      <TemplatePlanner template={template} />
       <DemoSections template={template} />
       <DemoFooter name={template.name} line={loud ? copy.loudFooter : halo ? copy.haloFooter : copy.museFooter} locale={locale} />
     </>

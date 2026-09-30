@@ -101,6 +101,13 @@
   .catalog-footer-top { font-size: 8px; }
   .devdes-catalog .catalog-footer-bottom .devdes-logo-type { font-size: 15px; }
 }
+.collection-results { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin: 0 0 28px; font-size: 12px; color: #615f58; }
+.collection-results span { font-size: 9px; letter-spacing: .08em; }
+.catalog-page .filter-bar { margin-bottom: 25px; }
+.catalog-page .template-thumb:focus-visible .preview-hover { transform: translateY(0); }
+@media (max-width: 760px) {
+  .collection-results span { display: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   :is(.devdes-catalog, .devdes-detail) *, .catalog-page .template-card { animation: none; transition: none; }
 }
